@@ -1,4 +1,4 @@
-using BeautySalon.Models.Database;
+using BeautySalon.Models.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
