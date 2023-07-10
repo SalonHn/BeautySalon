@@ -131,7 +131,10 @@ public partial class BeautysalonContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(15)
                 .HasColumnName("phone");
-            entity.Property(e => e.PinCustomer).HasColumnName("pinCustomer");
+            entity.Property(e => e.PinCustomer)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("pinCustomer");
         });
 
         modelBuilder.Entity<Employee>(entity =>

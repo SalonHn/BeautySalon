@@ -39,24 +39,33 @@ namespace BeautySalon.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterCustomer([Bind("FullName", "Phone", "PinCustomer")] Customer customer, int pinConfirm)
+        public async Task<IActionResult> RegisterCustomer([Bind("FullName", "Phone", "PinCustomer")] Customer customer, string pinConfirm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if(pinConfirm != customer.PinCustomer)
-                {
-                    ViewBag.ErrorPin = "PINs don't match";
-                    return View(customer);
-                }
-                else
-                {
-                    customer.CreateDate = DateTime.Now;
-                    _context.Add(customer);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(LoginCustomer));
-                }
+                return View(customer);
             }
-            return View(customer);
+
+            if (pinConfirm != customer.PinCustomer)
+            {
+                ViewBag.ErrorPin = "PINs don't match";
+                return View(customer);
+            }
+            Customer? existCustomer = null;
+            existCustomer = (from c in _context.Customers 
+                             where c.Phone == customer.Phone 
+                             select c).FirstOrDefault();
+            if(existCustomer != null)
+            {
+                ViewBag.Error = "Ya existe una cuenta para el telefono";
+                return View(existCustomer);
+            }else
+            {
+                customer.CreateDate = DateTime.Now;
+                _context.Add(customer);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(LoginCustomer));
+            }
         }
 
         public IActionResult LogoutCustomer() 
