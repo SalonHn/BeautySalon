@@ -10,3 +10,11 @@
     height: 100px;
     border-radius: 50px;
 }
+
+.icon-login{
+    font-size:30px;
+}
+
+.link{
+    text-decoration: none;
+}

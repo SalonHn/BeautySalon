@@ -1,0 +1,55 @@
+﻿@model BeautySalon.Models.DataBase.UserAdmin
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>UserAdmin</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserPassword)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserPassword)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserActive)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserActive)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserDateCreate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserDateCreate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserDateModify)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserDateModify)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserEmail)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdUser">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

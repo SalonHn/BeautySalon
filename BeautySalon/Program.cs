@@ -1,13 +1,17 @@
 using BeautySalon.Models.DataBase;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<BeautysalonContext>(options => 
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+builder.Services.AddDbContext<BeautysalonContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("conexion")));
 
 var app = builder.Build();

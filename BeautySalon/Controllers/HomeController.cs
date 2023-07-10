@@ -1,4 +1,5 @@
 ﻿using BeautySalon.Models;
+using BeautySalon.Models.DataBase;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,11 +7,11 @@ namespace BeautySalon.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly BeautysalonContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(BeautysalonContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -20,6 +21,24 @@ namespace BeautySalon.Controllers
 
         public IActionResult Privacy()
         {
+
+            UserAdmin? u = null;
+
+            using (BeautysalonContext db = new BeautysalonContext())
+            {
+                u = (from b in db.UserAdmins
+                     where b.UserName == "hola" && b.UserPassword == "hola"
+                     select b).FirstOrDefault();
+            }
+
+            if(u == null)
+            {
+                ViewBag.hola = "Error";
+            } else
+            {
+                ViewBag.hola = "sussesful";
+            }
+
             return View();
         }
 
