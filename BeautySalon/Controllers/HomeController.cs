@@ -1,10 +1,12 @@
 ﻿using BeautySalon.Models;
 using BeautySalon.Models.DataBase;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace BeautySalon.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly BeautysalonContext _context;
@@ -21,24 +23,6 @@ namespace BeautySalon.Controllers
 
         public IActionResult Privacy()
         {
-
-            UserAdmin? u = null;
-
-            using (BeautysalonContext db = new BeautysalonContext())
-            {
-                u = (from b in db.UserAdmins
-                     where b.UserName == "hola" && b.UserPassword == "hola"
-                     select b).FirstOrDefault();
-            }
-
-            if(u == null)
-            {
-                ViewBag.hola = "Error";
-            } else
-            {
-                ViewBag.hola = "sussesful";
-            }
-
             return View();
         }
 

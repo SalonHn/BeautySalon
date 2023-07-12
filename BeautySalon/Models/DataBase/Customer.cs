@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BeautySalon.Models.DataBase;
 
-public partial class Customer : ValidationAttribute
+public partial class Customer
 {
     public int IdCustomer { get; set; }
 
-    [Required(ErrorMessage="Nombre Requerido")]
+    [Required(ErrorMessage = "Nombre Requerido")]
     [MaxLength(50, ErrorMessage = "Maximo de caracteres superado")]
     [MinLength(3, ErrorMessage = "Nombre invalido")]
     public string FullName { get; set; } = null!;
