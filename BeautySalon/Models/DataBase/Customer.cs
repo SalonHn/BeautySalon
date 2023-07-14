@@ -18,13 +18,13 @@ public partial class Customer
     [MinLength(8, ErrorMessage = "Telefono invalido")]
     public string Phone { get; set; } = null!;
 
-    public DateTime CreateDate { get; set; }
-
     [Required(ErrorMessage = "Pin Requerido")]
     [MaxLength(6, ErrorMessage = "El numero maximo de digitos es 6")]
     [MinLength(4, ErrorMessage = "El numero minimo de digitos es 4")]
     [RegularExpression(@"^[0-9]+$", ErrorMessage = "Solo se aceptan numeros")]
     public string PinCustomer { get; set; } = null!;
+
+    public DateTime CreateDate { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 

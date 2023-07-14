@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BeautySalon.Models.DataBase;
 
@@ -25,17 +26,20 @@ public partial class Product
 
     public DateTime ModifyDate { get; set; }
 
-    public string? ImageUrl { get; set; }
-
     public bool Featured { get; set; }
 
     public int IdTax { get; set; }
 
     public int IdSkill { get; set; }
 
-    public virtual Category IdCategoryNavigation { get; set; } = null!;
+    public string? ImageProduct { get; set; }
 
-    public virtual RoleEmployee IdSkillNavigation { get; set; } = null!;
+    public virtual Category? IdCategoryNavigation { get; set; }
 
-    public virtual Tax IdTaxNavigation { get; set; } = null!;
+    public virtual RoleEmployee? IdSkillNavigation { get; set; }
+
+    public virtual Tax? IdTaxNavigation { get; set; }
+
+    [NotMapped]
+    public IFormFile? ImgFile { get; set; }
 }

@@ -1,0 +1,13 @@
+﻿body {
+}
+
+.icon-profile{
+    font-size: 30px;
+}
+
+.div-icon-profile{
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 25px;
+}

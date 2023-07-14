@@ -50,14 +50,14 @@ public partial class BeautysalonContext : DbContext
     public virtual DbSet<UserAdmin> UserAdmins { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
- //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("server=beautysalon.c6boib1qjmh9.us-east-1.rds.amazonaws.com; user=sa; password=salon123; database=beautysalon; TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.IdAppointment).HasName("PK__Appointm__44E34BD46565D92C");
+            entity.HasKey(e => e.IdAppointment).HasName("PK__Appointm__44E34BD4B7704213");
 
             entity.ToTable("Appointment");
 
@@ -105,7 +105,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.IdCategory).HasName("PK__Category__79D361B61F097AEE");
+            entity.HasKey(e => e.IdCategory).HasName("PK__Category__79D361B60C6EF548");
 
             entity.ToTable("Category");
 
@@ -117,7 +117,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.IdCustomer).HasName("PK__Customer__D058768604F94FC0");
+            entity.HasKey(e => e.IdCustomer).HasName("PK__Customer__D058768620D76DCC");
 
             entity.ToTable("Customer");
 
@@ -139,7 +139,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.IdEmployee).HasName("PK__Employee__227F26A549E9C1D4");
+            entity.HasKey(e => e.IdEmployee).HasName("PK__Employee__227F26A551C9AF0A");
 
             entity.ToTable("Employee");
 
@@ -185,7 +185,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Holiday>(entity =>
         {
-            entity.HasKey(e => e.IdHoliday).HasName("PK__Holiday__2A86D69745B212EC");
+            entity.HasKey(e => e.IdHoliday).HasName("PK__Holiday__2A86D697F2133C29");
 
             entity.ToTable("Holiday");
 
@@ -200,7 +200,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<HoursAvailable>(entity =>
         {
-            entity.HasKey(e => e.IdHour).HasName("PK__HoursAva__777963AED42EE14F");
+            entity.HasKey(e => e.IdHour).HasName("PK__HoursAva__777963AEE0AFD541");
 
             entity.ToTable("HoursAvailable");
 
@@ -213,7 +213,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.IdInvoice).HasName("PK__Invoice__D3631FCEBF3C5CA1");
+            entity.HasKey(e => e.IdInvoice).HasName("PK__Invoice__D3631FCED67E7C65");
 
             entity.ToTable("Invoice");
 
@@ -271,7 +271,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Module>(entity =>
         {
-            entity.HasKey(e => e.IdModule).HasName("PK__Module__3CE613F051E3A290");
+            entity.HasKey(e => e.IdModule).HasName("PK__Module__3CE613F0CB629B7E");
 
             entity.ToTable("Module");
 
@@ -304,7 +304,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.IdProduct).HasName("PK__Product__5EEC79D13EDB093C");
+            entity.HasKey(e => e.IdProduct).HasName("PK__Product__5EEC79D14D48B196");
 
             entity.ToTable("Product");
 
@@ -319,9 +319,9 @@ public partial class BeautysalonContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("idSkill");
             entity.Property(e => e.IdTax).HasColumnName("idTax");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(1)
-                .HasColumnName("imageUrl");
+            entity.Property(e => e.ImageProduct)
+                .IsUnicode(false)
+                .HasColumnName("imageProduct");
             entity.Property(e => e.ModifyDate)
                 .HasColumnType("date")
                 .HasColumnName("modifyDate");
@@ -355,7 +355,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<RoleEmployee>(entity =>
         {
-            entity.HasKey(e => e.IdRole).HasName("PK__RoleEmpl__E5045C540B1B30B1");
+            entity.HasKey(e => e.IdRole).HasName("PK__RoleEmpl__E5045C542C5C382F");
 
             entity.ToTable("RoleEmployee");
 
@@ -389,7 +389,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Tax>(entity =>
         {
-            entity.HasKey(e => e.IdTax).HasName("PK__Tax__020FEDA934F7B4A3");
+            entity.HasKey(e => e.IdTax).HasName("PK__Tax__020FEDA9A03E69B5");
 
             entity.ToTable("Tax");
 
@@ -403,7 +403,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<Timetable>(entity =>
         {
-            entity.HasKey(e => e.IdTimetable).HasName("PK__Timetabl__5DE92C406C2F60CD");
+            entity.HasKey(e => e.IdTimetable).HasName("PK__Timetabl__5DE92C40571870A3");
 
             entity.ToTable("Timetable");
 
@@ -429,7 +429,7 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<UserAdmin>(entity =>
         {
-            entity.HasKey(e => e.IdUser).HasName("PK__UserAdmi__3717C982078D84BA");
+            entity.HasKey(e => e.IdUser).HasName("PK__UserAdmi__3717C9826FEA4CDD");
 
             entity.ToTable("UserAdmin");
 

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace BeautySalon.Controllers
 {
-    [Authorize]
+  
     public class HomeController : Controller
     {
         private readonly BeautysalonContext _context;
