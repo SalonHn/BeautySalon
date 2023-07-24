@@ -1,8 +1,47 @@
-﻿
+﻿@model List<BeautySalon.Models.ViewModels.ViewModelProduct>
+
 @{
     ViewData["Title"] = "Productos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="row mt-4">
+    <div class="col-6">
+        <h1>Products</h1>
+    </div>
+    <div class="col-6">
+        <button class="btn btn-primary" onclick="">Nuevo Producto</button>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+    <table class="table table-sm table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Codigo</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Stock Disponible</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Categoria</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <th>@product.sku</th>
+                    <td>@product.name</td>
+                    <td>@product.stock</td>
+                    <td>@product.price</td>
+                    <td>@product.categoria</td>
+                    <td><a href="">Detalles</a></td>
+                    <td><a href="">Editar</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 

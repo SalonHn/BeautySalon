@@ -1,4 +1,5 @@
 ﻿using BeautySalon.Models.DataBase;
+using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -15,8 +16,24 @@ namespace BeautySalon.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View();
+        { 
+            var joinProductCategory = _context.Products.Join(_context.Categories, 
+                product=>product.IdCategory,
+                category=>category.IdCategory,
+                (product, category) => new { product, category }).ToList();
+
+            List<ViewModelProduct> products = joinProductCategory.ConvertAll(x =>
+                new ViewModelProduct
+                {
+                    id = x.product.IdProduct,
+                    name = x.product.NameProduct,
+                    sku = x.product.Sku,
+                    price = x.product.Price,
+                    stock = x.product.Stock,
+                    categoria = x.category.Category1
+                });
+
+            return View(products);
         }
 
         public async Task<IActionResult> Create()
