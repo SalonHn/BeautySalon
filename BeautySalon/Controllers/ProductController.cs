@@ -84,5 +84,87 @@ namespace BeautySalon.Controllers
                 return View();
             }
         }
+
+        public IActionResult Detalles(int id)
+        {
+            Product? product = _context.Products.Find(id);
+            Category? category = null;
+            if (product != null)
+            {
+                category = _context.Categories.Find(product.IdCategory);
+            }
+
+            if(category != null && product != null) 
+            {
+                ViewBag.Category = category;
+                ViewBag.Product = product;
+            }
+
+            return View();
+        }
+
+        public async Task<IActionResult> Editar(int id)
+        {
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Taxes = await _context.Taxes.ToListAsync();
+            Product? product = _context.Products.Find(id);
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar([Bind("IdProduct", "Sku", "NameProduct", "IdCategory", "ImgFile", "Description", "Price", "Stock", "IdTax", "StockMinimum", "Featured")] Product product)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Categories = await _context.Categories.ToListAsync();
+                    ViewBag.Taxes = await _context.Taxes.ToListAsync();
+                    return View(product);
+                }
+
+                var productOriginal = await _context.Products.FindAsync(product.IdProduct);
+
+                if(productOriginal != null)
+                {
+                    Byte[] img;
+                    //Verificando si hubo cambio de imagen
+                    if (product.ImgFile != null)
+                    {
+                        using (Stream fs = product.ImgFile.OpenReadStream())
+                        {
+                            using (BinaryReader br = new BinaryReader(fs))
+                            {
+                                img = br.ReadBytes((int)fs.Length);
+                                productOriginal.ImageProduct = Convert.ToBase64String(img, 0, img.Length);
+                            }
+                        }
+                    }
+                    //Agregando cambios
+                    productOriginal.NameProduct = product.NameProduct;
+                    productOriginal.Description = product.Description;
+                    productOriginal.Price = product.Price;
+                    productOriginal.IdCategory = product.IdCategory;
+                    productOriginal.IdTax = product.IdTax;
+                    productOriginal.Stock = product.Stock;
+                    productOriginal.StockMinimum = product.StockMinimum;
+                    productOriginal.Featured = product.Featured;
+                    productOriginal.ModifyDate = DateTime.Now;
+                    productOriginal.Sku = product.Sku;
+
+                    //Actualizando
+                    _context.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Categories = await _context.Categories.ToListAsync();
+                ViewBag.Taxes = await _context.Taxes.ToListAsync();
+                ViewBag.Error = ex.Message;
+                return View(product);
+            }
+        }
     }
 }

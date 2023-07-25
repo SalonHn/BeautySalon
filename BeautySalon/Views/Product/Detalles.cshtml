@@ -1,0 +1,93 @@
+﻿@using BeautySalon.Models.DataBase
+
+@{
+    ViewData["Title"] = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Product product = ViewBag.Product;
+    Category category = ViewBag.Category;
+}
+
+<div class="d-flex justify-content-center">
+    <h1>Detalles del Producto</h1>
+</div>
+
+<div class="row mt-4">
+    <div class="col-6 d-flex justify-content-center">
+        <img src="data:image/jpg; base64, @product.ImageProduct" alt="Sin imagen para mostrar" width="400" height="400" style="border: 1px solid;"/>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-4">
+                <label class="form-label">Codigo</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.Sku"/>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Nombre</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.NameProduct" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Precio</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.Price" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Descripcion</label>
+            </div>
+            <div class="col-6">
+                <textarea class="form-control" disabled>@product.Description</textarea>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Categoria</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@category.Category1" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Stock Disponible</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.Stock" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Stock Minimo</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.StockMinimum" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Fecha de ingreso</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.CreateDate" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-4">
+                <label class="form-label">Ultima modificación</label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" disabled value="@product.ModifyDate" />
+            </div>
+        </div>
+    </div>
+</div>

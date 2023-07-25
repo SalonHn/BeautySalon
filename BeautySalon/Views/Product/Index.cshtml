@@ -10,7 +10,7 @@
         <h1>Products</h1>
     </div>
     <div class="col-6">
-        <button class="btn btn-primary" onclick="">Nuevo Producto</button>
+        <a href="@Url.Content("~/Product/Create")"><button class="btn btn-primary">Nuevo Producto</button></a>
     </div>
 </div>
 
@@ -36,8 +36,8 @@
                     <td>@product.stock</td>
                     <td>@product.price</td>
                     <td>@product.categoria</td>
-                    <td><a href="">Detalles</a></td>
-                    <td><a href="">Editar</a></td>
+                    <td><a href="@Url.Content("~/Product/Detalles/" + product.id)">Detalles</a></td>
+                    <td><a href="@Url.Content("~/Product/Editar/" + product.id)">Editar</a></td>
                 </tr>
             }
         </tbody>
