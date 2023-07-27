@@ -1,0 +1,53 @@
+﻿
+@using BeautySalon.Models.ViewModels;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ViewModelHorario> timetable = ViewBag.Timetable;
+}
+
+<div class="d-flex justify-content-center mt-3"><h1>Horario</h1></div>
+<div class="mt-2"><a href="">Cofiguración de horario</a></div>
+<div class="mt-2">
+    <table class="table table-sm">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Dia</th>
+                <th scope="col">Hora de Apertura</th>
+                <th scope="col">Hora de Cierre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var day in timetable)
+            {
+                <tr>
+                    <td>@day.day</td>
+                    <td>@day.open</td>
+                    <td>@day.close</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-center mt-4"><h1>Feriados</h1></div>
+<div class="mt-2"><a href="">Agregar feriado</a></div>
+<div class="mt-2">
+    <table class="table table-sm">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Motivo</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>kfkjwe</td>
+                <td>day.open</td>
+                <td><a href="">Eliminar</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
