@@ -39,7 +39,7 @@ namespace BeautySalon.Controllers
 
             // Extrae los feriados para mostrar
             List<Holiday>? holidays = null;
-            holidays = _context.Holidays.OrderBy(h => h.Date).ToList();
+            holidays = _context.Holidays.OrderBy(h=> h.Date).ToList();
 
             ViewBag.Holidays = holidays;
 
@@ -76,9 +76,130 @@ namespace BeautySalon.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult ConfigurarFeriado()
+        public IActionResult ConfigurarHorario()
         {
-            return View();
+            List<Timetable> horarios = _context.Timetables.ToList();
+            ViewModelAllHorario allHorarios = new ViewModelAllHorario();
+            foreach (Timetable timetable in horarios)
+            {
+                if(timetable.IdTimetable == 1)
+                {
+                    allHorarios.domingo = timetable.IsHoliday;
+                    allHorarios.domingoO = timetable.OpenHour;
+                    allHorarios.domingoC = timetable.CloseHour;
+                }
+                if (timetable.IdTimetable == 2)
+                {
+                    allHorarios.lunes = timetable.IsHoliday;
+                    allHorarios.lunesO = timetable.OpenHour;
+                    allHorarios.lunesC = timetable.CloseHour;
+                }
+                if (timetable.IdTimetable == 3)
+                {
+                    allHorarios.martes = timetable.IsHoliday;
+                    allHorarios.martesO = timetable.OpenHour;
+                    allHorarios.martesC = timetable.CloseHour;
+                }
+                if (timetable.IdTimetable == 4)
+                {
+                    allHorarios.miercoles = timetable.IsHoliday;
+                    allHorarios.miercolesO = timetable.OpenHour;
+                    allHorarios.miercolesC = timetable.CloseHour;
+                }
+                if (timetable.IdTimetable == 5)
+                {
+                    allHorarios.jueves = timetable.IsHoliday;
+                    allHorarios.juevesO = timetable.OpenHour;
+                    allHorarios.juevesC = timetable.CloseHour;
+                }
+                if (timetable.IdTimetable == 6)
+                {
+                    allHorarios.viernes = timetable.IsHoliday;
+                    allHorarios.viernesO = timetable.OpenHour;
+                    allHorarios.viernesC = timetable.CloseHour;
+                }
+                if (timetable.IdTimetable == 7)
+                {
+                    allHorarios.sabado = timetable.IsHoliday;
+                    allHorarios.sabadoO = timetable.OpenHour;
+                    allHorarios.sabadoC = timetable.CloseHour;
+                }
+            } 
+
+            ViewBag.Horas = _context.HoursAvailables.OrderBy(h=> h.IdHour).ToList();
+
+            return View(allHorarios);
+        }
+
+        [HttpPost]
+        public IActionResult ConfigurarHorario(ViewModelAllHorario allHorario)
+        {
+            List<Timetable> horarios = _context.Timetables.ToList();
+
+            Timetable? domingo = _context.Timetables.Find(1);
+            if (domingo != null) 
+            {
+                domingo.IsHoliday = allHorario.domingo;
+                domingo.OpenHour = allHorario.domingoO;
+                domingo.CloseHour = allHorario.domingoC;
+                _context.SaveChanges();
+            }
+
+            Timetable? lunes = _context.Timetables.Find(2);
+            if (lunes != null)
+            {
+                lunes.IsHoliday = allHorario.lunes;
+                lunes.OpenHour = allHorario.lunesO;
+                lunes.CloseHour = allHorario.lunesC;
+                _context.SaveChanges();
+            }
+
+            Timetable? martes = _context.Timetables.Find(3);
+            if (martes != null)
+            {
+                martes.IsHoliday = allHorario.martes;
+                martes.OpenHour = allHorario.martesO;
+                martes.CloseHour = allHorario.martesC;
+                _context.SaveChanges();
+            }
+
+            Timetable? miercoles = _context.Timetables.Find(4);
+            if (miercoles != null)
+            {
+                miercoles.IsHoliday = allHorario.miercoles;
+                miercoles.OpenHour = allHorario.miercolesO;
+                miercoles.CloseHour = allHorario.miercolesC;
+                _context.SaveChanges();
+            }
+
+            Timetable? jueves = _context.Timetables.Find(5);
+            if (jueves != null)
+            {
+                jueves.IsHoliday = allHorario.jueves;
+                jueves.OpenHour = allHorario.juevesO;
+                jueves.CloseHour = allHorario.juevesC;
+                _context.SaveChanges();
+            }
+
+            Timetable? viernes = _context.Timetables.Find(6);
+            if (viernes != null)
+            {
+                viernes.IsHoliday = allHorario.viernes;
+                viernes.OpenHour = allHorario.viernesO;
+                viernes.CloseHour = allHorario.viernesC;
+                _context.SaveChanges();
+            }
+
+            Timetable? sabado = _context.Timetables.Find(7);
+            if (sabado != null)
+            {
+                sabado.IsHoliday = allHorario.sabado;
+                sabado.OpenHour = allHorario.sabadoO;
+                sabado.CloseHour = allHorario.sabadoC;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
