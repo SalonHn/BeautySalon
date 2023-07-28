@@ -1,10 +1,12 @@
 ﻿
 @using BeautySalon.Models.ViewModels;
+@using BeautySalon.Models.DataBase;
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<ViewModelHorario> timetable = ViewBag.Timetable;
+    List<Holiday> holiday = ViewBag.Holidays;
 }
 
 <div class="d-flex justify-content-center mt-3"><h1>Horario</h1></div>
@@ -32,7 +34,10 @@
 </div>
 
 <div class="d-flex justify-content-center mt-4"><h1>Feriados</h1></div>
-<div class="mt-2"><a href="">Agregar feriado</a></div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newFeriadoModal">
+    Agregar Feriado
+</button>
+<span class="text-danger">@ViewBag.Error</span>
 <div class="mt-2">
     <table class="table table-sm">
         <thead class="table-dark">
@@ -43,11 +48,42 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>kfkjwe</td>
-                <td>day.open</td>
-                <td><a href="">Eliminar</a></td>
-            </tr>
+            @foreach(var h in holiday)
+            {
+                <tr>
+                    <td>@h.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@h.Reason</td>
+                    <td><a href="@Url.Content("~/Timetable/DelFeriado/" + h.IdHoliday)">Eliminar</a></td>
+                </tr>
+            }
         </tbody>
     </table>
+</div>
+
+<!--Modal para agregar feriado-->
+<div class="modal fade" id="newFeriadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Feriado</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AddFeriado" method="post">
+                <div class="modal-body">
+                        <div>
+						    <label class="form-label">Fecha</label>
+                            <input type="date" class="form-control" name="fecha" min="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+                        </div>
+                        <div class="mt-2">
+                            <label class="form-label">Motivo</label>
+                            <textarea type="text" class="form-control" name="motivo"></textarea>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
