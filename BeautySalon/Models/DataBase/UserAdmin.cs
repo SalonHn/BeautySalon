@@ -18,4 +18,6 @@ public partial class UserAdmin
     public DateTime UserDateModify { get; set; }
 
     public string UserEmail { get; set; } = null!;
+
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

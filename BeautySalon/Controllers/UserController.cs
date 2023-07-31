@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BeautySalon.Models.DataBase;
+using BeautySalon.Models.ViewModels;
 
 namespace BeautySalon.Controllers
 {
@@ -19,11 +20,29 @@ namespace BeautySalon.Controllers
         }
 
         // GET: User
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return _context.UserAdmins != null ? 
-                          View(await _context.UserAdmins.ToListAsync()) :
-                          Problem("Entity set 'BeautysalonContext.UserAdmins'  is null.");
+            var allUser = _context.Employees.Join(
+                _context.UserAdmins, 
+                employee => employee.IdUser, 
+                user => user.IdUser, 
+                (employee, user) => new { employee, user }).ToList();
+
+            List<ViewModelAllUser> users = allUser.ConvertAll(x =>
+                new ViewModelAllUser
+                {
+                    Id = x.user.IdUser,
+                    name = x.employee.FirstName,
+                    UserName = x.user.UserName,
+                    userActive = x.user.UserActive,
+                    genero = x.employee.Gender,
+                    CreateDate = x.user.UserDateCreate
+                }
+            );
+
+            ViewBag.Users = users;
+
+            return View();
         }
 
         // GET: User/Details/5
@@ -47,6 +66,10 @@ namespace BeautySalon.Controllers
         // GET: User/Create
         public IActionResult Create()
         {
+            List<RoleEmployee> roles = _context.RoleEmployees.ToList();
+            List<string> genero = new List<string> { "Masculino", "Femenino", "Sin Especificar" };
+            ViewBag.Genero = genero;
+            ViewBag.Rol = roles;
             return View();
         }
 

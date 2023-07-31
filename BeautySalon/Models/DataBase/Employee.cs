@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BeautySalon.Models.DataBase;
 
@@ -10,8 +11,6 @@ public partial class Employee
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;
-
-    public string Idi { get; set; } = null!;
 
     public string Phone { get; set; } = null!;
 
@@ -29,5 +28,25 @@ public partial class Employee
 
     public int IdRole { get; set; }
 
+    public string Dni { get; set; } = null!;
+
+    public int IdUser { get; set; }
+
     public virtual RoleEmployee IdRoleNavigation { get; set; } = null!;
+
+    public virtual UserAdmin IdUserNavigation { get; set; } = null!;
+
+
+
+    //No Mapeado
+    [NotMapped]
+    public string UserName { get; set; } = null!;
+    [NotMapped]
+    public string UserPassword { get; set; } = null!;
+    [NotMapped]
+    public string UserPasswordConfirm { get; set; } = null!;
+    [NotMapped]
+    public bool UserActive { get; set; }
+    [NotMapped]
+    public string UserEmail { get; set; } = null!;
 }

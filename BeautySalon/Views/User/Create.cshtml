@@ -1,56 +1,105 @@
-﻿@model BeautySalon.Models.DataBase.UserAdmin
+﻿@model BeautySalon.Models.DataBase.Employee
+
+@using BeautySalon.Models.DataBase;
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> genero = ViewBag.Genero;
+    List<RoleEmployee> roles = ViewBag.Rol;
 }
 
-<h1>Create</h1>
-
-<h4>UserAdmin</h4>
+<div class="d-flex justify-content-center mt-2"><h1>Nuevo Empleado</h1></div>
+<h4>Datos del empleado</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+<div>
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-6 form-group">
+                <label asp-for="FirstName" class="control-label">Nombres</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserPassword" class="control-label"></label>
-                <input asp-for="UserPassword" class="form-control" />
-                <span asp-validation-for="UserPassword" class="text-danger"></span>
+            <div class="col-6 form-group">
+                <label asp-for="LastName" class="control-label">Apellidos</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="UserActive" /> @Html.DisplayNameFor(model => model.UserActive)
-                </label>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6 form-group">
+                <label asp-for="Dni" class="control-label">DNI</label>
+                <input asp-for="Dni" class="form-control" />
+                <span asp-validation-for="Dni" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserDateCreate" class="control-label"></label>
-                <input asp-for="UserDateCreate" class="form-control" />
-                <span asp-validation-for="UserDateCreate" class="text-danger"></span>
+            <div class="col-6 form-group">
+                <label asp-for="Phone" class="control-label">Telefono</label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserDateModify" class="control-label"></label>
-                <input asp-for="UserDateModify" class="form-control" />
-                <span asp-validation-for="UserDateModify" class="text-danger"></span>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6 form-group">
+                <label asp-for="DateOfBirth" class="control-label">Fecha de Nacimiento</label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserEmail" class="control-label"></label>
+            <div class="col-6 form-group">
+                <label asp-for="Age" class="control-label">Edad</label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6 form-group">
+                <label asp-for="Gender" class="control-label">Genero</label>
+                <select asp-for="Gender" class="form-select" asp-items="@(new SelectList(genero))"></select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="col-6 form-group">
+                <label asp-for="IdRole" class="control-label">Rol</label>
+                <select asp-for="IdRole" class="form-select" asp-items="@(new SelectList(roles, "IdRole", "NameRole"))"></select>
+                <span asp-validation-for="IdRole" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+        <h4>Datos de usuario</h4>
+        <hr />
+        <div class="row mt-2">
+            <div class="col-6 form-group">
+                <label asp-for="UserEmail" class="control-label">Correo</label>
                 <input asp-for="UserEmail" class="form-control" />
                 <span asp-validation-for="UserEmail" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="col-6 form-group">
+                <label asp-for="UserName" class="control-label">Usuario</label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
-        </form>
-    </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6 form-group">
+                <label asp-for="UserPassword" class="control-label">Contraseña</label>
+                <input asp-for="UserPassword" type="password" class="form-control" />
+                <span asp-validation-for="UserPassword" class="text-danger"></span>
+            </div>
+            <div class="col-6 form-group">
+                <label asp-for="UserPasswordConfirm" class="control-label">Confirmar Contraseña</label>
+                <input asp-for="UserPasswordConfirm" type="password" class="form-control" />
+                <span asp-validation-for="UserPasswordConfirm" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <input type="submit" value="Crear Empleado" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 
+<hr />
+
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver</a>
 </div>
 

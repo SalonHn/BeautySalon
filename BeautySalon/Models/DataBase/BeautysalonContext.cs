@@ -154,6 +154,10 @@ public partial class BeautysalonContext : DbContext
             entity.Property(e => e.DateOfBirth)
                 .HasColumnType("date")
                 .HasColumnName("dateOfBirth");
+            entity.Property(e => e.Dni)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("DNI");
             entity.Property(e => e.EmployeeActive).HasColumnName("employeeActive");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
@@ -164,10 +168,7 @@ public partial class BeautysalonContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("gender");
             entity.Property(e => e.IdRole).HasColumnName("idRole");
-            entity.Property(e => e.Idi)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("IDI");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
             entity.Property(e => e.LastName)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -181,6 +182,11 @@ public partial class BeautysalonContext : DbContext
                 .HasForeignKey(d => d.IdRole)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_role_employee");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_user_employee");
         });
 
         modelBuilder.Entity<Holiday>(entity =>

@@ -1,66 +1,46 @@
-﻿@model IEnumerable<BeautySalon.Models.DataBase.UserAdmin>
+﻿
+@model IEnumerable<BeautySalon.Models.DataBase.UserAdmin>
+
+@using BeautySalon.Models.ViewModels;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Users";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ViewModelAllUser> users = ViewBag.Users;
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-center mt-3"><h1>Empleados</h1></div>
+<div class="mt-3"><a asp-action="Create">Agregar nuevo usuario</a></div>
+<div class="mt-1">
+    <div>
+        <table class="table table-sm table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Creación</th>
+                    <th>Empleado</th>
+                    <th>Genero</th>
+                    <th>Usuario</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in users)
+                {
+                    <tr>
+                        <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.name</td>
+                        <td>@item.genero</td>
+                        <td>@item.UserName</td>
+                        <td>@item.userActive</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserPassword)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserActive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserDateCreate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserDateModify)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserEmail)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserPassword)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserDateCreate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserDateModify)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserEmail)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdUser">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdUser">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdUser">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
