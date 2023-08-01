@@ -34,11 +34,11 @@ public partial class Product
 
     public string? ImageProduct { get; set; }
 
-    public virtual Category IdCategoryNavigation { get; set; } = null!;
+    public virtual Category? IdCategoryNavigation { get; set; }
 
-    public virtual RoleEmployee IdSkillNavigation { get; set; } = null!;
+    public virtual RoleEmployee? IdSkillNavigation { get; set; }
 
-    public virtual Tax IdTaxNavigation { get; set; } = null!;
+    public virtual Tax? IdTaxNavigation { get; set; }
 
     [NotMapped]
     public IFormFile? ImgFile { get; set; }

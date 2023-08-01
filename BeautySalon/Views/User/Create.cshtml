@@ -91,9 +91,45 @@
             </div>
         </div>
         <hr />
+        <h4>Permisos</h4>
+        <hr />
+        <div class="row">
+            <div class="form-check col">
+                <input class="form-check-input" type="checkbox" name="citas" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Citas/Facturación</label>
+            </div>
+            <div class="form-check col">
+                <input class="form-check-input" type="checkbox" name="inventario" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Inventario</label>
+            </div>
+            <div class="form-check col">
+                <input class="form-check-input" type="checkbox" name="servicios" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Servicios</label>
+            </div>
+            <div class="form-check col">
+                <input class="form-check-input" type="checkbox" name="reportes" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Reportes</label>
+            </div>
+            <div class="form-check col">
+                <input class="form-check-input" type="checkbox" name="usuarios" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Ususarios</label>
+            </div>
+            <div class="form-check col">
+                <input class="form-check-input" type="checkbox" name="configuracion" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Configuración</label>
+            </div>
+        </div>
+        <hr />
         <div class="form-group">
             <input type="submit" value="Crear Empleado" class="btn btn-primary" />
         </div>
+        <span asp-validation-for="IdRoleNavigation" class="text-danger"></span>
+        <span asp-validation-for="IdUser" class="text-danger"></span>
+        <span asp-validation-for="IdUserNavigation" class="text-danger"></span>
+        <span asp-validation-for="DateCreate" class="text-danger"></span>
+        <span asp-validation-for="DateModify" class="text-danger"></span>
+        <span asp-validation-for="EmployeeActive" class="text-danger"></span>
+        <span class="text-danger">@ViewBag.Error</span>
     </form>
 </div>
 

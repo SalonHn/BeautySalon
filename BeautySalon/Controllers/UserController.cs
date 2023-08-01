@@ -78,15 +78,76 @@ namespace BeautySalon.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdUser,UserName,UserPassword,UserActive,UserDateCreate,UserDateModify,UserEmail")] UserAdmin userAdmin)
+        public async Task<IActionResult> Create(
+            [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole, UserPasswordConfirm,UserName,UserPassword,UserEmail")] Employee empleado,
+            bool citas,
+            bool inventario,
+            bool configuracion,
+            bool servicios,
+            bool reportes,
+            bool usuarios)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(userAdmin);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                List<RoleEmployee> roles = _context.RoleEmployees.ToList();
+                List<string> genero = new List<string> { "Masculino", "Femenino", "Sin Especificar" };
+                ViewBag.Genero = genero;
+                ViewBag.Rol = roles;
+                ViewBag.Error = "Aqui";
+
+                return View(empleado);
             }
-            return View(userAdmin);
+            if (empleado.UserPassword != empleado.UserPasswordConfirm)
+            {
+                List<RoleEmployee> roles = _context.RoleEmployees.ToList();
+                List<string> genero = new List<string> { "Masculino", "Femenino", "Sin Especificar" };
+                ViewBag.Genero = genero;
+                ViewBag.Rol = roles;
+                ViewBag.Error = "Ocurre contraseñas";
+
+                return View(empleado);
+            }
+            //Creando usuario
+            UserAdmin user = new UserAdmin();
+            user.UserName = empleado.UserName;
+            user.UserEmail = empleado.UserEmail;
+            user.UserPassword = empleado.UserPassword;
+            user.UserDateCreate = DateTime.Now;
+            user.UserDateModify = DateTime.Now;
+            user.UserActive = true;
+
+            var userIngresado = _context.UserAdmins.Add(user);
+            await _context.SaveChangesAsync();
+
+            //Creando los permisos
+            for (int i = 1; i <= 6; i++)
+            {
+                Permission permission = new Permission();
+                permission.IdModule = i;
+                permission.IdUser = userIngresado.Entity.IdUser;
+                switch (i)
+                {
+                    case 1: permission.StatusPermission = usuarios; break;
+                    case 2: permission.StatusPermission = citas; break;
+                    case 3: permission.StatusPermission = inventario; break;
+                    case 4: permission.StatusPermission = servicios; break;
+                    case 5: permission.StatusPermission = configuracion; break;
+                    case 6: permission.StatusPermission = reportes; break;
+                }
+                _context.Permissions.Add(permission);
+                await _context.SaveChangesAsync();
+            }
+
+            // Guardando empleado
+            empleado.IdUser = userIngresado.Entity.IdUser;
+            empleado.DateCreate = DateTime.Now;
+            empleado.DateModify = DateTime.Now;
+            empleado.EmployeeActive = true;
+
+            _context.Employees.Add(empleado);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: User/Edit/5

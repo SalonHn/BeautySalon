@@ -9,6 +9,8 @@ public partial class Permission
 
     public int IdModule { get; set; }
 
+    public bool StatusPermission { get; set; }
+
     public virtual Module IdModuleNavigation { get; set; } = null!;
 
     public virtual UserAdmin IdUserNavigation { get; set; } = null!;
