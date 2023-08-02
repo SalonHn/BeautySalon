@@ -24,30 +24,32 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Home</a>
+                            <a asp-action="Index" asp-controller="Home" class="nav-link active">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Citas</a>
+                            <a asp-action="Index" asp-controller="Citas" class="nav-link">Citas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Facturacion</a>
+                            <a asp-action="Index" asp-controller="PuntoVentas" class="nav-link">Punto de Venta</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Servicios</a>
+                            <a asp-action="Index" asp-controller="Servicios" class="nav-link">Servicios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Inventario</a>
+                            <a asp-action="Index" asp-controller="Inventario" class="nav-link">Inventario</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Clientes" class="nav-link">Clientes</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Configuracion
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Horarios</a></li>
-                                <li><a class="dropdown-item" href="#">Feriados</a></li>
-                                <li><a class="dropdown-item" href="#">Parametros Generales</a></li>
+                                <li><a asp-action="Index" asp-controller="Timetable" class="dropdown-item">Horario y Feriados</a></li>
+                                <li><a asp-action="ConfigurarHorario" asp-controller="Timetable" class="dropdown-item">Configurar Horario</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Usuarios</a></li>
+                                <li><a asp-action="Index" asp-controller="User" class="dropdown-item">Usuarios</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -68,7 +70,7 @@
 										<li><a class="dropdown-item" href="#">My Profile</a></li>
 										<li><a class="dropdown-item" href="#">Edit</a></li>
 										<li><hr class="dropdown-divider"></li>
-										<li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+                                        <li><a asp-action="Logout" asp-controller="Account" class="dropdown-item text-danger">Logout</a></li>
 									</ul>
 								</li>
 							</ul>

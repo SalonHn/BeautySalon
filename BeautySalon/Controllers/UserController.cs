@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeautySalon.Controllers
 {
+    [Authorize(Roles = "Usuarios")]
     public class UserController : Controller
     {
         private readonly BeautysalonContext _context;
@@ -110,7 +112,6 @@ namespace BeautySalon.Controllers
             //Creando usuario
             UserAdmin user = new UserAdmin();
             user.UserName = empleado.UserName;
-            user.UserEmail = empleado.UserEmail;
             user.UserPassword = empleado.UserPassword;
             user.UserDateCreate = DateTime.Now;
             user.UserDateModify = DateTime.Now;

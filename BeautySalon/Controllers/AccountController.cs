@@ -37,11 +37,29 @@ namespace BeautySalon.Controllers
 
             if(userAdmin != null)
             {
+                TypeUser? typeUser = _context.TypeUsers.Find(userAdmin.IdType);
                 var claim = new List<Claim> 
                 {
                     new Claim(ClaimTypes.Name, userAdmin.UserName),
                     new Claim("idUser", userAdmin.IdUser.ToString())
                 };
+
+                if(typeUser != null )
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, typeUser.TypeName));
+
+                    var permisos = _context.Permissions.Where(
+                            p => p.IdUser == userAdmin.IdUser && p.StatusPermission == true).Join(
+                            _context.Modules,
+                            permiso => permiso.IdModule,
+                            module => module.IdModule,
+                            (permiso, module) => new { permiso, module }).ToList();
+
+                    foreach (var p in permisos)
+                    {
+                        claim.Add(new Claim(ClaimTypes.Role, p.module.ModuleName));
+                    }
+                }
 
                 var claimIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -57,61 +75,7 @@ namespace BeautySalon.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Login();
-        }
-
-        public IActionResult LoginCustomer()
-        {
-            return View();
-        }
-
-        public IActionResult RegisterCustomer()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RegisterCustomer([Bind("IdCustomer","FullName", "Phone", "PinCustomer")] Customer customer, string pinConfirm)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(customer);
-                }
-
-                if (pinConfirm != customer.PinCustomer)
-                {
-                    ViewBag.ErrorPin = "PINs don't match";
-                    return View(customer);
-                }
-                Customer? existCustomer = null;
-                existCustomer = (from c in _context.Customers
-                                 where c.Phone == customer.Phone
-                                 select c).FirstOrDefault();
-                if (existCustomer != null)
-                {
-                    ViewBag.Error = "El numero de telefono ya esta registrado";
-                    return View(existCustomer);
-                }
-                else
-                {
-                    customer.CreateDate = DateTime.Now;
-                    _context.Add(customer);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(LoginCustomer));
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                return View();
-            }
-        }
-
-        public IActionResult LogoutCustomer() 
-        {
-            return View();
+            return RedirectToAction("Login", "Account");
         }
     }
 }

@@ -1,25 +1,27 @@
 ﻿using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System.Data;
 
 namespace BeautySalon.Controllers
 {
-    public class ProductController : Controller
+    [Authorize(Roles = "Inventario")]
+    public class InventarioController : Controller
     {
         private readonly BeautysalonContext _context;
 
-        public ProductController(BeautysalonContext context)
+        public InventarioController(BeautysalonContext context)
         {
             _context = context;
         }
 
         public IActionResult Index()
-        { 
-            var joinProductCategory = _context.Products.Join(_context.Categories, 
-                product=>product.IdCategory,
-                category=>category.IdCategory,
+        {
+            var joinProductCategory = _context.Products.Join(_context.Categories,
+                product => product.IdCategory,
+                category => category.IdCategory,
                 (product, category) => new { product, category }).ToList();
 
             List<ViewModelProduct> products = joinProductCategory.ConvertAll(x =>
@@ -57,11 +59,11 @@ namespace BeautySalon.Controllers
 
                 Byte[] img;
 
-                if(product.ImgFile != null)
+                if (product.ImgFile != null)
                 {
                     using (Stream fs = product.ImgFile.OpenReadStream())
                     {
-                        using(BinaryReader br = new BinaryReader(fs))
+                        using (BinaryReader br = new BinaryReader(fs))
                         {
                             img = br.ReadBytes((int)fs.Length);
                             product.ImageProduct = Convert.ToBase64String(img, 0, img.Length);
@@ -94,7 +96,7 @@ namespace BeautySalon.Controllers
                 category = _context.Categories.Find(product.IdCategory);
             }
 
-            if(category != null && product != null) 
+            if (category != null && product != null)
             {
                 ViewBag.Category = category;
                 ViewBag.Product = product;
@@ -126,7 +128,7 @@ namespace BeautySalon.Controllers
 
                 var productOriginal = await _context.Products.FindAsync(product.IdProduct);
 
-                if(productOriginal != null)
+                if (productOriginal != null)
                 {
                     Byte[] img;
                     //Verificando si hubo cambio de imagen

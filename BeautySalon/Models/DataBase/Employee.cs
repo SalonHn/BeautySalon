@@ -32,9 +32,13 @@ public partial class Employee
 
     public int IdUser { get; set; }
 
-    public virtual RoleEmployee? IdRoleNavigation { get; set; }
+    public string? Email { get; set; }
 
-    public virtual UserAdmin? IdUserNavigation { get; set; }
+    public virtual RoleEmployee? IdRoleNavigation { get; set; } 
+
+    public virtual UserAdmin? IdUserNavigation { get; set; } 
+
+
 
     //No Mapeado
     [NotMapped]

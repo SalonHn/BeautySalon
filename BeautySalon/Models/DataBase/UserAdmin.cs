@@ -17,7 +17,13 @@ public partial class UserAdmin
 
     public DateTime UserDateModify { get; set; }
 
-    public string UserEmail { get; set; } = null!;
+    public int? IdType { get; set; }
+
+    public virtual ICollection<Bitacora> Bitacoras { get; set; } = new List<Bitacora>();
+
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+    public virtual TypeUser? IdTypeNavigation { get; set; }
 }

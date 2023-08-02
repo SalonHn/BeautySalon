@@ -19,6 +19,8 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<AppointmentDetail> AppointmentDetails { get; set; }
 
+    public virtual DbSet<Bitacora> Bitacoras { get; set; }
+
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
@@ -46,6 +48,8 @@ public partial class BeautysalonContext : DbContext
     public virtual DbSet<Tax> Taxes { get; set; }
 
     public virtual DbSet<Timetable> Timetables { get; set; }
+
+    public virtual DbSet<TypeUser> TypeUsers { get; set; }
 
     public virtual DbSet<UserAdmin> UserAdmins { get; set; }
 
@@ -103,6 +107,30 @@ public partial class BeautysalonContext : DbContext
                 .HasConstraintName("fk_service_appointment");
         });
 
+        modelBuilder.Entity<Bitacora>(entity =>
+        {
+            entity.HasKey(e => e.IdBitacora).HasName("PK__Bitacora__223FE14209C4F919");
+
+            entity.ToTable("Bitacora");
+
+            entity.Property(e => e.IdBitacora).HasColumnName("idBitacora");
+            entity.Property(e => e.Descripcion)
+                .IsUnicode(false)
+                .HasColumnName("descripcion");
+            entity.Property(e => e.DetallesAdicionales)
+                .IsUnicode(false)
+                .HasColumnName("detallesAdicionales");
+            entity.Property(e => e.Fecha)
+                .HasColumnType("datetime")
+                .HasColumnName("fecha");
+            entity.Property(e => e.Nivel).HasColumnName("nivel");
+            entity.Property(e => e.Usuario).HasColumnName("usuario");
+
+            entity.HasOne(d => d.UsuarioNavigation).WithMany(p => p.Bitacoras)
+                .HasForeignKey(d => d.Usuario)
+                .HasConstraintName("fk_bitacora_user");
+        });
+
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.IdCategory).HasName("PK__Category__79D361B60C6EF548");
@@ -125,16 +153,24 @@ public partial class BeautysalonContext : DbContext
             entity.Property(e => e.CreateDate)
                 .HasColumnType("date")
                 .HasColumnName("createDate");
+            entity.Property(e => e.Email)
+                .HasMaxLength(200)
+                .IsUnicode(false);
             entity.Property(e => e.FullName)
                 .HasMaxLength(40)
                 .HasColumnName("fullName");
+            entity.Property(e => e.Gender)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("gender");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
             entity.Property(e => e.Phone)
                 .HasMaxLength(15)
                 .HasColumnName("phone");
-            entity.Property(e => e.PinCustomer)
-                .HasMaxLength(6)
-                .IsUnicode(false)
-                .HasColumnName("pinCustomer");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Customers)
+                .HasForeignKey(d => d.IdUser)
+                .HasConstraintName("fk_customer_user");
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -158,6 +194,9 @@ public partial class BeautysalonContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("DNI");
+            entity.Property(e => e.Email)
+                .HasMaxLength(200)
+                .IsUnicode(false);
             entity.Property(e => e.EmployeeActive).HasColumnName("employeeActive");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
@@ -433,6 +472,19 @@ public partial class BeautysalonContext : DbContext
                 .HasConstraintName("fk_open_timetable");
         });
 
+        modelBuilder.Entity<TypeUser>(entity =>
+        {
+            entity.HasKey(e => e.IdType).HasName("PK__TypeUser__4BB98BC668BCF1B4");
+
+            entity.ToTable("TypeUser");
+
+            entity.Property(e => e.IdType).HasColumnName("idType");
+            entity.Property(e => e.TypeName)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("typeName");
+        });
+
         modelBuilder.Entity<UserAdmin>(entity =>
         {
             entity.HasKey(e => e.IdUser).HasName("PK__UserAdmi__3717C9826FEA4CDD");
@@ -440,6 +492,7 @@ public partial class BeautysalonContext : DbContext
             entity.ToTable("UserAdmin");
 
             entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.IdType).HasColumnName("idType");
             entity.Property(e => e.UserActive).HasColumnName("userActive");
             entity.Property(e => e.UserDateCreate)
                 .HasColumnType("date")
@@ -447,10 +500,6 @@ public partial class BeautysalonContext : DbContext
             entity.Property(e => e.UserDateModify)
                 .HasColumnType("date")
                 .HasColumnName("userDateModify");
-            entity.Property(e => e.UserEmail)
-                .HasMaxLength(200)
-                .IsUnicode(false)
-                .HasColumnName("userEmail");
             entity.Property(e => e.UserName)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -459,6 +508,10 @@ public partial class BeautysalonContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("userPassword");
+
+            entity.HasOne(d => d.IdTypeNavigation).WithMany(p => p.UserAdmins)
+                .HasForeignKey(d => d.IdType)
+                .HasConstraintName("fk_user_type");
         });
 
         OnModelCreatingPartial(modelBuilder);

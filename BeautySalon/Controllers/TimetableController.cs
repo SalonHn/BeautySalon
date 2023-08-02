@@ -1,9 +1,12 @@
 ﻿using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace BeautySalon.Controllers
 {
+    [Authorize(Roles = "Usuarios")]
     public class TimetableController : Controller
     {
         private readonly BeautysalonContext _context;
