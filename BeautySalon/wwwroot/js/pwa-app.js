@@ -9,7 +9,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
     // Muestra el mensaje de instalación personalizado.
     // Puedes utilizar un elemento HTML, un modal, o cualquier otro enfoque que desees.
-    installPWA();
     const installButton = document.getElementById('install-button');
     installButton.style.display = 'block';
 
