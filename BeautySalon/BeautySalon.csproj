@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\pwa-app.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\pwa-app.js" />
     <_ContentIncludedByDefault Remove="wwwroot\manifest.json" />
   </ItemGroup>
 
@@ -25,6 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Models\DataBase\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\pwa-app.js" />
   </ItemGroup>
 
 </Project>
