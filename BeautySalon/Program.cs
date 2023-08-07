@@ -19,6 +19,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddDbContext<BeautysalonContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("conexion")));
 
+builder.Services.AddProgressiveWebApp();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

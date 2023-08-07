@@ -57,7 +57,7 @@ namespace BeautySalon.Controllers
 
                     foreach (var p in permisos)
                     {
-                        claim.Add(new Claim(ClaimTypes.Role, p.module.ModuleName));
+                        if(p.module.ModuleName != null) { claim.Add(new Claim(ClaimTypes.Role, p.module.ModuleName)); }
                     }
                 }
 

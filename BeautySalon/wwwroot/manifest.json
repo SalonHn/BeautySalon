@@ -1,0 +1,21 @@
+{
+  "name": "365 Beauty Salon",
+  "short_name": "365 BS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "permissions": [ "push" ],
+  "theme_color": "#007bff",
+  "icons": [
+    {
+      "src": "/img/pwa-icon/192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/pwa-icon/512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

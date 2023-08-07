@@ -6,7 +6,7 @@ using System.Data;
 
 namespace BeautySalon.Controllers
 {
-    [Authorize(Roles = "Usuarios")]
+    //[Authorize(Roles = "Usuarios")]
     public class TimetableController : Controller
     {
         private readonly BeautysalonContext _context;
