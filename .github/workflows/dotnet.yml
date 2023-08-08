@@ -25,5 +25,5 @@ jobs:
 
     - name: Deploy to IIS
       run: | 
-        Copy-Item -Path './publish/*' -Destination 'C:\inetpub\wwwroot\miaplicacion' -Recurse -Force
+        Copy-Item -Path './publish/*' -Destination 'C:\inetpub\wwwroot\beautysalon' -Recurse -Force
         iisreset /restart
