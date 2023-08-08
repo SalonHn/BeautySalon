@@ -18,8 +18,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+
+    - name: Stop IIS
+      run: iisreset /stop
+      
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Publish
       run: dotnet publish --configuration Release --output 'C:\inetpub\wwwroot\beautysalon'
 
