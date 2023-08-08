@@ -21,9 +21,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish --configuration Release --output ./publish
+      run: dotnet publish --configuration Release --output 'C:\inetpub\wwwroot\beautysalon'
 
-    - name: Deploy to IIS
-      run: | 
-        Copy-Item -Path './publish/*' -Destination 'C:\inetpub\wwwroot\beautysalon' -Recurse -Force
-        iisreset /restart
+    - name: Restart IIS
+      run: iisreset /restart
