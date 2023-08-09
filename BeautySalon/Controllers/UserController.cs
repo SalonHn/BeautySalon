@@ -99,20 +99,9 @@ namespace BeautySalon.Controllers
 
                 return View(empleado);
             }
-            if (empleado.UserPassword != empleado.UserPasswordConfirm)
-            {
-                List<RoleEmployee> roles = _context.RoleEmployees.ToList();
-                List<string> genero = new List<string> { "Masculino", "Femenino", "Sin Especificar" };
-                ViewBag.Genero = genero;
-                ViewBag.Rol = roles;
-                ViewBag.Error = "Ocurre contraseñas";
 
-                return View(empleado);
-            }
             //Creando usuario
             UserAdmin user = new UserAdmin();
-            user.UserName = empleado.UserName;
-            user.UserPassword = empleado.UserPassword;
             user.UserDateCreate = DateTime.Now;
             user.UserDateModify = DateTime.Now;
             user.UserActive = true;
