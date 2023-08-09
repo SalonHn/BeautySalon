@@ -81,7 +81,7 @@ namespace BeautySalon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole, UserPasswordConfirm,UserName,UserPassword,UserEmail")] Employee empleado,
+            [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole")] Employee empleado,
             bool citas,
             bool inventario,
             bool configuracion,
