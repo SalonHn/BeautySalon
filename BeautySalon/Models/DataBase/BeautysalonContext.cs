@@ -35,6 +35,8 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; }
 
+    public virtual DbSet<Membresium> Membresia { get; set; }
+
     public virtual DbSet<Module> Modules { get; set; }
 
     public virtual DbSet<Permission> Permissions { get; set; }
@@ -314,6 +316,29 @@ public partial class BeautysalonContext : DbContext
                 .HasConstraintName("fk_tax_invoicedetail");
         });
 
+        modelBuilder.Entity<Membresium>(entity =>
+        {
+            entity.HasKey(e => e.IdMembresia).HasName("PK__Membresi__BDDB80E93550ACD2");
+
+            entity.Property(e => e.IdMembresia).HasColumnName("idMembresia");
+            entity.Property(e => e.Estado).HasColumnName("estado");
+            entity.Property(e => e.FechaFin)
+                .HasColumnType("datetime")
+                .HasColumnName("fechaFin");
+            entity.Property(e => e.FechaInicio)
+                .HasColumnType("datetime")
+                .HasColumnName("fechaInicio");
+            entity.Property(e => e.Precio)
+                .HasColumnType("money")
+                .HasColumnName("precio");
+            entity.Property(e => e.UserId).HasColumnName("userId");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Membresia)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_user_membresia");
+        });
+
         modelBuilder.Entity<Module>(entity =>
         {
             entity.HasKey(e => e.IdModule).HasName("PK__Module__3CE613F0CB629B7E");
@@ -493,6 +518,9 @@ public partial class BeautysalonContext : DbContext
 
             entity.Property(e => e.IdUser).HasColumnName("idUser");
             entity.Property(e => e.IdType).HasColumnName("idType");
+            entity.Property(e => e.TokenPush)
+                .IsUnicode(false)
+                .HasColumnName("tokenPush");
             entity.Property(e => e.UserActive).HasColumnName("userActive");
             entity.Property(e => e.UserDateCreate)
                 .HasColumnType("date")

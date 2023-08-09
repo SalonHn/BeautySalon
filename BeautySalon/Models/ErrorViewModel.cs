@@ -11,4 +11,5 @@ namespace BeautySalon.Models
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
     }
+
 }

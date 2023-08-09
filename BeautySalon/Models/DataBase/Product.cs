@@ -40,7 +40,6 @@ public partial class Product
 
     public virtual Tax? IdTaxNavigation { get; set; }
 
-
     [NotMapped]
     public IFormFile? ImgFile { get; set; }
 }

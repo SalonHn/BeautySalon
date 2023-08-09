@@ -19,6 +19,8 @@ public partial class UserAdmin
 
     public int? IdType { get; set; }
 
+    public string? TokenPush { get; set; }
+
     public virtual ICollection<Bitacora> Bitacoras { get; set; } = new List<Bitacora>();
 
     public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
@@ -26,4 +28,6 @@ public partial class UserAdmin
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual TypeUser? IdTypeNavigation { get; set; }
+
+    public virtual ICollection<Membresium> Membresia { get; set; } = new List<Membresium>();
 }
