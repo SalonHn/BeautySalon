@@ -11,7 +11,7 @@
 <div class="d-flex justify-content-center">
     <h1>Detalles del Producto</h1>
 </div>
-
+<hr />
 <div class="row mt-4">
     <div class="col-6 d-flex justify-content-center">
         <img src="data:image/jpg; base64, @product.ImageProduct" alt="Sin imagen para mostrar" width="400" height="400" style="border: 1px solid;" />
@@ -90,4 +90,8 @@
             </div>
         </div>
     </div>
+</div>
+<hr />
+<div class="d-flex justify-content-center mt3">
+    <div><button type="button" class="btn btn-danger" onclick="window.location.href='@Url.Action("Index", "Inventario")';">Volver</button></div>
 </div>

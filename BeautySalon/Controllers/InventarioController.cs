@@ -7,7 +7,7 @@ using System.Data;
 
 namespace BeautySalon.Controllers
 {
-    [Authorize(Roles = "Administrador,Inventario")]
+    //[Authorize(Roles = "Administrador,Inventario")]
     public class InventarioController : Controller
     {
         private readonly BeautysalonContext _context;
@@ -115,7 +115,7 @@ namespace BeautySalon.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar([Bind("IdProduct", "Sku", "NameProduct", "IdCategory", "ImgFile", "Description", "Price", "Stock", "IdTax", "StockMinimum", "Featured")] Product product)
+        public async Task<IActionResult> Editar([Bind("IdProduct", "Sku", "NameProduct", "IdCategory", "ImgFile", "Description", "Price", "Stock", "IdTax", "StockMinimum")] Product product)
         {
             try
             {
