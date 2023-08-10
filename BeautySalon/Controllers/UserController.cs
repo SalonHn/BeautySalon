@@ -81,13 +81,7 @@ namespace BeautySalon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole")] Employee empleado,
-            bool citas,
-            bool inventario,
-            bool configuracion,
-            bool servicios,
-            bool reportes,
-            bool usuarios)
+            [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole")] Employee empleado)
         {
             if (!ModelState.IsValid)
             {
@@ -109,24 +103,6 @@ namespace BeautySalon.Controllers
             var userIngresado = _context.UserAdmins.Add(user);
             await _context.SaveChangesAsync();
 
-            //Creando los permisos
-            for (int i = 1; i <= 6; i++)
-            {
-                Permission permission = new Permission();
-                permission.IdModule = i;
-                permission.IdUser = userIngresado.Entity.IdUser;
-                switch (i)
-                {
-                    case 1: permission.StatusPermission = usuarios; break;
-                    case 2: permission.StatusPermission = citas; break;
-                    case 3: permission.StatusPermission = inventario; break;
-                    case 4: permission.StatusPermission = servicios; break;
-                    case 5: permission.StatusPermission = configuracion; break;
-                    case 6: permission.StatusPermission = reportes; break;
-                }
-                _context.Permissions.Add(permission);
-                await _context.SaveChangesAsync();
-            }
 
             // Guardando empleado
             empleado.IdUser = userIngresado.Entity.IdUser;

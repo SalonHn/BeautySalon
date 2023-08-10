@@ -47,18 +47,6 @@ namespace BeautySalon.Controllers
                 if(typeUser != null )
                 {
                     claim.Add(new Claim(ClaimTypes.Role, typeUser.TypeName));
-
-                    var permisos = _context.Permissions.Where(
-                            p => p.IdUser == userAdmin.IdUser && p.StatusPermission == true).Join(
-                            _context.Modules,
-                            permiso => permiso.IdModule,
-                            module => module.IdModule,
-                            (permiso, module) => new { permiso, module }).ToList();
-
-                    foreach (var p in permisos)
-                    {
-                        if(p.module.ModuleName != null) { claim.Add(new Claim(ClaimTypes.Role, p.module.ModuleName)); }
-                    }
                 }
 
                 var claimIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);

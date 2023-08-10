@@ -37,10 +37,6 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<Membresium> Membresia { get; set; }
 
-    public virtual DbSet<Module> Modules { get; set; }
-
-    public virtual DbSet<Permission> Permissions { get; set; }
-
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<RoleEmployee> RoleEmployees { get; set; }
@@ -337,39 +333,6 @@ public partial class BeautysalonContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_user_membresia");
-        });
-
-        modelBuilder.Entity<Module>(entity =>
-        {
-            entity.HasKey(e => e.IdModule).HasName("PK__Module__3CE613F0CB629B7E");
-
-            entity.ToTable("Module");
-
-            entity.Property(e => e.IdModule).HasColumnName("idModule");
-            entity.Property(e => e.ModuleName)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("moduleName");
-        });
-
-        modelBuilder.Entity<Permission>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("Permission");
-
-            entity.Property(e => e.IdModule).HasColumnName("idModule");
-            entity.Property(e => e.IdUser).HasColumnName("idUser");
-
-            entity.HasOne(d => d.IdModuleNavigation).WithMany()
-                .HasForeignKey(d => d.IdModule)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_module_permission");
-
-            entity.HasOne(d => d.IdUserNavigation).WithMany()
-                .HasForeignKey(d => d.IdUser)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_user_permission");
         });
 
         modelBuilder.Entity<Product>(entity =>

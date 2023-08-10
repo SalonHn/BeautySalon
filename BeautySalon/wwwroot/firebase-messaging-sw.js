@@ -1,5 +1,12 @@
 // service-worker.js
 
+self.addEventListener('install', function (event) {
+    // Realizar la caché de recursos necesarios
+
+    // Activar el nuevo Service Worker y tomar el control
+    self.skipWaiting();
+});
+
 self.addEventListener('push', event => {
     console.log(event.data.json());
     if (event.data) {
