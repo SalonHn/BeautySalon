@@ -5,7 +5,7 @@ using System.Data;
 
 namespace BeautySalon.Controllers
 {
-    //[Authorize(Roles = "Citas")]
+    [Authorize(Roles = "Administrador,Estilista,Caja")]
     public class CitasController : Controller
     {
         private readonly BeautysalonContext _context;

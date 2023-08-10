@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeautySalon.Controllers
 {
-    //[Authorize(Roles = "Clientes")]
+    [Authorize(Roles = "Cliente")]
     public class ClientesController : Controller
     {
         private readonly BeautysalonContext _context;

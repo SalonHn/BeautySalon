@@ -1,9 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 
-@{
-    ViewData["Title"] = "Permiso denegado";
-    Layout = "";
-}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,18 +27,18 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        @if (User.IsInRole("Cliente"))
-                        {
-                            <li class="nav-item">
-                                <a asp-action="Index" asp-controller="Clientes" class="nav-link active">Home</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a asp-action="Index" asp-controller="Home" class="nav-link active">Home</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Clientes" class="nav-link active">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Clientes" class="nav-link">Citas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Clientes" class="nav-link">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Clientes" class="nav-link">Servicios</a>
+                        </li>
                     </ul>
                     <!--Parte del usuario-->
                     <hr class="dropdown-divider" />
@@ -79,20 +75,9 @@
             </div>
         </div>
         <hr id="install-hr" style="display: none;" />
-        <h1>Permiso denegado</h1>
-        <h3>No cuenta con los permisos necesarios para acceder.</h3>
-        <div class="mt-3 mb-3">
-            @if (User.IsInRole("Cliente"))
-            {
-                <a asp-action="Index" asp-controller="Clientes" class="link">Volver</a>
-            }
-            else
-            {
-                <a asp-action="Index" asp-controller="Home" class="link">Volver</a>
-            }
-        </div>
-
-
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -103,6 +88,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 
     <script>
         if ('serviceWorker' in navigator) {

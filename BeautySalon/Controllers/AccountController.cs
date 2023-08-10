@@ -32,11 +32,18 @@ namespace BeautySalon.Controllers
             UserAdmin? userAdmin = new UserAdmin();
 
             userAdmin = (from u in _context.UserAdmins 
-                         where u.UserName == username && u.UserPassword == password && u.UserActive == true
+                         where u.UserName == username && u.UserPassword == password
                          select u).FirstOrDefault();
+
 
             if(userAdmin != null)
             {
+                if(userAdmin.IdType != 1 && userAdmin.UserActive == false)
+                {
+                    ViewBag.Error = "Usuario desactivado";
+                    return View();
+                }
+
                 TypeUser? typeUser = _context.TypeUsers.Find(userAdmin.IdType);
                 var claim = new List<Claim> 
                 {
@@ -53,7 +60,14 @@ namespace BeautySalon.Controllers
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
 
-                return RedirectToAction("Index", "Home");
+                if(userAdmin.IdType == 1)
+                {
+                    return RedirectToAction("Index", "Clientes");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             ViewBag.Error = "Credenciales invalidas";

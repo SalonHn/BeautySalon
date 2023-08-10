@@ -6,7 +6,6 @@ using System.Diagnostics;
 
 namespace BeautySalon.Controllers
 {
-    //[Authorize(Roles = "Cliente,Administrador")]
     public class HomeController : Controller
     {
         private readonly BeautysalonContext _context;
@@ -16,11 +15,13 @@ namespace BeautySalon.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Administrador,Estilista,Caja,Inventario")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();

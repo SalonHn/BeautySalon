@@ -7,7 +7,7 @@ using System.Data;
 
 namespace BeautySalon.Controllers
 {
-    //[Authorize(Roles = "Inventario")]
+    [Authorize(Roles = "Administrador,Inventario")]
     public class InventarioController : Controller
     {
         private readonly BeautysalonContext _context;

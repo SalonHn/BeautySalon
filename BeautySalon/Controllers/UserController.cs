@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BeautySalon.Controllers
 {
-    //[Authorize(Roles = "Usuarios")]
+    [Authorize(Roles = "Administrador")]
     public class UserController : Controller
     {
         private readonly BeautysalonContext _context;
