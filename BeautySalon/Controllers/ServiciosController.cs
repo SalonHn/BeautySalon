@@ -100,5 +100,37 @@ namespace BeautySalon.Controllers
 
             return RedirectToAction("Privacy", "Home");
         }
+
+        [HttpPost]
+        public IActionResult NuevoRecurso(int idService, int idProduct, double cantidad)
+        {
+            var prueba = new { 
+                servicio = idService,
+                producto = idProduct,
+                cantidad = cantidad
+            };
+
+            return new JsonResult(prueba);
+        }
+
+
+        [HttpGet]
+        public IActionResult BuscarProducto(string buscar)
+        {
+            var producto = _context.Products
+                .Where(p=>p.IdCategory != 1 && (p.Sku.Contains(buscar) || p.NameProduct.Contains(buscar)))
+                .Take(5).ToList();
+
+            List<ViewModelRecurso> productos = producto.ConvertAll(
+                x=> new ViewModelRecurso
+                {
+                    Id = x.IdProduct,
+                    Name = x.NameProduct,
+                    Sku = x.Sku
+                }
+            );
+
+            return new JsonResult(productos);
+        }
     }
 }

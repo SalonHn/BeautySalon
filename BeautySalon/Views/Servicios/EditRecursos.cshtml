@@ -7,6 +7,28 @@
 <link rel="stylesheet" href="~/css/recursos.css"/>
 <script type="text/javascript" src="~/js/recursos.js"></script>
 
+<script>
+    $(document).ready(function () {
+        // Manejar el evento click del botón
+        $('#buscarProductos').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Content("~/Servicios/BuscarProducto")',
+                data: { buscar: $('#search').val() }, // Pasar el parámetro de consulta
+                dataType: 'json',
+                success: function (data) {
+                    // Procesar los datos recibidos (en este caso, agregar elementos a la lista)
+                    productos = data;
+                    mostrarProductos();
+                },
+                error: function () {
+                    console.log('Error al obtener la lista de productos por categoría.');
+                }
+            });
+        });
+    });
+</script>
+
 @{
     ViewData["Title"] = "EditRecursos";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -28,36 +50,38 @@
 <h4 class="mt-3">Recursos Requeridos</h4>
 <hr />
 <!-- Boton Agregar Recurso -->
-<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Agregar Recurso
-</button>
+<div id="btnAddRecursoModal">
+    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Agregar Recurso
+    </button>
+</div>
 
 <!--Formulario para agregar-->
-<section id="addRecurso">
+<section id="addRecurso" style="display: none;">
     <div class="div-addrecurso">
-        <form>
+        <form asp-action="NuevoRecurso" asp-controller="Servicios" method="post">
             <h6>Agregar Recurso</h6>
             <hr />
             <input name="idService" value="@servicio.IdProduct" hidden />
-            <input name="idProduct" id="idProduct" hidden />
+            <input name="idProduct" id="idProduct" value="" hidden />
             <div class="row">
                 <div class="col-3">
                     <label class="col-form-label-sm">Codigo</label>
-                    <input id="sku" type="text" class="form-control form-control-sm" />
+                    <input id="sku" type="text" class="form-control form-control-sm" disabled/>
                 </div>
                 <div class="col-6">
                     <label class="col-form-label-sm">Nombre</label>
-                    <input id="nombre" type="text" class="form-control form-control-sm" />
+                    <input id="nombre" type="text" class="form-control form-control-sm" disabled/>
                 </div>
                 <div class="col-3">
                     <label class="col-form-label-sm">Cantidad</label>
-                    <input id="cantidad" type="text" class="form-control form-control-sm" />
+                    <input name="cantidad" id="cantidad" type="number" class="form-control form-control-sm" />
                 </div>
             </div>
             <hr />
             <div class="row">
                 <div class="d-flex justify-content-center col-6">
-                    <button type="button" class="btn btn-sm btn-danger" onclick="">Cancelar</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="cancelarAddRecurso();">Cancelar</button>
                 </div>
                 <div class="d-flex justify-content-center col-6">
                     <button type="submit" class="btn btn-sm btn-success">Agregar</button>
@@ -90,9 +114,9 @@
 </table>
 <hr />
 
-
-
-
+<div class="d-flex justify-content-center">
+    <button type="button" class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index", "Servicios")';">Listo</button>
+</div>
 
 
 
@@ -113,10 +137,15 @@
                         <input type="search" id="search" name="search" class="form-control form-control-sm" />
                     </div>
                     <div class="col-4">
-                        <button type="button" class="btn btn-sm btn-success" onclick="">Buscar</button>
+                        <button type="button" class="btn btn-sm btn-success" id="buscarProductos">Buscar</button>
                     </div>
                 </div>
                 <hr />
+                <table id="buscarProductosTabla" class="table table-sm mt-3">
+                    <tbody>
+             
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
