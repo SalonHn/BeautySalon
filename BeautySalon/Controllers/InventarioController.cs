@@ -7,7 +7,7 @@ using System.Data;
 
 namespace BeautySalon.Controllers
 {
-    //[Authorize(Roles = "Administrador,Inventario")]
+    [Authorize(Roles = "Administrador,Inventario")]
     public class InventarioController : Controller
     {
         private readonly BeautysalonContext _context;
@@ -19,7 +19,7 @@ namespace BeautySalon.Controllers
 
         public IActionResult Index()
         {
-            var joinProductCategory = _context.Products.Join(_context.Categories,
+            var joinProductCategory = _context.Products.Where(product=>product.IdCategory != 1).Join(_context.Categories,
                 product => product.IdCategory,
                 category => category.IdCategory,
                 (product, category) => new { product, category }).ToList();
@@ -40,7 +40,7 @@ namespace BeautySalon.Controllers
 
         public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Categories = await _context.Categories.Where(c=>c.IdCategory!=1).ToListAsync();
             ViewBag.Taxes = await _context.Taxes.ToListAsync();
             return View();
         }
@@ -52,7 +52,7 @@ namespace BeautySalon.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Categories = await _context.Categories.ToListAsync();
+                    ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
                     ViewBag.Taxes = await _context.Taxes.ToListAsync();
                     return View(product);
                 }
@@ -80,7 +80,7 @@ namespace BeautySalon.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Categories = await _context.Categories.ToListAsync();
+                ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
                 ViewBag.Taxes = await _context.Taxes.ToListAsync();
                 ViewBag.Error = ex.Message;
                 return View();
@@ -107,7 +107,7 @@ namespace BeautySalon.Controllers
 
         public async Task<IActionResult> Editar(int id)
         {
-            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
             ViewBag.Taxes = await _context.Taxes.ToListAsync();
             Product? product = _context.Products.Find(id);
 
@@ -121,7 +121,7 @@ namespace BeautySalon.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Categories = await _context.Categories.ToListAsync();
+                    ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
                     ViewBag.Taxes = await _context.Taxes.ToListAsync();
                     return View(product);
                 }
@@ -162,7 +162,7 @@ namespace BeautySalon.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Categories = await _context.Categories.ToListAsync();
+                ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
                 ViewBag.Taxes = await _context.Taxes.ToListAsync();
                 ViewBag.Error = ex.Message;
                 return View(product);

@@ -1,0 +1,126 @@
+﻿
+@model BeautySalon.Models.ViewModels.ViewModelProduct
+
+@using BeautySalon.Models.DataBase;
+@using BeautySalon.Models.ViewModels;
+
+<link rel="stylesheet" href="~/css/recursos.css"/>
+<script type="text/javascript" src="~/js/recursos.js"></script>
+
+@{
+    ViewData["Title"] = "EditRecursos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Product servicio = ViewBag.service;
+    List<ViewModelProduct> recursos = ViewBag.recursos;
+}
+
+<div class="mt-2 d-flex justify-content-center">
+    <h1>Recursos del Servicio</h1>
+</div>
+<h4>Información del Servicio</h4>
+<hr />
+<div><span><strong>Codigo: </strong> @servicio.Sku</span></div>
+<div><span><strong>Nombre: </strong> @servicio.NameProduct</span></div>
+<div><span><strong>Precio: </strong> @servicio.Price</span></div>
+<div><span><strong>Habilidad requerida: </strong> @ViewBag.skill</span></div>
+<div><span><strong>Descripción: </strong> @servicio.Description</span></div>
+
+<h4 class="mt-3">Recursos Requeridos</h4>
+<hr />
+<!-- Boton Agregar Recurso -->
+<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Agregar Recurso
+</button>
+
+<!--Formulario para agregar-->
+<section id="addRecurso">
+    <div class="div-addrecurso">
+        <form>
+            <h6>Agregar Recurso</h6>
+            <hr />
+            <input name="idService" value="@servicio.IdProduct" hidden />
+            <input name="idProduct" id="idProduct" hidden />
+            <div class="row">
+                <div class="col-3">
+                    <label class="col-form-label-sm">Codigo</label>
+                    <input id="sku" type="text" class="form-control form-control-sm" />
+                </div>
+                <div class="col-6">
+                    <label class="col-form-label-sm">Nombre</label>
+                    <input id="nombre" type="text" class="form-control form-control-sm" />
+                </div>
+                <div class="col-3">
+                    <label class="col-form-label-sm">Cantidad</label>
+                    <input id="cantidad" type="text" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="d-flex justify-content-center col-6">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="">Cancelar</button>
+                </div>
+                <div class="d-flex justify-content-center col-6">
+                    <button type="submit" class="btn btn-sm btn-success">Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<table class="table table-sm table-bordered mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Codigo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in recursos)
+        {
+            <tr>
+                <th>@product.sku</th>
+                <td>@product.name</td>
+                <td>@product.stock</td>
+                <td><a href="@Url.Content("~/Inventario/Detalles/" + product.id)" class="text-danger">Quitar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar Recurso</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Buscar Producto</h6>
+                <hr />
+                <div class="row">
+                    <div class="col-8">
+                        <input type="search" id="search" name="search" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-sm btn-success" onclick="">Buscar</button>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

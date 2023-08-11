@@ -9,11 +9,13 @@
   <ItemGroup>
     <Content Remove="wwwroot\firebase-app.js" />
     <Content Remove="wwwroot\js\pwa-app.js" />
+    <Content Remove="wwwroot\js\recursos.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\firebase-app.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\pwa-app.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\recursos.js" />
     <_ContentIncludedByDefault Remove="wwwroot\manifest.json" />
   </ItemGroup>
 
@@ -37,6 +39,7 @@
   <ItemGroup>
     <None Include="wwwroot\firebase-app.js" />
     <None Include="wwwroot\js\pwa-app.js" />
+    <None Include="wwwroot\js\recursos.js" />
   </ItemGroup>
 
 </Project>
