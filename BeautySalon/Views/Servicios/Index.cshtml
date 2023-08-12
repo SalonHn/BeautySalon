@@ -1,7 +1,12 @@
 ﻿
+@using BeautySalon.Models.DataBase;
+
 @{
-    ViewData["Title"] = "Ventas";
+    ViewData["Title"] = "Servicios";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Product> servicios = ViewBag.Servicios;
+    List<Product> serviciosVIP = ViewBag.ServiciosVIP;
 }
 
 <h1>Servicios</h1>
@@ -15,7 +20,54 @@
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">Gnerales</div>
-    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">VIP</div>
+    <!--Tabla de Servicios Generales-->
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+        <table class="table table-sm table-bordered mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Codigo</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var servicio in servicios)
+                {
+                    <tr>
+                        <th>@servicio.Sku</th>
+                        <td>@servicio.NameProduct</td>
+                        <td>@servicio.Price</td>
+                        <td><a href="@Url.Action("EditRecursos", "Servicios", new {id=servicio.IdProduct})" class="link">Detalles</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!--Tabla de Servicios VIP-->
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+        <table class="table table-sm table-bordered mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Codigo</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var servicio in serviciosVIP)
+                {
+                    <tr>
+                        <th>@servicio.Sku</th>
+                        <td>@servicio.NameProduct</td>
+                        <td>@servicio.Price</td>
+                        <td><a href="@Url.Action("EditRecursos", "Servicios", new {id=servicio.IdProduct})" class="link">Detalles</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 

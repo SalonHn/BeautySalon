@@ -30,17 +30,28 @@
 </script>
 
 @{
-    ViewData["Title"] = "EditRecursos";
+    ViewData["Title"] = "Detalles";
     Layout = "~/Views/Shared/_Layout.cshtml";
     Product servicio = ViewBag.service;
     List<ViewModelProduct> recursos = ViewBag.recursos;
 }
 
 <div class="mt-2 d-flex justify-content-center">
-    <h1>Recursos del Servicio</h1>
+    <h1>Detalles del Servicio</h1>
 </div>
-<h4>Información del Servicio</h4>
+<div class="d-flex align-items-center">
+    <h4>Información del Servicio &ensp;</h4>
+    <a href="@Url.Content("~/Servicios/EditServicio/" + servicio.IdProduct)" style="font-size: 18px;"><i class="fa-solid fa-pen-to-square"></i>Editar</a>
+</div>
 <hr />
+@if (servicio.Featured == true)
+{
+    <div class="d-flex mb-2">
+        <div class="div-VIP ps-2 pe-2">
+            <span style="color: #f2c22d;"><strong>Servicio VIP</strong></span>
+        </div>
+    </div>
+}
 <div><span><strong>Codigo: </strong> @servicio.Sku</span></div>
 <div><span><strong>Nombre: </strong> @servicio.NameProduct</span></div>
 <div><span><strong>Precio: </strong> @servicio.Price</span></div>
@@ -115,7 +126,7 @@
 <hr />
 
 <div class="d-flex justify-content-center">
-    <button type="button" class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index", "Servicios")';">Listo</button>
+    <button type="button" class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index", "Servicios")';">Volver</button>
 </div>
 
 

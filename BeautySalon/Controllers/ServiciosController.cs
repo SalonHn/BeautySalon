@@ -21,6 +21,10 @@ namespace BeautySalon.Controllers
 
             List<Product> serviciosVIP = _context.Products.Where(p => p.IdCategory == 1 && p.Featured == true).ToList();
 
+            ViewBag.Servicios = servicios;
+
+            ViewBag.ServiciosVIP = serviciosVIP;
+
             return View();
         }
 
@@ -139,6 +143,66 @@ namespace BeautySalon.Controllers
             return RedirectToAction("EditRecursos", "Servicios", new { id = idService });
         }
 
+
+        public IActionResult EditServicio(int id) 
+        {
+            ViewBag.Skill = _context.RoleEmployees.Where(skill => skill.IdRole != 1).ToList();
+
+            Product? servicio = _context.Products.Find(id);
+
+            if(servicio != null)
+            {
+                return View(servicio);
+            }
+
+            return RedirectToAction("Index", "Servicios"); 
+        }
+
+        [HttpPost]
+        public IActionResult EditServicio([Bind("Sku", "NameProduct", "Price", "ImgFile", "Featured", "Description", "IdSkill", "IdProduct")] Product servicio)
+        {
+            servicio.IdCategory = 1;
+            servicio.Stock = 0;
+            servicio.StockMinimum = 0;
+            servicio.IdTax = 1;
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Skill = _context.RoleEmployees.Where(skill => skill.IdRole != 1).ToList();
+                return View(servicio);
+            }
+
+            Product? editServicio = _context.Products.Find(servicio.IdProduct);
+
+            if(editServicio != null)
+            {
+                Byte[] img;
+
+                if (servicio.ImgFile != null)
+                {
+                    using (Stream fs = servicio.ImgFile.OpenReadStream())
+                    {
+                        using (BinaryReader br = new BinaryReader(fs))
+                        {
+                            img = br.ReadBytes((int)fs.Length);
+                            editServicio.ImageProduct = Convert.ToBase64String(img, 0, img.Length);
+                        }
+                    }
+                }
+
+                editServicio.NameProduct = servicio.NameProduct;
+                editServicio.IdSkill = servicio.IdSkill;
+                editServicio.Description = servicio.Description;
+                editServicio.Featured = servicio.Featured;
+                editServicio.Price = servicio.Price;
+
+                _context.SaveChanges();
+
+                return RedirectToAction("EditRecursos", "Servicios", new { id = servicio.IdProduct });
+            }
+
+            return RedirectToAction("Index", "Servicios");
+        }
 
         [HttpGet]
         public IActionResult BuscarProducto(string buscar)
