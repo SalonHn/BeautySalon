@@ -11,6 +11,8 @@ public partial class ServiceDetail
 
     public double Quantity { get; set; }
 
+    public int Id { get; set; }
+
     public virtual Product IdProductNavigation { get; set; } = null!;
 
     public virtual Product IdServiceNavigation { get; set; } = null!;

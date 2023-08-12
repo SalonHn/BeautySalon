@@ -13,5 +13,7 @@ public partial class Appointment
 
     public string StatusAppointment { get; set; } = null!;
 
+    public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
+
     public virtual Customer IdCustomerNavigation { get; set; } = null!;
 }

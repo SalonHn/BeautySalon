@@ -17,12 +17,16 @@ namespace BeautySalon.Controllers
 
         public IActionResult Index()
         {
+            List<Product> servicios = _context.Products.Where(p => p.IdCategory == 1 && p.Featured == false).ToList();
+
+            List<Product> serviciosVIP = _context.Products.Where(p => p.IdCategory == 1 && p.Featured == true).ToList();
+
             return View();
         }
 
         public IActionResult Create()
         {
-            ViewBag.Skill = _context.RoleEmployees.Where(skill=>skill.IdRole != 1).ToList();
+            ViewBag.Skill = _context.RoleEmployees.Where(skill => skill.IdRole != 1).ToList();
             return View();
         }
 
@@ -80,14 +84,14 @@ namespace BeautySalon.Controllers
                 }
 
                 //Retornando los recursos configurados
-                var joinService = _context.ServiceDetails.Where(service=>service.IdService == id)
-                    .Join(_context.Products, service=>service.IdProduct, product=>product.IdProduct, (service, product)=> new {service, product})
+                var joinService = _context.ServiceDetails.Where(service => service.IdService == id)
+                    .Join(_context.Products, service => service.IdProduct, product => product.IdProduct, (service, product) => new { service, product })
                     .ToList();
 
                 List<ViewModelProduct> recursos = joinService.ConvertAll(
-                    x=> new ViewModelProduct
+                    x => new ViewModelProduct
                     {
-                        id = x.product.IdProduct,
+                        id = x.service.Id,
                         name = x.product.NameProduct,
                         stock = x.service.Quantity,
                         sku = x.product.Sku
@@ -104,13 +108,35 @@ namespace BeautySalon.Controllers
         [HttpPost]
         public IActionResult NuevoRecurso(int idService, int idProduct, double cantidad)
         {
-            var prueba = new { 
-                servicio = idService,
-                producto = idProduct,
-                cantidad = cantidad
-            };
+            ServiceDetail? existe = _context.ServiceDetails.Where(sd=> sd.IdService == idService && sd.IdProduct == idProduct).FirstOrDefault();
+            if (existe == null)
+            {
+                ServiceDetail serviceDetail = new ServiceDetail();
+                serviceDetail.IdService = idService;
+                serviceDetail.IdProduct = idProduct;
+                serviceDetail.Quantity = cantidad;
+                _context.ServiceDetails.Add(serviceDetail);
+                _context.SaveChanges();
+            }
+            else
+            {
+                existe.Quantity = existe.Quantity + cantidad;
+                _context.SaveChanges();
+            }
 
-            return new JsonResult(prueba);
+            return RedirectToAction("EditRecursos", "Servicios", new { id = idService });
+        }
+
+
+        public IActionResult DeleteRecurso(int idService, int recurso)
+        {
+            ServiceDetail? serviceDetail = _context.ServiceDetails.Find(recurso);
+            if (serviceDetail != null)
+            {
+                _context.ServiceDetails.Remove(serviceDetail);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("EditRecursos", "Servicios", new { id = idService });
         }
 
 

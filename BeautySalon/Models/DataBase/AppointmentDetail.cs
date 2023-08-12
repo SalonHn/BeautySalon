@@ -11,6 +11,8 @@ public partial class AppointmentDetail
 
     public int HourService { get; set; }
 
+    public int Id { get; set; }
+
     public virtual HoursAvailable HourServiceNavigation { get; set; } = null!;
 
     public virtual Appointment IdAppointmentNavigation { get; set; } = null!;

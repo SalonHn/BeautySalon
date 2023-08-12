@@ -17,5 +17,7 @@ public partial class InvoiceDetail
 
     public double Tax { get; set; }
 
+    public int Id { get; set; }
+
     public virtual Tax IdTypeTaxNavigation { get; set; } = null!;
 }

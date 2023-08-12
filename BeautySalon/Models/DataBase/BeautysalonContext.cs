@@ -81,25 +81,26 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<AppointmentDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("AppointmentDetail");
+            entity.HasKey(e => e.Id).HasName("PK__Appointm__3213E83FF43717C4");
 
+            entity.ToTable("AppointmentDetail");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.HourService).HasColumnName("hourService");
             entity.Property(e => e.IdAppointment).HasColumnName("idAppointment");
             entity.Property(e => e.IdService).HasColumnName("idService");
 
-            entity.HasOne(d => d.HourServiceNavigation).WithMany()
+            entity.HasOne(d => d.HourServiceNavigation).WithMany(p => p.AppointmentDetails)
                 .HasForeignKey(d => d.HourService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_hour_appointment");
 
-            entity.HasOne(d => d.IdAppointmentNavigation).WithMany()
+            entity.HasOne(d => d.IdAppointmentNavigation).WithMany(p => p.AppointmentDetails)
                 .HasForeignKey(d => d.IdAppointment)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_appointment_appointment");
 
-            entity.HasOne(d => d.IdServiceNavigation).WithMany()
+            entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.AppointmentDetails)
                 .HasForeignKey(d => d.IdService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_service_appointment");
@@ -293,10 +294,11 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<InvoiceDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("InvoiceDetail");
+            entity.HasKey(e => e.Id).HasName("PK__InvoiceD__3213E83FC81D29AD");
 
+            entity.ToTable("InvoiceDetail");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdInvoice).HasColumnName("idInvoice");
             entity.Property(e => e.IdProduct).HasColumnName("idProduct");
             entity.Property(e => e.IdTypeTax).HasColumnName("idTypeTax");
@@ -306,7 +308,7 @@ public partial class BeautysalonContext : DbContext
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.Tax).HasColumnName("tax");
 
-            entity.HasOne(d => d.IdTypeTaxNavigation).WithMany()
+            entity.HasOne(d => d.IdTypeTaxNavigation).WithMany(p => p.InvoiceDetails)
                 .HasForeignKey(d => d.IdTypeTax)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_tax_invoicedetail");
@@ -401,20 +403,21 @@ public partial class BeautysalonContext : DbContext
 
         modelBuilder.Entity<ServiceDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ServiceDetail");
+            entity.HasKey(e => e.Id).HasName("PK__ServiceD__3213E83FB7F08F8B");
 
+            entity.ToTable("ServiceDetail");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdProduct).HasColumnName("idProduct");
             entity.Property(e => e.IdService).HasColumnName("idService");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-            entity.HasOne(d => d.IdProductNavigation).WithMany()
+            entity.HasOne(d => d.IdProductNavigation).WithMany(p => p.ServiceDetailIdProductNavigations)
                 .HasForeignKey(d => d.IdProduct)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_product_servicedetail");
 
-            entity.HasOne(d => d.IdServiceNavigation).WithMany()
+            entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.ServiceDetailIdServiceNavigations)
                 .HasForeignKey(d => d.IdService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_service_servicedetail");
