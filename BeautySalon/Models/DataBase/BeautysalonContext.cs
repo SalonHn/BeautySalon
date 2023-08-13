@@ -15,10 +15,6 @@ public partial class BeautysalonContext : DbContext
     {
     }
 
-    public virtual DbSet<Appointment> Appointments { get; set; }
-
-    public virtual DbSet<AppointmentDetail> AppointmentDetails { get; set; }
-
     public virtual DbSet<Bitacora> Bitacoras { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
@@ -39,6 +35,8 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<Reserva> Reservas { get; set; }
+
     public virtual DbSet<RoleEmployee> RoleEmployees { get; set; }
 
     public virtual DbSet<ServiceDetail> ServiceDetails { get; set; }
@@ -57,55 +55,6 @@ public partial class BeautysalonContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Appointment>(entity =>
-        {
-            entity.HasKey(e => e.IdAppointment).HasName("PK__Appointm__44E34BD4B7704213");
-
-            entity.ToTable("Appointment");
-
-            entity.Property(e => e.IdAppointment).HasColumnName("idAppointment");
-            entity.Property(e => e.DateAppointment)
-                .HasColumnType("date")
-                .HasColumnName("dateAppointment");
-            entity.Property(e => e.IdCustomer).HasColumnName("idCustomer");
-            entity.Property(e => e.StatusAppointment)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("statusAppointment");
-
-            entity.HasOne(d => d.IdCustomerNavigation).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.IdCustomer)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_customer_appointment");
-        });
-
-        modelBuilder.Entity<AppointmentDetail>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Appointm__3213E83FF43717C4");
-
-            entity.ToTable("AppointmentDetail");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.HourService).HasColumnName("hourService");
-            entity.Property(e => e.IdAppointment).HasColumnName("idAppointment");
-            entity.Property(e => e.IdService).HasColumnName("idService");
-
-            entity.HasOne(d => d.HourServiceNavigation).WithMany(p => p.AppointmentDetails)
-                .HasForeignKey(d => d.HourService)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_hour_appointment");
-
-            entity.HasOne(d => d.IdAppointmentNavigation).WithMany(p => p.AppointmentDetails)
-                .HasForeignKey(d => d.IdAppointment)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_appointment_appointment");
-
-            entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.AppointmentDetails)
-                .HasForeignKey(d => d.IdService)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_service_appointment");
-        });
-
         modelBuilder.Entity<Bitacora>(entity =>
         {
             entity.HasKey(e => e.IdBitacora).HasName("PK__Bitacora__223FE14209C4F919");
@@ -386,6 +335,36 @@ public partial class BeautysalonContext : DbContext
                 .HasForeignKey(d => d.IdTax)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_tax_product");
+        });
+
+        modelBuilder.Entity<Reserva>(entity =>
+        {
+            entity.HasKey(e => e.IdReserva).HasName("PK__Reserva__94D104C81F95CD2B");
+
+            entity.ToTable("Reserva");
+
+            entity.Property(e => e.IdReserva).HasColumnName("idReserva");
+            entity.Property(e => e.Fecha)
+                .HasColumnType("date")
+                .HasColumnName("fecha");
+            entity.Property(e => e.IdCustomer).HasColumnName("idCustomer");
+            entity.Property(e => e.IdHora).HasColumnName("idHora");
+            entity.Property(e => e.IdServicio).HasColumnName("idServicio");
+
+            entity.HasOne(d => d.IdCustomerNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdCustomer)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_Reserva_Customer");
+
+            entity.HasOne(d => d.IdHoraNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdHora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_Reserva_Hora");
+
+            entity.HasOne(d => d.IdServicioNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdServicio)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_Reserva_Servicio");
         });
 
         modelBuilder.Entity<RoleEmployee>(entity =>

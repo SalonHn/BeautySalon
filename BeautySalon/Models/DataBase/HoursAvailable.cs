@@ -9,7 +9,7 @@ public partial class HoursAvailable
 
     public string Hour { get; set; } = null!;
 
-    public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
+    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
 
     public virtual ICollection<Timetable> TimetableCloseHourNavigations { get; set; } = new List<Timetable>();
 

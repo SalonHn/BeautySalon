@@ -34,21 +34,20 @@ public partial class Product
 
     public string? ImageProduct { get; set; }
 
-    public virtual ICollection<AppointmentDetail> AppointmentDetails { get; set; } = new List<AppointmentDetail>();
+    public virtual Category? IdCategoryNavigation { get; set; }
 
-    public virtual Category? IdCategoryNavigation { get; set; } 
-
-    public virtual RoleEmployee? IdSkillNavigation { get; set; } 
+    public virtual RoleEmployee? IdSkillNavigation { get; set; }
 
     public virtual Tax? IdTaxNavigation { get; set; }
+
+    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
 
     public virtual ICollection<ServiceDetail> ServiceDetailIdProductNavigations { get; set; } = new List<ServiceDetail>();
 
     public virtual ICollection<ServiceDetail> ServiceDetailIdServiceNavigations { get; set; } = new List<ServiceDetail>();
 
+
+
     [NotMapped]
-    public IFormFile? ImgFile
-    {
-        get; set;
-    }
+    public IFormFile? ImgFile { get; set; }
 }

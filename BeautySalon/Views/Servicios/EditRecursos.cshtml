@@ -44,6 +44,9 @@
     <a href="@Url.Content("~/Servicios/EditServicio/" + servicio.IdProduct)" style="font-size: 18px;"><i class="fa-solid fa-pen-to-square"></i>Editar</a>
 </div>
 <hr />
+<div class="mb-2">
+    <img src="data:image/jpg; base64, @servicio.ImageProduct" alt="Sin imagen para mostrar" width="200" height="200" style="border: 1px solid;" />
+</div>
 @if (servicio.Featured == true)
 {
     <div class="d-flex mb-2">
