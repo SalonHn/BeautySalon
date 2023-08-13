@@ -18,5 +18,22 @@ namespace BeautySalon.Controllers
         {
             return View();
         }
+
+        public IActionResult NuevaCita() 
+        {
+            if(User.FindFirst("idUser") != null)
+            {
+                int idCliente = Int32.Parse(User.FindFirst("idUser").Value);
+
+                UserAdmin? cliente = _context.UserAdmins.Find(idCliente);
+                
+                if (cliente != null)
+                {
+                    ViewBag.Cliente = cliente;
+                }
+            }
+
+            return View();
+        }
     }
 }

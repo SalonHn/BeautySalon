@@ -1,0 +1,15 @@
+﻿
+@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "NuevaCita";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    UserAdmin cliente = ViewBag.Cliente;
+}
+
+<h1>NuevaCita</h1>
+
+<span>@cliente.UserName</span>
+<br />
+<span>@cliente.IdUser</span>
+<br />

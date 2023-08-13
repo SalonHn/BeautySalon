@@ -56,6 +56,11 @@ namespace BeautySalon.Controllers
                     claim.Add(new Claim(ClaimTypes.Role, typeUser.TypeName));
                 }
 
+                if(userAdmin.IdType == 1 && userAdmin.UserActive == true)
+                {
+                    claim.Add(new Claim(ClaimTypes.Role, "VIP"));
+                }
+
                 var claimIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
