@@ -1,15 +1,115 @@
 ﻿
 @using BeautySalon.Models.DataBase;
 
+<script type="text/javascript" src="~/js/reserva.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Agregar un controlador de eventos para el evento "change" utilizando jQuery
+        $("#fechaReserva").on("change", function () {
+            // Manejar el cambio de fecha aquí
+            var date = $("#fechaReserva").val();
+            var url = '@Url.Content("~/Clientes/ComprobarFecha?fecha=")' + date;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Manejar los datos recibidos en la variable "data"
+                    if(data.laborable == true){
+                        horas = data.horario;
+                        $("#alertFecha").hide();
+                    }else{
+                        horas = [];
+                        $("#alertFecha").show();
+                    }
+                    cargarHorario();
+                    comprobarDatos();
+                    console.log(data);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        $("#horaReserva").on("change", function () {
+            comprobarDatos();
+        });
+    });
+</script>
+
 @{
     ViewData["Title"] = "NuevaCita";
     Layout = "~/Views/Shared/_LayoutCliente.cshtml";
     UserAdmin cliente = ViewBag.Cliente;
+    Product servicio = ViewBag.Servicio;
 }
 
-<h1>NuevaCita</h1>
+<div class="d-flex justify-content-center mb-3"><h1>Reservar</h1></div>
+<h5>Detalles del servicio</h5>
+<hr />
+<div class="row mb-3">
+    <div class="d-flex justify-content-center col-12 col-sm-5 col-lg-3 col-md-4">
+        <img src="data:image/jpg; base64, @servicio.ImageProduct" alt="Sin imagen para mostrar" width="200" height="200" />
+    </div>
+    <div class="col">
+        @if (servicio.Featured == true)
+        {
+            <div class="d-flex mb-2">
+                <div class="ps-2 pe-2" style="border-radius: 25px; background-color: black;">
+                    <span style="color: #f2c22d;"><strong>Servicio VIP</strong></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex mb-2">
+                <div class="ps-2 pe-2" style="border-radius: 25px; background-color: dodgerblue;">
+                    <span style="color: white;"><strong>Normal</strong></span>
+                </div>
+            </div>
+        }
+        <div><span><strong>Codigo: </strong> @servicio.Sku</span></div>
+        <div><span><strong>Nombre: </strong> @servicio.NameProduct</span></div>
+        <div><span><strong>Precio: </strong> @servicio.Price</span></div>
+        <div><span><strong>Habilidad requerida: </strong> @ViewBag.skill</span></div>
+        <div><span><strong>Descripción: </strong> @servicio.Description</span></div>
+    </div>
+</div>
+<h5>Fecha y Hora de reserva</h5>
+<hr />
+<form asp-action="NuevaCita" asp-controller="Clientes" method="post">
+    <input hidden name="idServicio" value="@servicio.IdProduct" />
+    <input hidden name="idCliente" value="@cliente.IdUser" />
+    <div class="row">
+        <div class="col-auto">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="fechaReserva" class="col-form-label">Fecha</label>
+                </div>
+                <div class="col-auto">
+                    <input name="fechaReserva" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" id="fechaReserva" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="horaReserva" class="col-form-label">Hora</label>
+                </div>
+                <div class="col-auto">
+                    <select name="horaReserva" id="horaReserva" class="form-select">
+                        <option value="0">Seleccione</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span id="alertFecha" class="text-danger" style="display: none">La fecha seleccionada no corresponde a un dia laborable. Seleccione una fecha distinta.</span>
+    <div class="row mt-4">
+        <div class="col-6 d-flex justify-content-center">
+            <a href="@Url.Action("Servicios", "Clientes")" class="btn btn-danger">Volver</a>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+            <button id="btnReservar" type="submit" class="btn btn-primary" disabled>Reservar</button>
+        </div>
+    </div>
+</form>
 
-<span>@cliente.UserName</span>
-<br />
-<span>@cliente.IdUser</span>
-<br />
+

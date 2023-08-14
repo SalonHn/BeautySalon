@@ -15,7 +15,11 @@ public partial class Reserva
 
     public int IdHora { get; set; }
 
-    public virtual Customer IdCustomerNavigation { get; set; } = null!;
+    public int? IdEstado { get; set; }
+
+    public virtual UserAdmin IdCustomerNavigation { get; set; } = null!;
+
+    public virtual EstadoReserva? IdEstadoNavigation { get; set; }
 
     public virtual HoursAvailable IdHoraNavigation { get; set; } = null!;
 

@@ -23,6 +23,8 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
+    public virtual DbSet<EstadoReserva> EstadoReservas { get; set; }
+
     public virtual DbSet<Holiday> Holidays { get; set; }
 
     public virtual DbSet<HoursAvailable> HoursAvailables { get; set; }
@@ -174,6 +176,18 @@ public partial class BeautysalonContext : DbContext
                 .HasForeignKey(d => d.IdUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_user_employee");
+        });
+
+        modelBuilder.Entity<EstadoReserva>(entity =>
+        {
+            entity.HasKey(e => e.IdEstado).HasName("PK__EstadoRe__62EA894A5900E2D7");
+
+            entity.ToTable("EstadoReserva");
+
+            entity.Property(e => e.IdEstado).HasColumnName("idEstado");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Holiday>(entity =>
@@ -348,13 +362,18 @@ public partial class BeautysalonContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("fecha");
             entity.Property(e => e.IdCustomer).HasColumnName("idCustomer");
+            entity.Property(e => e.IdEstado).HasColumnName("idEstado");
             entity.Property(e => e.IdHora).HasColumnName("idHora");
             entity.Property(e => e.IdServicio).HasColumnName("idServicio");
 
             entity.HasOne(d => d.IdCustomerNavigation).WithMany(p => p.Reservas)
                 .HasForeignKey(d => d.IdCustomer)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_Reserva_Customer");
+                .HasConstraintName("fk_Reserva_User");
+
+            entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdEstado)
+                .HasConstraintName("fk_Reserva_Estado");
 
             entity.HasOne(d => d.IdHoraNavigation).WithMany(p => p.Reservas)
                 .HasForeignKey(d => d.IdHora)

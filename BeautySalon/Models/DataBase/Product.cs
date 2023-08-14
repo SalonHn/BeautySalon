@@ -34,9 +34,9 @@ public partial class Product
 
     public string? ImageProduct { get; set; }
 
-    public virtual Category? IdCategoryNavigation { get; set; }
+    public virtual Category? IdCategoryNavigation { get; set; } 
 
-    public virtual RoleEmployee? IdSkillNavigation { get; set; }
+    public virtual RoleEmployee? IdSkillNavigation { get; set; } 
 
     public virtual Tax? IdTaxNavigation { get; set; }
 
@@ -45,7 +45,6 @@ public partial class Product
     public virtual ICollection<ServiceDetail> ServiceDetailIdProductNavigations { get; set; } = new List<ServiceDetail>();
 
     public virtual ICollection<ServiceDetail> ServiceDetailIdServiceNavigations { get; set; } = new List<ServiceDetail>();
-
 
 
     [NotMapped]

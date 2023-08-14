@@ -24,6 +24,4 @@ public partial class Customer
     public virtual UserAdmin? IdUserNavigation { get; set; }
 
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
-
-    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
 }

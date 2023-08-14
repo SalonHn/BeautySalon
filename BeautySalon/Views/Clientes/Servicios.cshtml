@@ -1,0 +1,62 @@
+﻿
+@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "Servicios";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    List<Product> servicios = ViewBag.Servicios;
+}
+
+<h1>Servicios que ofrecemos</h1>
+<nav class="mt-3">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Servicios Generales</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Servicios VIP</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <!--Tabla de Servicios Generales-->
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+        <div class="row">
+            @foreach(var s in servicios)
+            {
+                <div class="d-flex justify-content-center col-12 col-sm-6 col-md-6 col-lg-4 mt-2">
+                    <div class="card" style="width: 18rem;">
+                        <img src="data:image/jpg; base64, @s.ImageProduct" class="card-img-top" alt="Imagen no Disponible">
+                        <div class="card-body">
+                            <h5 class="card-title">@s.NameProduct</h5>
+                            <div><sapn><strong>L. @s.Price.ToString("F2")</strong></sapn></div>
+                            <p class="card-text">@s.Description</p>
+                            <a href="@Url.Action("NuevaCita", "Clientes", new {idServicio=s.IdProduct})" class="btn btn-primary">Reservar</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!--Tabla de Servicios VIP-->
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+        <div class="row">
+            @if (User.IsInRole("VIP"))
+            {
+                List<Product> serviciosVIP = ViewBag.ServicesVIP;
+                @foreach (var s in serviciosVIP)
+                {
+                    <div class="d-flex justify-content-center col-12 col-sm-6 col-md-6 col-lg-4 mt-2">
+                        <div class="card" style="width: 18rem;">
+                            <img src="data:image/jpg; base64, @s.ImageProduct" class="card-img-top" alt="Imagen no Disponible">
+                            <div class="card-body">
+                                <h5 class="card-title">@s.NameProduct</h5>
+                                <div><sapn><strong>L. @s.Price.ToString("F2")</strong></sapn></div>
+                                <p class="card-text">@s.Description</p>
+                                <a href="@Url.Action("NuevaCita", "Clientes", new {idServicio=s.IdProduct})" class="btn btn-primary">Reservar</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+

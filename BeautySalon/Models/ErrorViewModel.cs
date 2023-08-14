@@ -10,6 +10,9 @@ namespace BeautySalon.Models
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
+
+        [NotMapped]
+        public IFormFile? ImgFile { get; set; }
     }
 
 }

@@ -30,4 +30,6 @@ public partial class UserAdmin
     public virtual TypeUser? IdTypeNavigation { get; set; }
 
     public virtual ICollection<Membresium> Membresia { get; set; } = new List<Membresium>();
+
+    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
 }
