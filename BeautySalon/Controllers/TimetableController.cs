@@ -42,7 +42,7 @@ namespace BeautySalon.Controllers
 
             // Extrae los feriados para mostrar
             List<Holiday>? holidays = null;
-            holidays = _context.Holidays.OrderBy(h=> h.Date).ToList();
+            holidays = _context.Holidays.Where(h=> h.Date.Date >= DateTime.Now.Date).OrderBy(h=> h.Date).ToList();
 
             ViewBag.Holidays = holidays;
 

@@ -24,21 +24,19 @@ namespace BeautySalon.Controllers
         // GET: User
         public IActionResult Index()
         {
-            var allUser = _context.Employees.Join(
-                _context.UserAdmins, 
-                employee => employee.IdUser, 
-                user => user.IdUser, 
-                (employee, user) => new { employee, user }).ToList();
+            var allUser = _context.Employees
+                .Join(_context.UserAdmins,employee => employee.IdUser,user => user.IdUser,(employee, user) => new { employee, user })
+                .Join(_context.TypeUsers, empleado=> empleado.user.IdType, type=> type.IdType, (empleado, type)=> new {empleado, type })
+                .ToList();
 
             List<ViewModelAllUser> users = allUser.ConvertAll(x =>
                 new ViewModelAllUser
                 {
-                    Id = x.user.IdUser,
-                    name = x.employee.FirstName,
-                    UserName = x.user.UserName,
-                    userActive = x.user.UserActive,
-                    genero = x.employee.Gender,
-                    CreateDate = x.user.UserDateCreate
+                    Id = x.empleado.user.IdUser,
+                    Name = x.empleado.employee.FirstName + " " + x.empleado.employee.LastName,
+                    Type = x.type.TypeName,
+                    userActive = x.empleado.user.UserActive,
+                    genero = x.empleado.employee.Gender
                 }
             );
 

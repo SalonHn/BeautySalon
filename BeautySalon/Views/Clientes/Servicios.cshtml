@@ -7,11 +7,14 @@
     List<Product> servicios = ViewBag.Servicios;
 }
 
-<h1>Servicios que ofrecemos</h1>
 <nav class="mt-3">
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Servicios Generales</button>
-        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Servicios VIP</button>
+        @if(User.IsInRole("VIP")){
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Servicios VIP</button>
+        }else{
+            <button class="nav-link disabled" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" disabled><i class="fa-solid fa-lock"></i> Servicios VIP</button>
+        }
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">

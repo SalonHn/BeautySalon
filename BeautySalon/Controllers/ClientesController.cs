@@ -176,7 +176,7 @@ namespace BeautySalon.Controllers
 
         public IActionResult CancelarReserva(int idReserva)
         {
-            Reserva? reserva = _context.Reservas.Find();
+            Reserva? reserva = _context.Reservas.Find(idReserva);
             if(reserva != null)
             {
                 reserva.IdEstado = 2;
