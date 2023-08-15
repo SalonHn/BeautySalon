@@ -17,9 +17,10 @@
         <table class="table table-sm table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>Empleado</th>
-                    <th>Genero</th>
+                    <th class="d-none d-sm-block d-lg-block d-md-block d-xl-block d-xxl-block">Empleado</th>
+                    <th class="d-sm-none d-lg-none d-md-none d-xl-none d-xxl-none">Empleado</th>
                     <th>Tipo</th>
+                    <th class="d-none d-sm-block d-lg-block d-md-block d-xl-block d-xxl-block">Genero</th>
                     <th>Activo</th>
                     <th></th>
                 </tr>
@@ -28,9 +29,10 @@
                 @foreach (var item in users)
                 {
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@item.genero</td>
+                        <td class="d-none d-sm-block d-lg-block d-md-block d-xl-block d-xxl-block">@item.FullName</td>
+                        <td class="d-sm-none d-lg-none d-md-none d-xl-none d-xxl-none">@item.Name</td>
                         <td>@item.Type</td>
+                        <td class="d-none d-sm-block d-lg-block d-md-block d-xl-block d-xxl-block">@item.genero</td>
                         <td>@item.userActive</td>
                         <td>
                             <a asp-action="Details" asp-controller="User" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Detalles</a>

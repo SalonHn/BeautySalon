@@ -13,85 +13,28 @@
 </div>
 <hr />
 <div class="row mt-4">
-    <div class="col-6 d-flex justify-content-center">
-        <img src="data:image/jpg; base64, @product.ImageProduct" alt="Sin imagen para mostrar" width="400" height="400" style="border: 1px solid;" />
+    <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 col-xxl-3 d-flex justify-content-center mb-4">
+        <img src="data:image/jpg; base64, @product.ImageProduct" alt="Sin imagen para mostrar" width="250" height="250" style="border: 1px solid;" />
     </div>
-    <div class="col-6">
-        <div class="row">
-            <div class="col-4">
-                <label class="form-label">Codigo</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.Sku" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Nombre</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.NameProduct" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Precio</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.Price" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Descripcion</label>
-            </div>
-            <div class="col-6">
-                <textarea class="form-control" disabled>@product.Description</textarea>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Categoria</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@category.Category1" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Stock Disponible</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.Stock" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Stock Minimo</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.StockMinimum" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Fecha de ingreso</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.CreateDate" />
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-4">
-                <label class="form-label">Ultima modificación</label>
-            </div>
-            <div class="col-6">
-                <input class="form-control" disabled value="@product.ModifyDate" />
-            </div>
-        </div>
+    <div class="col-12 col-sm-6">
+        <div><span><strong>Codigo: </strong>@product.Sku</span></div>
+        <div><span><strong>Nombre: </strong>@product.NameProduct</span></div>
+        <div><span><strong>Precio: </strong>L. @product.Price.ToString("F2")</span></div>
+        <div><span><strong>Descripción: </strong>@product.Description</span></div>
+        <div><span><strong>Categoria: </strong>@category.Category1</span></div>
+        <div><span><strong>Stock Disponible: </strong>@product.Stock</span></div>
+        <div><span><strong>Stock Minimo: </strong>@product.StockMinimum</span></div>
+        <div><span><strong>Fecha de ingreso: </strong>@product.CreateDate</span></div>
+        <div><span><strong>Ultima modificación: </strong>@product.ModifyDate</span></div>
     </div>
 </div>
 <hr />
-<div class="d-flex justify-content-center mt3">
-    <div><button type="button" class="btn btn-danger" onclick="window.location.href='@Url.Action("Index", "Inventario")';">Volver</button></div>
+<div class="row mt-3">
+    <div class="d-flex justify-content-center col-6">
+        <div><button type="button" class="btn btn-danger" onclick="window.location.href='@Url.Action("Index", "Inventario")';">Volver</button></div>
+    </div>
+    <div class="d-flex justify-content-center col-6">
+        <div><a href="@Url.Action("Editar", "Inventario", new {id=product.IdProduct})" class="btn btn-primary">Editar</a></div>
+    </div>
 </div>
+

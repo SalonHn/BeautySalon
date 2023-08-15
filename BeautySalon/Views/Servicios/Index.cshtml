@@ -37,7 +37,7 @@
                     <tr>
                         <th>@servicio.Sku</th>
                         <td>@servicio.NameProduct</td>
-                        <td>@servicio.Price</td>
+                        <td>@servicio.Price.ToString("F2")</td>
                         <td><a href="@Url.Action("EditRecursos", "Servicios", new {id=servicio.IdProduct})" class="link">Detalles</a></td>
                     </tr>
                 }
@@ -62,7 +62,7 @@
                     <tr>
                         <th>@servicio.Sku</th>
                         <td>@servicio.NameProduct</td>
-                        <td>@servicio.Price</td>
+                        <td>@servicio.Price.ToString("F2")</td>
                         <td><a href="@Url.Action("EditRecursos", "Servicios", new {id=servicio.IdProduct})" class="link">Detalles</a></td>
                     </tr>
                 }

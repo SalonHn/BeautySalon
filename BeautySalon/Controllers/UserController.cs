@@ -33,7 +33,8 @@ namespace BeautySalon.Controllers
                 new ViewModelAllUser
                 {
                     Id = x.empleado.user.IdUser,
-                    Name = x.empleado.employee.FirstName + " " + x.empleado.employee.LastName,
+                    FullName = x.empleado.employee.FirstName + " " + x.empleado.employee.LastName,
+                    Name = x.empleado.employee.FirstName,
                     Type = x.type.TypeName,
                     userActive = x.empleado.user.UserActive,
                     genero = x.empleado.employee.Gender

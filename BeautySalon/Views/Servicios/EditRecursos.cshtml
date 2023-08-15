@@ -44,22 +44,30 @@
     <a href="@Url.Content("~/Servicios/EditServicio/" + servicio.IdProduct)" style="font-size: 18px;"><i class="fa-solid fa-pen-to-square"></i>Editar</a>
 </div>
 <hr />
-<div class="mb-2">
-    <img src="data:image/jpg; base64, @servicio.ImageProduct" alt="Sin imagen para mostrar" width="200" height="200" style="border: 1px solid;" />
-</div>
-@if (servicio.Featured == true)
-{
-    <div class="d-flex mb-2">
-        <div class="div-VIP ps-2 pe-2">
-            <span style="color: #f2c22d;"><strong>Servicio VIP</strong></span>
+<div class="row">
+    <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-3 col-xxl-3 mt-2">
+		<div class="d-flex justify-content-center mb-2">
+			<img src="data:image/jpg; base64, @servicio.ImageProduct" alt="Sin imagen para mostrar" width="200" height="200" style="border: 1px solid;" />
+		</div>
+    </div>
+    <div class="d-flex align-items-center col-12 col-sm-7 col-md-8 col-lg-9 col-xl-9 col-xxl-9 mt-2">
+        <div>
+            @if (servicio.Featured == true)
+            {
+                <div class="d-flex mb-2">
+                    <div class="div-VIP ps-2 pe-2">
+                        <span style="color: #f2c22d;"><strong>Servicio VIP</strong></span>
+                    </div>
+                </div>
+            }
+            <div><span><strong>Codigo: </strong> @servicio.Sku</span></div>
+            <div><span><strong>Nombre: </strong> @servicio.NameProduct</span></div>
+            <div><span><strong>Precio: </strong> @servicio.Price</span></div>
+            <div><span><strong>Habilidad requerida: </strong> @ViewBag.skill</span></div>
+            <div><span><strong>Descripción: </strong> @servicio.Description</span></div>
         </div>
     </div>
-}
-<div><span><strong>Codigo: </strong> @servicio.Sku</span></div>
-<div><span><strong>Nombre: </strong> @servicio.NameProduct</span></div>
-<div><span><strong>Precio: </strong> @servicio.Price</span></div>
-<div><span><strong>Habilidad requerida: </strong> @ViewBag.skill</span></div>
-<div><span><strong>Descripción: </strong> @servicio.Description</span></div>
+</div>
 
 <h4 class="mt-3">Recursos Requeridos</h4>
 <hr />
