@@ -67,52 +67,47 @@ namespace BeautySalon.Controllers
         // GET: User/Create
         public IActionResult Create()
         {
-            List<RoleEmployee> roles = _context.RoleEmployees.ToList();
+            List<RoleEmployee> skills = _context.RoleEmployees.Where(s=> s.IdRole != 1).ToList();
+            List<TypeUser> roles = _context.TypeUsers.Where(r=> r.IdType != 1).ToList();
             List<string> genero = new List<string> { "Masculino", "Femenino" };
             ViewBag.Genero = genero;
+            ViewBag.Skill = skills;
             ViewBag.Rol = roles;
+
             return View();
         }
 
-        // POST: User/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole")] Employee empleado)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                List<RoleEmployee> roles = _context.RoleEmployees.ToList();
-                List<string> genero = new List<string> { "Masculino", "Femenino", "Sin Especificar" };
-                ViewBag.Genero = genero;
-                ViewBag.Rol = roles;
-                ViewBag.Error = "Aqui";
+                if (!ModelState.IsValid)
+                {
+                    List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+                    List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+                    List<string> genero = new List<string> { "Masculino", "Femenino" };
+                    ViewBag.Genero = genero;
+                    ViewBag.Skill = skills;
+                    ViewBag.Rol = roles;
 
-                return View(empleado);
+                    return View(empleado);
+                }
+                return RedirectToAction("Index", "User");
             }
-
-            //Creando usuario
-            UserAdmin user = new UserAdmin();
-            user.UserDateCreate = DateTime.Now;
-            user.UserDateModify = DateTime.Now;
-            user.UserActive = true;
-
-            var userIngresado = _context.UserAdmins.Add(user);
-            await _context.SaveChangesAsync();
-
-
-            // Guardando empleado
-            empleado.IdUser = userIngresado.Entity.IdUser;
-            empleado.DateCreate = DateTime.Now;
-            empleado.DateModify = DateTime.Now;
-            empleado.EmployeeActive = true;
-
-            _context.Employees.Add(empleado);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception e)
+            {
+                ViewBag.Erro = e.Message;
+                List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+                List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+                List<string> genero = new List<string> { "Masculino", "Femenino" };
+                ViewBag.Genero = genero;
+                ViewBag.Skill = skills;
+                ViewBag.Rol = roles;
+                return View();
+            }
         }
 
         // GET: User/Edit/5
