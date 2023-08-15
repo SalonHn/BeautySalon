@@ -1,7 +1,7 @@
 ﻿@using BeautySalon.Models.DataBase;
 
 @{
-    ViewData["Title"] = "Detalles";
+    ViewData["Title"] = "Mi Perfil";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     Employee empleado = ViewBag.Empleado;
@@ -10,12 +10,12 @@
     TypeUser role = ViewBag.Role;
 }
 
-<div class="d-flex justify-content-center"><h2>Información del Empleado</h2></div>
+<div class="d-flex justify-content-center"><h2>Mi Perfil</h2></div>
 <hr />
 <div>
     <div class="row">
         <div class="col-12 col-sm-6">
-            <h5>Empleado</h5>
+            <h5>Información Personal</h5>
             <hr />
             <div><span><strong>Nombre:</strong></span>@(empleado.FirstName) @(empleado.LastName)</div>
             <div><span><strong>Genero: </strong>@empleado.Gender</span></div>
@@ -26,47 +26,33 @@
             <div><span><strong>Correo: </strong>@empleado.Email</span></div>
         </div>
         <div class="col-12 col-sm-6">
-            <h5 class="d-block d-sm-none mt-5">Usuario</h5>
-            <h5 class="d-none d-sm-block">Usuario</h5>
+            <h5 class="d-block d-sm-none mt-5">Mi Usuario</h5>
+            <h5 class="d-none d-sm-block">Mi Usuario</h5>
             <hr />
             <div><span><strong>Usuario: </strong>@user.UserName</span></div>
             <div>
                 <span><strong>Estado: </strong></span>
-				@if (user.UserActive == false)
-				{
-					<span style="color: red;"><strong>Desactivado</strong></span>
-				}
-				else
-				{
-					<span style="color: green;"><strong>Activado</strong></span>
-				}
+                @if (user.UserActive == false)
+                {
+                    <span style="color: red;"><strong>Desactivado</strong></span>
+                }
+                else
+                {
+                    <span style="color: green;"><strong>Activado</strong></span>
+                }
             </div>
             <div><span><strong>Fecha de creación: </strong>@user.UserDateCreate.ToString("dd-MM-yyyy")</span></div>
             <div><span><strong>Ultima Modificación: </strong>@user.UserDateModify.ToString("dd-MM-yyyy")</span></div>
             <div><span><strong>Rol: </strong>@role.TypeName</span></div>
-            @if(role.IdType == 3)
+            @if (role.IdType == 3)
             {
                 <div><span><strong>Habilidad: </strong>@skill.NameRole</span></div>
             }
-            <div class="mt-2">
-                @if(user.UserActive == true)
-                {
-                    <a href="@Url.Action("CambioEstado", "User", new {idEmpleado = empleado.IdEmployee, idUser = user.IdUser, estado = false})" class="btn btn-sm btn-danger">Desactivar Usuario</a>
-                }
-                else
-                {
-                    <a href="@Url.Action("CambioEstado", "User", new {idEmpleado = empleado.IdEmployee, idUser = user.IdUser, estado = true})" class="btn btn-sm btn-success">Activar Usuario</a>
-                }
-            </div>
         </div>
     </div>
     <hr />
-    <div class="row">
-        <div class="col-6 d-flex justify-content-center">
-            <a asp-action="Index" asp-controller="User" class="btn btn-sm btn-danger">Volver</a>
-        </div>
-        <div class="col-6 d-flex justify-content-center">
-            <a href="@Url.Action("Edit", "User", new {id = empleado.IdEmployee})" class="btn btn-sm btn-primary">Editar</a>
-        </div>
+    <div class="d-flex justify-content-center">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Volver</a>
     </div>
 </div>
+

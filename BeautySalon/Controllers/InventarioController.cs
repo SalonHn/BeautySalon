@@ -50,6 +50,9 @@ namespace BeautySalon.Controllers
         {
             try
             {
+                product.CreateDate = DateTime.Now;
+                product.ModifyDate = DateTime.Now;
+
                 if (!ModelState.IsValid)
                 {
                     ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
@@ -71,8 +74,6 @@ namespace BeautySalon.Controllers
                     }
                 }
 
-                product.CreateDate = DateTime.Now;
-                product.ModifyDate = DateTime.Now;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
 
@@ -119,6 +120,9 @@ namespace BeautySalon.Controllers
         {
             try
             {
+                product.CreateDate = DateTime.Now;
+                product.ModifyDate = DateTime.Now;
+
                 if (!ModelState.IsValid)
                 {
                     ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();

@@ -31,7 +31,7 @@ public partial class Employee
 
     public int IdUser { get; set; }
 
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     public virtual RoleEmployee IdRoleNavigation { get; set; } = null!;
 

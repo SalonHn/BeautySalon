@@ -2,6 +2,26 @@
 
 @using BeautySalon.Models.DataBase;
 
+<script>
+    $(document).ready(function () {
+
+        if ($('#selectRole').val() == "3") {
+            $('#divSkill').show();
+        };
+
+        // Seleccionar el elemento select por su ID
+        $('#selectRole').on('change', function () {
+            var seleccion = $(this).val(); // Obtener el valor seleccionado
+            if(seleccion == "3"){
+                $('#divSkill').show();
+            } else {
+                $('#selectSkill').val("1");
+                $('#divSkill').hide();
+            }
+        });
+    });
+</script>
+
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -66,17 +86,17 @@
         <div class="row">
             <div class="col-auto form-group">
                 <label asp-for="FirstName" class="control-label col-form-label-sm">Role</label>
-                <select class="form-select form-select-sm" asp-for="IdType" asp-items="@(new SelectList(roles, "IdType", "TypeName"))">
+                <select id="selectRole" class="form-select form-select-sm" asp-for="IdType" asp-items="@(new SelectList(roles, "IdType", "TypeName"))">
                     <option>Seleccione</option>
                 </select>
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <span asp-validation-for="IdType" class="text-danger"></span>
             </div>
-            <div class="col-auto form-group">
+            <div id="divSkill" class="col-auto form-group" style="display:none;">
                 <label class="control-label col-form-label-sm">Habilidad</label>
-                <select class="form-select form-select-sm" asp-for="IdRole" asp-items="@(new SelectList(skills, "IdRole", "NameRole"))">
-                    <option>Seleccione</option>
+                <select id="selectSkill" class="form-select form-select-sm" asp-for="IdRole" asp-items="@(new SelectList(skills, "IdRole", "NameRole"))">
+                    <option value="1">Seleccione</option>
                 </select>
-                <span asp-validation-for="LastName" class="text-danger"></span>
+                <span asp-validation-for="IdRole" class="text-danger"></span>
             </div>
         </div>
 
@@ -90,16 +110,26 @@
             </div>
             <div class="col-6 col-sm-4 mt-2 form-group">
                 <label class="control-label col-form-label-sm">Contraseña</label>
-                <input asp-for="UserPassword" class="form-control form-control-sm" />
+                <input type="password" asp-for="UserPassword" class="form-control form-control-sm" />
                 <span asp-validation-for="UserPassword" class="text-danger"></span>
+                <span class="text-danger">@ViewBag.NoCorresponde</span>
             </div>
             <div class="col-6 col-sm-4 mt-2 form-group">
                 <label class="control-label col-form-label-sm">Confirmar Contraseña</label>
-                <input asp-for="UserPasswordConfirm" class="form-control form-control-sm" />
+                <input type="password" asp-for="UserPasswordConfirm" class="form-control form-control-sm" />
                 <span asp-validation-for="UserPasswordConfirm" class="text-danger"></span>
+                <span class="text-danger">@ViewBag.NoCorresponde</span>
             </div>
         </div>
-
+        <hr />
+        <div class="row">
+            <div class="col-6 d-flex justify-content-center">
+                <a asp-action="Index" asp-controller="User" class="btn btn-sm btn-danger">Cancelar</a>
+            </div>
+            <div class="col-6 d-flex justify-content-center">
+                <button type="submit" class="btn btn-sm btn-success">Crear</button>
+            </div>
+        </div>
     </form>
 </div>
 

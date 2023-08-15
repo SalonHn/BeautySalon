@@ -22,9 +22,9 @@ public partial class Product
 
     public string Sku { get; set; } = null!;
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
+    public DateTime ModifyDate { get; set; }
 
     public bool Featured { get; set; }
 

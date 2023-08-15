@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using BeautySalon.Models.CreateModels;
 
 namespace BeautySalon.Controllers
 {
@@ -25,14 +26,14 @@ namespace BeautySalon.Controllers
         public IActionResult Index()
         {
             var allUser = _context.Employees
-                .Join(_context.UserAdmins,employee => employee.IdUser,user => user.IdUser,(employee, user) => new { employee, user })
-                .Join(_context.TypeUsers, empleado=> empleado.user.IdType, type=> type.IdType, (empleado, type)=> new {empleado, type })
+                .Join(_context.UserAdmins, employee => employee.IdUser, user => user.IdUser, (employee, user) => new { employee, user })
+                .Join(_context.TypeUsers, empleado => empleado.user.IdType, type => type.IdType, (empleado, type) => new { empleado, type })
                 .ToList();
 
             List<ViewModelAllUser> users = allUser.ConvertAll(x =>
                 new ViewModelAllUser
                 {
-                    Id = x.empleado.user.IdUser,
+                    Id = x.empleado.employee.IdEmployee,
                     FullName = x.empleado.employee.FirstName + " " + x.empleado.employee.LastName,
                     Name = x.empleado.employee.FirstName,
                     Type = x.type.TypeName,
@@ -47,28 +48,41 @@ namespace BeautySalon.Controllers
         }
 
         // GET: User/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.UserAdmins == null)
             {
                 return NotFound();
             }
 
-            var userAdmin = await _context.UserAdmins
-                .FirstOrDefaultAsync(m => m.IdUser == id);
-            if (userAdmin == null)
+
+            Employee? empleado = _context.Employees.Find(id);
+            if (empleado != null)
+            {
+                ViewBag.Empleado = empleado;
+                UserAdmin? user = _context.UserAdmins.Find(empleado.IdUser);
+                ViewBag.User = user;
+                RoleEmployee? skill = _context.RoleEmployees.Find(empleado.IdRole);
+                ViewBag.Skill = skill;
+                if (user != null)
+                {
+                    TypeUser? role = _context.TypeUsers.Find(user.IdType);
+                    ViewBag.Role = role;
+                }
+            }
+            else
             {
                 return NotFound();
             }
 
-            return View(userAdmin);
+            return View();
         }
 
         // GET: User/Create
         public IActionResult Create()
         {
-            List<RoleEmployee> skills = _context.RoleEmployees.Where(s=> s.IdRole != 1).ToList();
-            List<TypeUser> roles = _context.TypeUsers.Where(r=> r.IdType != 1).ToList();
+            List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+            List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
             List<string> genero = new List<string> { "Masculino", "Femenino" };
             ViewBag.Genero = genero;
             ViewBag.Skill = skills;
@@ -80,7 +94,7 @@ namespace BeautySalon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("FirstName, LastName, Dni, Phone, DateOfBirth, Gender, Age, IdRole")] Employee empleado)
+            [Bind("FirstName", "LastName", "Dni", "Phone", "DateOfBirth", "Genero", "Age", "Email", "IdType", "IdRole", "UserName", "UserPassword", "UserPasswordConfirm")] CreateEmpleado empleado)
         {
             try
             {
@@ -95,7 +109,53 @@ namespace BeautySalon.Controllers
 
                     return View(empleado);
                 }
-                return RedirectToAction("Index", "User");
+
+                if (empleado.UserPassword != empleado.UserPasswordConfirm)
+                {
+                    ViewBag.NoCorresponde = "Las contraseñas no coincien";
+                    List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+                    List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+                    List<string> genero = new List<string> { "Masculino", "Femenino" };
+                    ViewBag.Genero = genero;
+                    ViewBag.Skill = skills;
+                    ViewBag.Rol = roles;
+
+                    return View(empleado);
+                }
+
+                DateTime fecha = DateTime.Now;
+
+                //Guardar usuario
+                UserAdmin user = new UserAdmin();
+                user.UserName = empleado.UserName;
+                user.UserPassword = empleado.UserPassword;
+                user.IdType = empleado.IdType;
+                user.UserActive = true;
+                user.UserDateCreate = fecha;
+                user.UserDateModify = fecha;
+                var _user = _context.UserAdmins.Add(user);
+                await _context.SaveChangesAsync();
+
+                //Guardar empleado
+                Employee employee = new Employee();
+                employee.FirstName = empleado.FirstName;
+                employee.LastName = empleado.LastName;
+                employee.Email = empleado.Email;
+                employee.Phone = empleado.Phone;
+                employee.Gender = empleado.Genero;
+                employee.Age = empleado.Age;
+                employee.DateOfBirth = empleado.DateOfBirth;
+                employee.Dni = empleado.Dni;
+                employee.IdRole = empleado.IdRole;
+                employee.IdUser = _user.Entity.IdUser;
+                employee.DateCreate = fecha;
+                employee.DateModify = fecha;
+                employee.EmployeeActive = true;
+
+                var _employee = _context.Employees.Add(employee);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", "User", new { id = _employee.Entity.IdEmployee});
             }
             catch (Exception e)
             {
@@ -111,96 +171,149 @@ namespace BeautySalon.Controllers
         }
 
         // GET: User/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.UserAdmins == null)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            var userAdmin = await _context.UserAdmins.FindAsync(id);
-            if (userAdmin == null)
+            CreateEmpleado empleado = new CreateEmpleado();
+            Employee? _empleado = _context.Employees.Find(id);
+            if (_empleado != null)
             {
-                return NotFound();
-            }
-            return View(userAdmin);
-        }
-
-        // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdUser,UserName,UserPassword,UserActive,UserDateCreate,UserDateModify,UserEmail")] UserAdmin userAdmin)
-        {
-            if (id != userAdmin.IdUser)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                UserAdmin? user = _context.UserAdmins.Find(_empleado.IdUser);
+                if(user != null)
                 {
-                    _context.Update(userAdmin);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserAdminExists(userAdmin.IdUser))
+                    empleado = new CreateEmpleado
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        IdEmpleado = _empleado.IdEmployee,
+                        IdUsuario = user.IdUser,
+                        FirstName = _empleado.FirstName,
+                        LastName = _empleado.LastName,
+                        Dni = _empleado.Dni,
+                        Genero = _empleado.Gender,
+                        Email = _empleado.Email,
+                        Phone = _empleado.Phone,
+                        DateOfBirth = _empleado.DateOfBirth,
+                        IdRole = _empleado.IdRole,
+                        UserName = user.UserName,
+                        IdType = user.IdType,
+                        Age = _empleado.Age,
+                        UserPassword = user.UserPassword,
+                        UserPasswordConfirm = user.UserPassword
+                    };
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(userAdmin);
-        }
-
-        // GET: User/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.UserAdmins == null)
-            {
-                return NotFound();
-            }
-
-            var userAdmin = await _context.UserAdmins
-                .FirstOrDefaultAsync(m => m.IdUser == id);
-            if (userAdmin == null)
-            {
-                return NotFound();
-            }
-
-            return View(userAdmin);
-        }
-
-        // POST: User/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.UserAdmins == null)
-            {
-                return Problem("Entity set 'BeautysalonContext.UserAdmins'  is null.");
-            }
-            var userAdmin = await _context.UserAdmins.FindAsync(id);
-            if (userAdmin != null)
-            {
-                _context.UserAdmins.Remove(userAdmin);
             }
             
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+            List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+            List<string> genero = new List<string> { "Masculino", "Femenino" };
+            ViewBag.Genero = genero;
+            ViewBag.Skill = skills;
+            ViewBag.Rol = roles;
+
+            return View(empleado);
         }
 
-        private bool UserAdminExists(int id)
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit
+        (
+            [Bind("FirstName", "LastName", "Dni", "Phone", "DateOfBirth", "Genero", "Age", "Email", "IdType", "IdRole", "UserName", "UserPassword", "UserPasswordConfirm", "IdEmpleado", "IdUsuario")] CreateEmpleado empleado
+        )
         {
-          return (_context.UserAdmins?.Any(e => e.IdUser == id)).GetValueOrDefault();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+                    List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+                    List<string> genero = new List<string> { "Masculino", "Femenino" };
+                    ViewBag.Genero = genero;
+                    ViewBag.Skill = skills;
+                    ViewBag.Rol = roles;
+
+                    return View(empleado);
+                }
+
+                if (empleado.UserPassword != empleado.UserPasswordConfirm)
+                {
+                    ViewBag.NoCorresponde = "Las contraseñas no coincien";
+                    List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+                    List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+                    List<string> genero = new List<string> { "Masculino", "Femenino" };
+                    ViewBag.Genero = genero;
+                    ViewBag.Skill = skills;
+                    ViewBag.Rol = roles;
+
+                    return View(empleado);
+                }
+
+                DateTime fecha = DateTime.Now;
+
+                //Guardar usuario
+                UserAdmin? user = _context.UserAdmins.Find(empleado.IdUsuario);
+                if (user != null)
+                {
+                    user.UserName = empleado.UserName;
+                    user.UserPassword = empleado.UserPassword;
+                    user.IdType = empleado.IdType;
+                    user.UserDateModify = fecha;
+
+                    await _context.SaveChangesAsync();
+                }
+
+                //Guardar empleado
+                Employee? employee = _context.Employees.Find(empleado.IdEmpleado);
+                if (employee != null)
+                {
+                    employee.FirstName = empleado.FirstName;
+                    employee.LastName = empleado.LastName;
+                    employee.Email = empleado.Email;
+                    employee.Phone = empleado.Phone;
+                    employee.Gender = empleado.Genero;
+                    employee.Age = empleado.Age;
+                    employee.DateOfBirth = empleado.DateOfBirth;
+                    employee.Dni = empleado.Dni;
+                    employee.IdRole = empleado.IdRole;
+                    employee.DateModify = fecha;
+
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Details", "User", new { id = empleado.IdEmpleado });
+            }
+            catch (Exception e)
+            {
+                ViewBag.Erro = e.Message;
+                List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
+                List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
+                List<string> genero = new List<string> { "Masculino", "Femenino" };
+                ViewBag.Genero = genero;
+                ViewBag.Skill = skills;
+                ViewBag.Rol = roles;
+                return View();
+            }
+        }
+
+        public async Task<IActionResult> CambioEstado(int idEmpleado, int idUser, bool estado)
+        {
+            Employee? empleado = _context.Employees.Find(idEmpleado);
+            if(empleado != null)
+            {
+                empleado.EmployeeActive = estado;
+                empleado.DateModify = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+            UserAdmin? user = _context.UserAdmins.Find(idUser);
+            if(user != null)
+            {
+                user.UserActive = estado;
+                user.UserDateModify = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Details", "User", new { id = idEmpleado });
         }
     }
 }

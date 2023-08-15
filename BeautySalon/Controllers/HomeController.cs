@@ -27,6 +27,39 @@ namespace BeautySalon.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Administrador,Estilista,Caja,Inventario")]
+        public IActionResult MyProfile() 
+        {
+            if (User.FindFirst("idUser") != null)
+            {
+                int id = Int32.Parse(User.FindFirst("idUser").Value);
+
+                Employee? empleado = _context.Employees.Where(e=> e.IdUser == id).FirstOrDefault();
+                if (empleado != null)
+                {
+                    ViewBag.Empleado = empleado;
+                    UserAdmin? user = _context.UserAdmins.Find(empleado.IdUser);
+                    ViewBag.User = user;
+                    RoleEmployee? skill = _context.RoleEmployees.Find(empleado.IdRole);
+                    ViewBag.Skill = skill;
+                    if (user != null)
+                    {
+                        TypeUser? role = _context.TypeUsers.Find(user.IdType);
+                        ViewBag.Role = role;
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

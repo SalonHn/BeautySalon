@@ -1,54 +1,137 @@
-﻿@model BeautySalon.Models.DataBase.UserAdmin
+﻿@model BeautySalon.Models.CreateModels.CreateEmpleado
+
+@using BeautySalon.Models.DataBase;
+
+<script>
+    $(document).ready(function () {
+
+        if ($('#selectRole').val() == "3") {
+            $('#divSkill').show();
+        };
+
+        // Seleccionar el elemento select por su ID
+        $('#selectRole').on('change', function () {
+            var seleccion = $(this).val(); // Obtener el valor seleccionado
+            if (seleccion == "3") {
+                $('#divSkill').show();
+            } else {
+                $('#selectSkill').val("1");
+                $('#divSkill').hide();
+            }
+        });
+    });
+</script>
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> genero = ViewBag.Genero;
+    List<RoleEmployee> skills = ViewBag.Skill;
+    List<TypeUser> roles = ViewBag.Rol;
 }
 
-<h1>Edit</h1>
-
-<h4>UserAdmin</h4>
+<div class="d-flex justify-content-center mt-2 mb-3"><h1>Editar Empleado</h1></div>
+<h5>Datos del empleado</h5>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdUser" />
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
+<div>
+    <form asp-action="Edit" asp-controller="User" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="IdEmpleado" hidden />
+        <input asp-for="IdUsuario" hidden />
+        <div class="row">
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Nombres</label>
+                <input asp-for="FirstName" class="form-control form-control-sm" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Apellidos</label>
+                <input asp-for="LastName" class="form-control form-control-sm" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">DNI</label>
+                <input asp-for="Dni" class="form-control form-control-sm" />
+                <span asp-validation-for="Dni" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Fecha nacimiento</label>
+                <input asp-for="DateOfBirth" type="date" class="form-control form-control-sm" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Genero</label>
+                <select class="form-select form-select-sm" asp-for="Genero" asp-items="@(new SelectList(genero))">
+                    <option>Seleccione</option>
+                </select>
+                <span asp-validation-for="Genero" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Edad</label>
+                <input asp-for="Age" min="14" max="90" type="number" class="form-control form-control-sm" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Telefono</label>
+                <input asp-for="Phone" class="form-control form-control-sm" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Correo</label>
+                <input asp-for="Email" type="email" class="form-control form-control-sm" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <h5 class="mt-4">Rol de usuario</h5>
+        <hr />
+        <div class="row">
+            <div class="col-auto form-group">
+                <label asp-for="FirstName" class="control-label col-form-label-sm">Role</label>
+                <select id="selectRole" class="form-select form-select-sm" asp-for="IdType" asp-items="@(new SelectList(roles, "IdType", "TypeName"))">
+                    <option>Seleccione</option>
+                </select>
+                <span asp-validation-for="IdType" class="text-danger"></span>
+            </div>
+            <div id="divSkill" class="col-auto form-group" style="display:none;">
+                <label class="control-label col-form-label-sm">Habilidad</label>
+                <select id="selectSkill" class="form-select form-select-sm" asp-for="IdRole" asp-items="@(new SelectList(skills, "IdRole", "NameRole"))">
+                    <option value="1">Seleccione</option>
+                </select>
+                <span asp-validation-for="IdRole" class="text-danger"></span>
+            </div>
+        </div>
+
+        <h5 class="mt-4">Usuario</h5>
+        <hr />
+        <div class="row">
+            <div class="col-7 col-sm-4 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Nombre de Usuario</label>
+                <input asp-for="UserName" class="form-control form-control-sm" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserPassword" class="control-label"></label>
-                <input asp-for="UserPassword" class="form-control" />
+            <div class="col-6 col-sm-4 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Contraseña</label>
+                <input type="password" asp-for="UserPassword" class="form-control form-control-sm" />
                 <span asp-validation-for="UserPassword" class="text-danger"></span>
+                <span class="text-danger">@ViewBag.NoCorresponde</span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="UserActive" /> @Html.DisplayNameFor(model => model.UserActive)
-                </label>
+            <div class="col-6 col-sm-4 mt-2 form-group">
+                <label class="control-label col-form-label-sm">Confirmar Contraseña</label>
+                <input type="password" asp-for="UserPasswordConfirm" class="form-control form-control-sm" />
+                <span asp-validation-for="UserPasswordConfirm" class="text-danger"></span>
+                <span class="text-danger">@ViewBag.NoCorresponde</span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserDateCreate" class="control-label"></label>
-                <input asp-for="UserDateCreate" class="form-control" />
-                <span asp-validation-for="UserDateCreate" class="text-danger"></span>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-6 d-flex justify-content-center">
+                <a href="@Url.Action("Details", "User", new {id = Model.IdEmpleado })" class="btn btn-sm btn-danger">Cancelar</a>
             </div>
-            <div class="form-group">
-                <label asp-for="UserDateModify" class="control-label"></label>
-                <input asp-for="UserDateModify" class="form-control" />
-                <span asp-validation-for="UserDateModify" class="text-danger"></span>
+            <div class="col-6 d-flex justify-content-center">
+                <button type="submit" class="btn btn-sm btn-success">Guardar</button>
             </div>
-            <div class="form-group">
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
 </div>
 

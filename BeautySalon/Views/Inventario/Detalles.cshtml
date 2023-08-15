@@ -24,8 +24,8 @@
         <div><span><strong>Categoria: </strong>@category.Category1</span></div>
         <div><span><strong>Stock Disponible: </strong>@product.Stock</span></div>
         <div><span><strong>Stock Minimo: </strong>@product.StockMinimum</span></div>
-        <div><span><strong>Fecha de ingreso: </strong>@product.CreateDate</span></div>
-        <div><span><strong>Ultima modificación: </strong>@product.ModifyDate</span></div>
+        <div><span><strong>Fecha de ingreso: </strong>@product.CreateDate.ToString("dd-MM-yyyy")</span></div>
+        <div><span><strong>Ultima modificación: </strong>@product.ModifyDate.ToString("dd-MM-yyyy")</span></div>
     </div>
 </div>
 <hr />

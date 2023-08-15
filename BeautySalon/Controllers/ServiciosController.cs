@@ -195,6 +195,7 @@ namespace BeautySalon.Controllers
                 editServicio.Description = servicio.Description;
                 editServicio.Featured = servicio.Featured;
                 editServicio.Price = servicio.Price;
+                editServicio.ModifyDate = DateTime.Now;
 
                 _context.SaveChanges();
 
