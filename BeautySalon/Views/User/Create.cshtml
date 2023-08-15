@@ -1,4 +1,4 @@
-﻿@model BeautySalon.Models.DataBase.Employee
+﻿@model BeautySalon.Models.CreateModels.CreateEmpleado
 
 @using BeautySalon.Models.DataBase;
 
@@ -9,11 +9,11 @@
     List<RoleEmployee> roles = ViewBag.Rol;
 }
 
-<div class="d-flex justify-content-center mt-2"><h1>Nuevo Empleado</h1></div>
+<div class="d-flex justify-content-center mt-2 mb-3"><h1>Nuevo Empleado</h1></div>
 <h4>Datos del empleado</h4>
 <hr />
 <div>
-    <form asp-action="Create">
+    <form asp-action="Create" asp-controller="User" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-6 form-group">
@@ -27,109 +27,6 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
         </div>
-        <div class="row mt-2">
-            <div class="col-6 form-group">
-                <label asp-for="Dni" class="control-label">DNI</label>
-                <input asp-for="Dni" class="form-control" />
-                <span asp-validation-for="Dni" class="text-danger"></span>
-            </div>
-            <div class="col-6 form-group">
-                <label asp-for="Phone" class="control-label">Telefono</label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-6 form-group">
-                <label asp-for="DateOfBirth" class="control-label">Fecha de Nacimiento</label>
-                <input asp-for="DateOfBirth" class="form-control" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </div>
-            <div class="col-6 form-group">
-                <label asp-for="Age" class="control-label">Edad</label>
-                <input asp-for="Age" class="form-control" />
-                <span asp-validation-for="Age" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-6 form-group">
-                <label asp-for="Gender" class="control-label">Genero</label>
-                <select asp-for="Gender" class="form-select" asp-items="@(new SelectList(genero))"></select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-            <div class="col-6 form-group">
-                <label asp-for="IdRole" class="control-label">Rol</label>
-                <select asp-for="IdRole" class="form-select" asp-items="@(new SelectList(roles, "IdRole", "NameRole"))"></select>
-                <span asp-validation-for="IdRole" class="text-danger"></span>
-            </div>
-        </div>
-        <hr />
-        <h4>Datos de usuario</h4>
-        <hr />
-        <div class="row mt-2">
-            <div class="col-6 form-group">
-                <label class="control-label">Correo</label>
-                <input  class="form-control" />
-                <span  class="text-danger"></span>
-            </div>
-            <div class="col-6 form-group">
-                <label  class="control-label">Usuario</label>
-                <input  class="form-control" />
-                <span  class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-6 form-group">
-                <label  class="control-label">Contraseña</label>
-                <input  type="password" class="form-control" />
-                <span  class="text-danger"></span>
-            </div>
-            <div class="col-6 form-group">
-                <label  class="control-label">Confirmar Contraseña</label>
-                <input  type="password" class="form-control" />
-                <span  class="text-danger"></span>
-            </div>
-        </div>
-        <hr />
-        <h4>Permisos</h4>
-        <hr />
-        <div class="row">
-            <div class="form-check col">
-                <input class="form-check-input" type="checkbox" name="citas" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">Citas/Facturación</label>
-            </div>
-            <div class="form-check col">
-                <input class="form-check-input" type="checkbox" name="inventario" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">Inventario</label>
-            </div>
-            <div class="form-check col">
-                <input class="form-check-input" type="checkbox" name="servicios" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">Servicios</label>
-            </div>
-            <div class="form-check col">
-                <input class="form-check-input" type="checkbox" name="reportes" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">Reportes</label>
-            </div>
-            <div class="form-check col">
-                <input class="form-check-input" type="checkbox" name="usuarios" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">Ususarios</label>
-            </div>
-            <div class="form-check col">
-                <input class="form-check-input" type="checkbox" name="configuracion" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">Configuración</label>
-            </div>
-        </div>
-        <hr />
-        <div class="form-group">
-            <input type="submit" value="Crear Empleado" class="btn btn-primary" />
-        </div>
-        <span asp-validation-for="IdRoleNavigation" class="text-danger"></span>
-        <span asp-validation-for="IdUser" class="text-danger"></span>
-        <span asp-validation-for="IdUserNavigation" class="text-danger"></span>
-        <span asp-validation-for="DateCreate" class="text-danger"></span>
-        <span asp-validation-for="DateModify" class="text-danger"></span>
-        <span asp-validation-for="EmployeeActive" class="text-danger"></span>
-        <span class="text-danger">@ViewBag.Error</span>
     </form>
 </div>
 

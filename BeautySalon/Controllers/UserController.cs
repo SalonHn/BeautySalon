@@ -68,7 +68,7 @@ namespace BeautySalon.Controllers
         public IActionResult Create()
         {
             List<RoleEmployee> roles = _context.RoleEmployees.ToList();
-            List<string> genero = new List<string> { "Masculino", "Femenino", "Sin Especificar" };
+            List<string> genero = new List<string> { "Masculino", "Femenino" };
             ViewBag.Genero = genero;
             ViewBag.Rol = roles;
             return View();
