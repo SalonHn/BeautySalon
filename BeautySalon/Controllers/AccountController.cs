@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using BeautySalon.Models.DataBase;
+using BeautySalon.Models.CreateModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -43,11 +42,11 @@ namespace BeautySalon.Controllers
                     ViewBag.Error = "Usuario desactivado";
                     return View();
                 }
-
+                string userName = GetNombre(userAdmin.IdUser, userAdmin.IdType);
                 TypeUser? typeUser = _context.TypeUsers.Find(userAdmin.IdType);
                 var claim = new List<Claim> 
                 {
-                    new Claim(ClaimTypes.Name, userAdmin.UserName),
+                    new Claim(ClaimTypes.Name, userName),
                     new Claim("idUser", userAdmin.IdUser.ToString())
                 };
 
@@ -79,10 +78,105 @@ namespace BeautySalon.Controllers
             return View();
         }
 
+        public string GetNombre(int id, int idType)
+        {
+            string nombre = "Sin Nombre";
+
+            if(idType == 1)
+            {
+                Customer? customer = _context.Customers.Where(c=> c.IdUser == id).FirstOrDefault();
+                if (customer != null) { nombre = customer.FullName; }
+            }
+            else
+            {
+                Employee? employee = _context.Employees.Where(e => e.IdUser == id).FirstOrDefault();
+                if(employee != null) { nombre = employee.FirstName + " " + employee.LastName; }
+            }
+
+            return nombre;
+        }
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
+        }
+
+        public IActionResult Registrarse()
+        {
+            List<string> genero = new List<string> {"Femenino", "Masculino" };
+            ViewBag.Genero = genero;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Registrarse([Bind("FullName", "Gender", "Age", "Phone", "Email", "UserName", "UserPassword", "UserPasswordConfirm")] CreateCliente cliente)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<string> genero = new List<string> { "Masculino", "Femenino" };
+                ViewBag.Genero = genero;
+                return View(cliente);
+            }
+
+            UserAdmin? userExist = _context.UserAdmins.Where(u=> u.UserName == cliente.UserName).FirstOrDefault();
+            if(userExist != null)
+            {
+                List<string> genero = new List<string> { "Masculino", "Femenino" };
+                ViewBag.Genero = genero;
+                ViewBag.Existe = "El nombre de usuario ya existe";
+                return View(cliente);
+            }
+
+            if(cliente.UserPassword != cliente.UserPasswordConfirm)
+            {
+                List<string> genero = new List<string> { "Masculino", "Femenino" };
+                ViewBag.Genero = genero;
+                ViewBag.Pass = "Las contraseñas no coinciden.";
+                return View(cliente);
+            }
+
+            DateTime fecha = DateTime.Now;
+
+            //Creando usuario
+            UserAdmin user = new UserAdmin
+            {
+                UserName = cliente.UserName,
+                UserActive = true,
+                UserPassword = cliente.UserPassword,
+                UserDateCreate = fecha,
+                UserDateModify = fecha,
+                IdType = 1
+            };
+            var _user = _context.UserAdmins.Add(user);
+            await _context.SaveChangesAsync();
+
+            //Creando cliente
+            Customer customer = new Customer
+            {
+                FullName = cliente.FullName,
+                Phone = cliente.Phone,
+                Gender = cliente.Gender,
+                Age = cliente.Age,
+                Email = cliente.Email,
+                CreateDate = fecha,
+                IdUser = _user.Entity.IdUser
+            };
+            _context.Customers.Add(customer);
+            await _context.SaveChangesAsync();
+
+            var claim = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, cliente.FullName),
+                new Claim("idUser", cliente.IdUser.ToString())
+            };
+            claim.Add(new Claim(ClaimTypes.Role, "Cliente"));
+
+            var claimIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
+
+            return RedirectToAction("Index", "Clientes");
         }
     }
 }

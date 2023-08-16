@@ -8,7 +8,7 @@
 
 <div class="bg-white p-5 divLogin">
 
-    <form action="@Url.Content("")" method="post">
+    <form asp-action="Login" asp-controller="Account" method="post">
         <div class="d-flex justify-content-center">
             <img src="/img/logo.png" alt="Login-icon" class="imgLogoLogin" />
         </div>
@@ -34,6 +34,9 @@
         </div>
         <div class="d-flex justify-content-center mt-3">
 			<button class="btn btn-dark" type="submit">Login</button>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <span>¿No tienes una cuenta? <a class="text-decoration-none" asp-action="Registrarse" asp-controller="Account">Registrate</a></span>
         </div>
     </form>
 
