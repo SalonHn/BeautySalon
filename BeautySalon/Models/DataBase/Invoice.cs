@@ -23,5 +23,9 @@ public partial class Invoice
 
     public decimal? Total { get; set; }
 
+    public int? IdPago { get; set; }
+
     public virtual Customer IdCustomerNavigation { get; set; } = null!;
+
+    public virtual Pago? IdPagoNavigation { get; set; }
 }

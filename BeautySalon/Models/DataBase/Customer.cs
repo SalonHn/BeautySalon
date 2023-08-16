@@ -13,13 +13,13 @@ public partial class Customer
 
     public DateTime CreateDate { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
     public int Age { get; set; }
 
     public string Gender { get; set; } = null!;
 
-    public int? IdUser { get; set; }
+    public int IdUser { get; set; }
 
     public virtual UserAdmin? IdUserNavigation { get; set; }
 

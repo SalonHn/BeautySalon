@@ -17,5 +17,9 @@ public partial class Membresium
 
     public int UserId { get; set; }
 
+    public int? IdPago { get; set; }
+
+    public virtual Pago? IdPagoNavigation { get; set; }
+
     public virtual UserAdmin User { get; set; } = null!;
 }

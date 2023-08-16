@@ -29,11 +29,15 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<HoursAvailable> HoursAvailables { get; set; }
 
+    public virtual DbSet<InformacionDePago> InformacionDePagos { get; set; }
+
     public virtual DbSet<Invoice> Invoices { get; set; }
 
     public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; }
 
     public virtual DbSet<Membresium> Membresia { get; set; }
+
+    public virtual DbSet<Pago> Pagos { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
 
@@ -46,6 +50,8 @@ public partial class BeautysalonContext : DbContext
     public virtual DbSet<Tax> Taxes { get; set; }
 
     public virtual DbSet<Timetable> Timetables { get; set; }
+
+    public virtual DbSet<TipoPago> TipoPagos { get; set; }
 
     public virtual DbSet<TypeUser> TypeUsers { get; set; }
 
@@ -218,6 +224,33 @@ public partial class BeautysalonContext : DbContext
                 .HasColumnName("_hour");
         });
 
+        modelBuilder.Entity<InformacionDePago>(entity =>
+        {
+            entity.HasKey(e => e.IdInfoPago).HasName("PK__Informac__191B44ABE4604766");
+
+            entity.ToTable("InformacionDePago");
+
+            entity.Property(e => e.IdInfoPago).HasColumnName("idInfoPago");
+            entity.Property(e => e.Ccv)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("ccv");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.NumeroTarjeta)
+                .HasMaxLength(19)
+                .IsUnicode(false)
+                .HasColumnName("numeroTarjeta");
+            entity.Property(e => e.Vence)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("vence");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.InformacionDePagos)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_infoPago_user");
+        });
+
         modelBuilder.Entity<Invoice>(entity =>
         {
             entity.HasKey(e => e.IdInvoice).HasName("PK__Invoice__D3631FCED67E7C65");
@@ -232,6 +265,7 @@ public partial class BeautysalonContext : DbContext
                 .HasColumnType("money")
                 .HasColumnName("discount");
             entity.Property(e => e.IdCustomer).HasColumnName("idCustomer");
+            entity.Property(e => e.IdPago).HasColumnName("idPago");
             entity.Property(e => e.NameCustomer)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -253,6 +287,10 @@ public partial class BeautysalonContext : DbContext
                 .HasForeignKey(d => d.IdCustomer)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_customer_invoice");
+
+            entity.HasOne(d => d.IdPagoNavigation).WithMany(p => p.Invoices)
+                .HasForeignKey(d => d.IdPago)
+                .HasConstraintName("fk_factura_pago");
         });
 
         modelBuilder.Entity<InvoiceDetail>(entity =>
@@ -289,15 +327,56 @@ public partial class BeautysalonContext : DbContext
             entity.Property(e => e.FechaInicio)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaInicio");
+            entity.Property(e => e.IdPago).HasColumnName("idPago");
             entity.Property(e => e.Precio)
                 .HasColumnType("money")
                 .HasColumnName("precio");
             entity.Property(e => e.UserId).HasColumnName("userId");
 
+            entity.HasOne(d => d.IdPagoNavigation).WithMany(p => p.Membresia)
+                .HasForeignKey(d => d.IdPago)
+                .HasConstraintName("fk_menbresia_pago");
+
             entity.HasOne(d => d.User).WithMany(p => p.Membresia)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_user_membresia");
+        });
+
+        modelBuilder.Entity<Pago>(entity =>
+        {
+            entity.HasKey(e => e.IdPago).HasName("PK__Pago__BD2295AD125A5752");
+
+            entity.ToTable("Pago");
+
+            entity.Property(e => e.IdPago).HasColumnName("idPago");
+            entity.Property(e => e.Cambio)
+                .HasColumnType("money")
+                .HasColumnName("cambio");
+            entity.Property(e => e.Ccv)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("ccv");
+            entity.Property(e => e.IdTipoPago).HasColumnName("idTipoPago");
+            entity.Property(e => e.Monto)
+                .HasColumnType("money")
+                .HasColumnName("monto");
+            entity.Property(e => e.NumeroDeTarjeta)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("numeroDeTarjeta");
+            entity.Property(e => e.Recibido)
+                .HasColumnType("money")
+                .HasColumnName("recibido");
+            entity.Property(e => e.Vence)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("vence");
+
+            entity.HasOne(d => d.IdTipoPagoNavigation).WithMany(p => p.Pagos)
+                .HasForeignKey(d => d.IdTipoPago)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_pago_tipo");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -459,6 +538,19 @@ public partial class BeautysalonContext : DbContext
                 .HasForeignKey(d => d.OpenHour)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_open_timetable");
+        });
+
+        modelBuilder.Entity<TipoPago>(entity =>
+        {
+            entity.HasKey(e => e.IdTipoPago).HasName("PK__TipoPago__AC5BA85BF16CB417");
+
+            entity.ToTable("TipoPago");
+
+            entity.Property(e => e.IdTipoPago).HasColumnName("idTipoPago");
+            entity.Property(e => e.Tipo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("tipo");
         });
 
         modelBuilder.Entity<TypeUser>(entity =>
