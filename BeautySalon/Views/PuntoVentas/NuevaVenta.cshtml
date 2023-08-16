@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewData["Title"] = "Factura";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="~/js/NuevaVenta.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#btnBuscarProducto").click(function () {
+            if ($("#inputBuscarProducto").val() != null && $("#inputBuscarProducto").val().trim() != ""){
+                $.ajax({
+                    url: '@Url.Content("~/PuntoVentas/SearchProducto")',
+                    method: "GET", 
+                    data: { sku: $("#inputBuscarProducto").val().trim() },
+                    success: function (response) {
+                        console.log(response);
+                        if (response.existe == true) {
+                            agregar(response.producto);
+                            $("#alertBuscar").hide();
+                        }else{
+                            $("#alertBuscar").show();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error en la petición AJAX:", error);
+                    }
+                });
+            }
+        });
+
+
+        $("input[name='tipoPago']").change(function () {
+            var opcionSeleccionada = $(this).val();
+            if(opcionSeleccionada == "1"){
+                $("#seccionPago").show();
+            }else{
+                $("#seccionPago").hide();
+            }
+        });
+    });
+</script>
+
+<div class="d-flex mt-3">
+    <div class="pe-3">
+        <input class="form-control form-control-sm" type="search" placeholder="Telefono"/>
+    </div>
+    <div>
+        <button type="button" class="btn btn-sm btn-success">Buscar Cliente</button>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center mt-3"><h3>Nueva Factura</h3></div>
+<hr />
+<div><span><strong>N° Referencia: </strong>100902983</span></div>
+<div class="d-flex mt-1">
+    <div class="pe-3"><span><strong>Cliente: </strong></span></div>
+    <div>
+        <input class="form-control form-control-sm" type="text" />
+    </div>
+</div>
+<div class="mt-2">
+    <h5>Detalles de la factura</h5>
+    <div class="d-flex mt-2">
+        <div class="pe-3">
+            <input id="inputBuscarProducto" class="form-control form-control-sm" type="search" placeholder="Codigo" />
+        </div>
+        <div>
+            <button id="btnBuscarProducto" type="button" class="btn btn-sm btn-success">Buscar Producto</button>
+        </div>
+    </div>
+    <span id="alertBuscar" class="text-danger" style="display: none;">Producto/Servicio no Encontrado</span>
+    <table id="tableDetalle" class="table table-sm table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <td>Producto</td>
+                <td>Precio</td>
+                <td>Cant.</td>
+                <td>Total</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <div><span><strong>Subtotal: </strong></span>L. <span>1298.00</span></div>
+    <div><span><strong>Impuestos: </strong></span>L. <span>150.00</span></div>
+</div>
+<div class="mt-4 p-2 d-flex justify-content-center" style="border: 1px solid; border-radius: 25px;">
+    <div><span style="font-size: 22px;"><strong>Total: </strong>L. </span><span style="font-size: 22px;">15650.00</span></div>
+</div>
+
+<div class="mt-3">
+    <h5>Metodo de pago</h5>
+</div>
+<div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipoPago" id="tipoPago1" checked value="1">
+        <label class="form-check-label" for="tipoPago1">Efectivo</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipoPago" id="tipoPago2" value="2">
+        <label class="form-check-label" for="tipoPago2">Tarjeta</label>
+    </div>
+</div>
+
+<section id="seccionPago">
+    <div class="row">
+        <div class="col-auto">
+            <label class="col-form-label-sm">Recibido</label>
+            <input class="form-control form-control-sm"/>
+        </div>
+        <div class="col-auto">
+            <label class="col-form-label-sm">Cambio</label>
+            <input class="form-control form-control-sm" disabled/>
+        </div>
+    </div>
+</section>

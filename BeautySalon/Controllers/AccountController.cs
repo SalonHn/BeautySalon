@@ -129,6 +129,15 @@ namespace BeautySalon.Controllers
                 return View(cliente);
             }
 
+            Customer? _cliente = _context.Customers.Where(c => c.Phone == cliente.Phone).FirstOrDefault();
+            if(_cliente != null)
+            {
+                List<string> genero = new List<string> { "Masculino", "Femenino" };
+                ViewBag.Genero = genero;
+                ViewBag.Tel = "Ya existe un usuario asociado a este telefono.";
+                return View(cliente);
+            }
+
             if(cliente.UserPassword != cliente.UserPasswordConfirm)
             {
                 List<string> genero = new List<string> { "Masculino", "Femenino" };
@@ -143,7 +152,7 @@ namespace BeautySalon.Controllers
             UserAdmin user = new UserAdmin
             {
                 UserName = cliente.UserName,
-                UserActive = true,
+                UserActive = false,
                 UserPassword = cliente.UserPassword,
                 UserDateCreate = fecha,
                 UserDateModify = fecha,
