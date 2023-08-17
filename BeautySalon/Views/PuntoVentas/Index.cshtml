@@ -1,8 +1,26 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Punto de venta";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
+<div class="row mt-5">
+  <div class="col-sm-6 mb-3 mb-sm-0">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Nueva Factura</h5>
+        <p class="card-text">Facturar una lista de articulos o servicios.</p>
+        <a asp-action="NuevaVenta" asp-controller="PuntoVentas" class="btn btn-primary">Facturar</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Historial de Ventas</h5>
+        <p class="card-text">Historial de ventas facturadas en el sistema.</p>
+        <a href="#" class="btn btn-primary">Facturas</a>
+      </div>
+    </div>
+  </div>
+</div>

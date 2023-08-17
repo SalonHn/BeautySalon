@@ -28,6 +28,26 @@ namespace BeautySalon.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Facturar([FromBody] CreateFactura factura)
+        {
+            try
+            {
+                Pago pago = new Pago();
+                if (factura.IdTipoPago == 1)
+                {
+                    pago = new Pago
+                    {
+
+                    };
+                }
+                return Json(new { status = true });
+            }
+            catch
+            {
+                return Json(new {status = false});
+            }
+        }
 
         //Obtener un Servicio o Producto
         public JsonResult SearchProducto(string sku)
@@ -39,8 +59,9 @@ namespace BeautySalon.Controllers
             if (product != null)
             {
                 decimal taxProduct = 0;
+                int tipoTax = 1;
                 if (product.IdTax == 1) { taxProduct = product.Price * 0.15m; }
-                else { taxProduct = product.Price * 0.18m; }
+                else { taxProduct = product.Price * 0.18m; tipoTax = 2; }
                 encontrado = true;
                 buscarProducto = new BuscarProducto
                 {
@@ -48,7 +69,8 @@ namespace BeautySalon.Controllers
                     name = product.NameProduct,
                     precio = product.Price,
                     tax = taxProduct,
-                    cantidad = 1
+                    cantidad = 1,
+                    typeTax= tipoTax
                 };
             }
 
@@ -56,6 +78,31 @@ namespace BeautySalon.Controllers
             {
                 existe = encontrado,
                 producto = buscarProducto
+            };
+
+            return Json(respuesta);
+        }
+
+
+        public JsonResult SearchCliente(string telefono)
+        {
+            int idCliente = 7;
+            string nombreCliente = "Sin nombre";
+            bool encontrado = false;
+
+            Customer? customer = _context.Customers.Where(c=> c.Phone == telefono).FirstOrDefault();
+            if(customer != null)
+            {
+                idCliente = customer.IdCustomer;
+                nombreCliente = customer.FullName;
+                encontrado = true;
+            }
+
+            var respuesta = new
+            {
+                existe = encontrado,
+                id = idCliente,
+                nombre = nombreCliente
             };
 
             return Json(respuesta);

@@ -7,5 +7,6 @@
         public decimal precio { get; set; }
         public decimal tax { get; set; }
         public int cantidad { get; set; }
+        public int typeTax { get; set; }
     }
 }

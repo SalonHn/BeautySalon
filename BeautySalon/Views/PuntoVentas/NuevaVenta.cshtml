@@ -8,6 +8,7 @@
 
 <script>
     $(document).ready(function () {
+        //Buscar Producto
         $("#btnBuscarProducto").click(function () {
             if ($("#inputBuscarProducto").val() != null && $("#inputBuscarProducto").val().trim() != ""){
                 $.ajax({
@@ -19,6 +20,8 @@
                         if (response.existe == true) {
                             agregar(response.producto);
                             $("#alertBuscar").hide();
+                            $("#inputBuscarProducto").val("");
+                            console.log(detalle);
                         }else{
                             $("#alertBuscar").show();
                         }
@@ -30,36 +33,76 @@
             }
         });
 
+        //Buscar Cliente
+        $("#btnBuscarCliente").click(function () {
+            if ($("#inputBuscarCliente").val() != null && $("#inputBuscarCliente").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Content("~/PuntoVentas/SearchCliente")',
+                    method: "GET",
+                    data: { telefono: $("#inputBuscarCliente").val().trim() },
+                    success: function (response) {
+                        console.log(response);
+                        if (response.existe == true) {
+                            $("#alertCliente").hide();
+                            $("#inputBuscarCliente").val("");
+                            clienteEncontrado(response);
 
+                        } else {
+                            $("#alertCliente").show();
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error en la petición AJAX:", error);
+                    }
+                });
+            }
+        });
+
+        //Seleccionar metodo de pago
         $("input[name='tipoPago']").change(function () {
             var opcionSeleccionada = $(this).val();
             if(opcionSeleccionada == "1"){
                 $("#seccionPago").show();
+                tipoPago = 1;
             }else{
                 $("#seccionPago").hide();
+                tipoPago = 0;
             }
         });
     });
 </script>
 
-<div class="d-flex mt-3">
-    <div class="pe-3">
-        <input class="form-control form-control-sm" type="search" placeholder="Telefono"/>
+<section id="seccionBuscarCliente">
+    <div class="d-flex mt-3">
+        <div class="pe-3">
+            <input id="inputBuscarCliente" class="form-control form-control-sm" type="search" placeholder="Telefono" />
+        </div>
+        <div>
+            <button id="btnBuscarCliente" type="button" class="btn btn-sm btn-success">Buscar Cliente</button>
+        </div>
     </div>
-    <div>
-        <button type="button" class="btn btn-sm btn-success">Buscar Cliente</button>
-    </div>
-</div>
+    <span id="alertCliente" class="text-danger" style="display: none;">Telefono no registrado</span>
+</section>
 
 <div class="d-flex justify-content-center mt-3"><h3>Nueva Factura</h3></div>
 <hr />
-<div><span><strong>N° Referencia: </strong>100902983</span></div>
-<div class="d-flex mt-1">
-    <div class="pe-3"><span><strong>Cliente: </strong></span></div>
-    <div>
-        <input class="form-control form-control-sm" type="text" />
-    </div>
+<div><span><strong>N° Referencia: </strong>xxxxxxxxxx</span></div>
+
+<seccion id="sinCliente">
+	<div class="d-flex mt-1">
+		<div class="pe-3"><span><strong>Cliente: </strong></span></div>
+		<div>
+			<input id="nombreCliente" class="form-control form-control-sm" type="text" />
+		</div>
+	</div>
+</seccion>
+
+<div style="display: none;" id="conCliente"><span><strong>Cliente: </strong></span><span id="viewCliente"></span></div>
+<div id="btnQuitarCliente" style="display: none;" class="mt-2">
+    <button onclick="quitarCliente();" type="button" class="btn btn-sm btn-danger">Quitar Cliente</button>
 </div>
+
+
 <div class="mt-2">
     <h5>Detalles de la factura</h5>
     <div class="d-flex mt-2">
@@ -87,11 +130,11 @@
 </div>
 
 <div>
-    <div><span><strong>Subtotal: </strong></span>L. <span>1298.00</span></div>
-    <div><span><strong>Impuestos: </strong></span>L. <span>150.00</span></div>
+    <div><span><strong>Subtotal: </strong></span>L. <span id="viewSubTotal">0.0</span></div>
+    <div><span><strong>Impuestos: </strong></span>L. <span id="viewISV">0.0</span></div>
 </div>
 <div class="mt-4 p-2 d-flex justify-content-center" style="border: 1px solid; border-radius: 25px;">
-    <div><span style="font-size: 22px;"><strong>Total: </strong>L. </span><span style="font-size: 22px;">15650.00</span></div>
+    <div><span style="font-size: 22px;"><strong>Total: </strong>L. </span><span style="font-size: 22px;" id="viewTotal">0.0</span></div>
 </div>
 
 <div class="mt-3">
@@ -112,7 +155,7 @@
     <div class="row">
         <div class="col-auto">
             <label class="col-form-label-sm">Recibido</label>
-            <input class="form-control form-control-sm"/>
+            <input id="inputRecivido" type="number" class="form-control form-control-sm"/>
         </div>
         <div class="col-auto">
             <label class="col-form-label-sm">Cambio</label>
@@ -120,3 +163,14 @@
         </div>
     </div>
 </section>
+<div><span id="alertSinProducto" style="display: none;" class="text-danger">Tienes que agregar al menos un producto.</span></div>
+<div><span id="alertRecibido" style="display: none;" class="text-danger">Lo recibido no cubre el monto total.</span></div>
+<hr />
+<div class="mt-2 row">
+    <div class="col-6 d-flex justify-content-center">
+        <a asp-action="Index" asp-controller="PuntoVentas" class="btn btn-danger">Cancelar</a>
+    </div>
+    <div class="col-6 d-flex justify-content-center">
+        <button onclick="facturar('@Url.Content("~/PuntoVentas/Facturar")');" class="btn btn-success">Confirmar</button>
+    </div>
+</div>
