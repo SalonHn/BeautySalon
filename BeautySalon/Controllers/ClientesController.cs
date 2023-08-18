@@ -185,5 +185,6 @@ namespace BeautySalon.Controllers
 
             return RedirectToAction("DetallesReserva", "Clientes", new { idReserva = idReserva });
         }
+
     }
 }

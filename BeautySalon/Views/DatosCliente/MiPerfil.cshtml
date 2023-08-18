@@ -1,0 +1,42 @@
+﻿
+@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    Customer cliente = ViewBag.Cliente;
+    UserAdmin user = ViewBag.User;
+}
+
+<div class="d-flex justify-content-center"><h3>Mi Perfil</h3></div>
+<hr />
+
+<div class="d-flex mb-2">
+    @if (user.UserActive == true)
+    {
+        <div class="ps-2 pe-2" style="border-radius: 25px; background-color: black;">
+            <span style="color: #f2c22d;"><strong>Cliente VIP</strong></span>
+        </div>
+    }
+
+    @if (user.UserActive == false)
+    {
+        <div class="ps-2 pe-2" style="border-radius: 25px; background-color: dodgerblue;">
+            <span style="color: white;"><strong>Cliente Normal</strong></span>
+        </div>
+    }
+</div>
+
+<div><span><strong>Nombre: </strong>@cliente.FullName</span></div>
+<div><span><strong>Genero: </strong>@cliente.Gender</span></div>
+<div><span><strong>Edad: </strong>@cliente.Age</span></div>
+<div><span><strong>Nombre de usuario: </strong>@user.UserName</span></div>
+<div><span><strong>Telefono: </strong>@cliente.Phone</span></div>
+<div><span><strong>Correo: </strong>@cliente.Email</span></div>
+<div><span><strong>Fecha de registro: </strong>@cliente.CreateDate.ToString("dd-MM-yyyy")</span></div>
+
+<hr />
+
+<div class="d-flex justify-content-center">
+    <a asp-action="Index" asp-controller="Clientes" class="btn btn-secondary">Salir</a>
+</div>
