@@ -195,5 +195,60 @@ namespace BeautySalon.Controllers
 
             return Json(respuesta);
         }
+
+        public IActionResult HistorialVentas(DateTime? fecha, string? cliente)
+        {
+            DateTime dateTime = fecha ?? DateTime.Now;
+            List<Invoice> invoices = new List<Invoice>();
+            if (fecha != null && cliente != null)
+            {
+                invoices = _context.Invoices.Where(i=> i.DateInvoice.Date == dateTime.Date && i.NameCustomer.Contains(cliente)).ToList();
+            }else if(fecha != null && cliente == null)
+            {
+                invoices = _context.Invoices.Where(i=> i.DateInvoice.Date == dateTime.Date).ToList();
+            }else if (cliente != null && fecha == null)
+            {
+                invoices = _context.Invoices.Where(i => i.NameCustomer.Contains(cliente)).ToList();
+            } else
+            {
+                invoices = _context.Invoices.ToList();
+            }
+
+            ViewBag.Facturas = invoices;
+            ViewBag.Cliente = cliente;
+            if(fecha != null)
+            {
+                ViewBag.Fecha = dateTime.ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                ViewBag.Fecha = fecha;
+            }
+            return View();
+        }
+
+
+        public IActionResult DetalleFactura(int idFactura)
+        {
+            Invoice? factura = _context.Invoices.Find(idFactura);
+            ViewBag.Factura = factura;
+            List<ViewDetalleFactura>? detalle = null;
+            if(factura != null)
+            {
+                var detall = _context.InvoiceDetails
+                    .Where(d => d.IdInvoice == factura.IdInvoice)
+                    .Join(_context.Products, d=> d.IdProduct, p=> p.IdProduct, (d, p) => new {d, p})
+                    .ToList();
+                detalle = detall.ConvertAll(x=> new ViewDetalleFactura
+                {
+                    name = x.p.NameProduct,
+                    cantidad = x.d.Quantity,
+                    precio = x.d.Price
+                });
+            }
+            ViewBag.Detalle = detalle;
+
+            return View();
+        }
     }
 }

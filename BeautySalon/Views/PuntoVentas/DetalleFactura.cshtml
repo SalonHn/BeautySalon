@@ -1,0 +1,47 @@
+﻿@using BeautySalon.Models.DataBase;
+@using BeautySalon.Models.ViewModels;
+
+@{
+    ViewData["Title"] = "Detalle de venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Invoice factura = ViewBag.Factura;
+    List<ViewDetalleFactura> detalle = ViewBag.Detalle;
+}
+
+<div class="d-flex justify-content-center mt-3"><h2>Detalle de Venta</h2></div>
+<hr />
+<div><span><strong>N° Referencia: </strong>@factura.ReferencesNumber</span></div>
+<div><span><strong>Fecha: </strong>@factura.DateInvoice.ToString("dd-MM-yyyy")</span></div>
+<div><span><strong>Cliente: </strong>@factura.NameCustomer</span></div>
+<div><span><strong>SubTotal: </strong>L. @factura.Subtotal</span></div>
+<div><span><strong>Impuesto: </strong>L. @factura.Tax</span></div>
+<div><span><strong>Total: </strong>L. @factura.Total</span></div>
+
+<div class="mt-2 mb-1"><span><strong>Detalle</strong></span></div>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Cant.</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+		@foreach (var d in detalle)
+		{
+            <tr>
+                <td>@d.name</td>
+                <td>@d.cantidad</td>
+                <td>@d.precio.ToString("F2")</td>
+                <td>@((d.cantidad * d.precio).ToString("F2"))</td>
+            </tr>
+		}
+    </tbody>
+</table>
+
+
+<hr />
+<div class="d-flex justify-content-center"><a asp-action="HistorialVentas" asp-controller="PuntoVentas" class="btn btn-secondary">Listo</a></div>
+
+
