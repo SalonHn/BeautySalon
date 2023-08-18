@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\firebase-app.js" />
+    <Content Remove="wwwroot\js\firebase.js" />
     <Content Remove="wwwroot\js\NuevaVenta.js" />
     <Content Remove="wwwroot\js\pwa-app.js" />
     <Content Remove="wwwroot\js\recursos.js" />
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\firebase-app.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\firebase.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\NuevaVenta.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\pwa-app.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\recursos.js" />
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\firebase-app.js" />
+    <None Include="wwwroot\js\firebase.js" />
     <None Include="wwwroot\js\NuevaVenta.js" />
     <None Include="wwwroot\js\pwa-app.js" />
     <None Include="wwwroot\js\recursos.js" />

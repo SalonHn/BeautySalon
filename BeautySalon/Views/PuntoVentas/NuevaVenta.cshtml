@@ -16,12 +16,10 @@
                     method: "GET", 
                     data: { sku: $("#inputBuscarProducto").val().trim() },
                     success: function (response) {
-                        console.log(response);
                         if (response.existe == true) {
                             agregar(response.producto);
                             $("#alertBuscar").hide();
                             $("#inputBuscarProducto").val("");
-                            console.log(detalle);
                         }else{
                             $("#alertBuscar").show();
                         }
@@ -41,7 +39,6 @@
                     method: "GET",
                     data: { telefono: $("#inputBuscarCliente").val().trim() },
                     success: function (response) {
-                        console.log(response);
                         if (response.existe == true) {
                             $("#alertCliente").hide();
                             $("#inputBuscarCliente").val("");

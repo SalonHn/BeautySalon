@@ -1,5 +1,3 @@
-// service-worker.js
-
 self.addEventListener('install', function (event) {
     // Realizar la caché de recursos necesarios
 

@@ -157,7 +157,13 @@ function completarFactura(url) {
         contentType: "application/json",
         data: JSON.stringify(params),
         success: function (response) {
-            console.log(response);
+            if (response.status == true) {
+                alert("Venta exitosa");
+                window.location.href = 'Index';
+            } else {
+                alert("¡Ha ocurrido un error inesperado! Intentelo de nuevo.");
+                window.location.href = 'Index';
+            }
         },
         error: function (error) {
             console.error("Error en la petición AJAX:", error);

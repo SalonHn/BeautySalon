@@ -11,6 +11,7 @@ namespace BeautySalon.Controllers
     public class PuntoVentasController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Random _random = new Random();
 
         public PuntoVentasController(BeautysalonContext context)
         {
@@ -33,20 +34,107 @@ namespace BeautySalon.Controllers
         {
             try
             {
+                Totales totales = CalcularTotal(factura.DetalleFactura);
+
+                //Creacion de pago
                 Pago pago = new Pago();
                 if (factura.IdTipoPago == 1)
                 {
                     pago = new Pago
                     {
-
+                        Monto = totales.total,
+                        Recibido = factura.Recibido,
+                        Cambio = factura.Recibido - totales.total,
+                        IdTipoPago = factura.IdTipoPago
                     };
                 }
+                else
+                {
+                    pago = pagoTarjeta(totales.total);
+                }
+                var _pago = _context.Pagos.Add(pago);
+                _context.SaveChanges();
+
+                //Creacion de factura
+
+                int cant = _context.Invoices.Count() + 1000000;
+                Invoice invoice = new Invoice
+                {
+                    ReferencesNumber = cant.ToString(),
+                    IdCustomer = factura.IdCustomer,
+                    NameCustomer = factura.NameCustomer,
+                    DateInvoice = DateTime.Now,
+                    Subtotal = totales.subtotal,
+                    Tax = totales.isv,
+                    Discount = 0,
+                    Total = totales.total,
+                    IdPago = _pago.Entity.IdPago
+                };
+                var _invoice = _context.Invoices.Add(invoice);
+                _context.SaveChanges();
+
+                //Agregando el detalle
+
+                foreach(var item in factura.DetalleFactura)
+                {
+                    InvoiceDetail nuevoDetalle = new InvoiceDetail 
+                    { 
+                        IdProduct = item.idProducto,
+                        IdInvoice = _invoice.Entity.IdInvoice,
+                        IdTypeTax = item.typeTax,
+                        Price = item.precio,
+                        Tax = (double)(item.tax * item.cantidad),
+                        Quantity = item.cantidad
+                    };
+                    _context.InvoiceDetails.Add(nuevoDetalle);
+                }
+                await _context.SaveChangesAsync();
+
                 return Json(new { status = true });
             }
-            catch
+            catch (Exception ex)
             {
-                return Json(new {status = false});
+                return Json(new { status = false } );
             }
+        }
+
+        public Totales CalcularTotal(List<BuscarProducto> detalle) 
+        {
+            Totales resp = new Totales
+            {
+                subtotal = 0,
+                isv = 0
+            };
+            foreach(var p in detalle)
+            {
+                resp.subtotal += (p.precio * p.cantidad);
+                resp.isv += (p.tax * p.cantidad);
+            }
+
+            resp.total = resp.subtotal + resp.isv;
+
+            return resp;
+        }
+
+        public Pago pagoTarjeta(decimal monto)
+        {
+            Pago pago = new Pago
+            {
+                IdTipoPago = 2,
+                Monto = monto,
+                NumeroDeTarjeta = "xxxx xxxx xxxx ",
+                Ccv = "",
+                Recibido = 0,
+                Cambio = 0
+            };
+
+            for (int i = 0; i < 4; i++) {pago.NumeroDeTarjeta += _random.Next(0,10).ToString();}
+            for (int i = 0; i < 3; i++) {pago.Ccv += _random.Next(0,10).ToString(); }
+            int mes = _random.Next(1,13);
+            if(mes < 10) { pago.Vence = "0" + mes.ToString() + "/23"; }
+            else { pago.Vence = mes.ToString() + "/23"; }
+
+            return pago;
         }
 
         //Obtener un Servicio o Producto
