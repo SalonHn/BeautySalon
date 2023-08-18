@@ -1,4 +1,5 @@
-﻿using BeautySalon.Models.DataBase;
+﻿using BeautySalon.Models;
+using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace BeautySalon.Controllers
     public class TimetableController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Metodos _metodos = new Metodos();
 
         public TimetableController(BeautysalonContext context)
         {
@@ -65,6 +67,9 @@ namespace BeautySalon.Controllers
             _context.Holidays.Add(newHoliday);
             await _context.SaveChangesAsync();
 
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Nuevo feriado", "Se agrego un feriado para la fecha " + fecha.ToString("dd-MM-yyyy"));
+
             return RedirectToAction("Index");
         }
 
@@ -73,9 +78,13 @@ namespace BeautySalon.Controllers
             Holiday? holiday = _context.Holidays.Find(id);
             if (holiday != null) 
             {
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Elimindado de feriado", "Se elimino el feriado de la fecha " + holiday.Date.ToString("dd-MM-yyyy"));
+
                 _context.Holidays.Remove(holiday);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction("Index");
         }
 
@@ -137,7 +146,6 @@ namespace BeautySalon.Controllers
         [HttpPost]
         public IActionResult ConfigurarHorario(ViewModelAllHorario allHorario)
         {
-            List<Timetable> horarios = _context.Timetables.ToList();
 
             Timetable? domingo = _context.Timetables.Find(1);
             if (domingo != null) 
@@ -145,7 +153,6 @@ namespace BeautySalon.Controllers
                 domingo.IsHoliday = allHorario.domingo;
                 domingo.OpenHour = allHorario.domingoO;
                 domingo.CloseHour = allHorario.domingoC;
-                _context.SaveChanges();
             }
 
             Timetable? lunes = _context.Timetables.Find(2);
@@ -154,7 +161,6 @@ namespace BeautySalon.Controllers
                 lunes.IsHoliday = allHorario.lunes;
                 lunes.OpenHour = allHorario.lunesO;
                 lunes.CloseHour = allHorario.lunesC;
-                _context.SaveChanges();
             }
 
             Timetable? martes = _context.Timetables.Find(3);
@@ -163,7 +169,6 @@ namespace BeautySalon.Controllers
                 martes.IsHoliday = allHorario.martes;
                 martes.OpenHour = allHorario.martesO;
                 martes.CloseHour = allHorario.martesC;
-                _context.SaveChanges();
             }
 
             Timetable? miercoles = _context.Timetables.Find(4);
@@ -172,7 +177,6 @@ namespace BeautySalon.Controllers
                 miercoles.IsHoliday = allHorario.miercoles;
                 miercoles.OpenHour = allHorario.miercolesO;
                 miercoles.CloseHour = allHorario.miercolesC;
-                _context.SaveChanges();
             }
 
             Timetable? jueves = _context.Timetables.Find(5);
@@ -181,7 +185,6 @@ namespace BeautySalon.Controllers
                 jueves.IsHoliday = allHorario.jueves;
                 jueves.OpenHour = allHorario.juevesO;
                 jueves.CloseHour = allHorario.juevesC;
-                _context.SaveChanges();
             }
 
             Timetable? viernes = _context.Timetables.Find(6);
@@ -190,7 +193,6 @@ namespace BeautySalon.Controllers
                 viernes.IsHoliday = allHorario.viernes;
                 viernes.OpenHour = allHorario.viernesO;
                 viernes.CloseHour = allHorario.viernesC;
-                _context.SaveChanges();
             }
 
             Timetable? sabado = _context.Timetables.Find(7);
@@ -199,8 +201,12 @@ namespace BeautySalon.Controllers
                 sabado.IsHoliday = allHorario.sabado;
                 sabado.OpenHour = allHorario.sabadoO;
                 sabado.CloseHour = allHorario.sabadoC;
-                _context.SaveChanges();
             }
+
+            _context.SaveChanges();
+
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Actualización de horario", "Se actualizo correctamente el horario");
 
             return RedirectToAction("Index");
         }

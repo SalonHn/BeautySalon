@@ -17,7 +17,7 @@ public partial class UserAdmin
 
     public DateTime UserDateModify { get; set; }
 
-    public int? IdType { get; set; }
+    public int IdType { get; set; }
 
     public string? TokenPush { get; set; }
 

@@ -4,12 +4,7 @@ namespace BeautySalon.Models
 {
     public class Metodos
     {
-        private readonly BeautysalonContext _context;
-
-        public Metodos(BeautysalonContext context)
-        {
-            _context = context;
-        }
+        private readonly BeautysalonContext _context = new BeautysalonContext();
 
         public async void addBitacora(int idUsuario, int nivel, string descripcion, string detalles)
         {

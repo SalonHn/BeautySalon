@@ -1,4 +1,5 @@
-﻿using BeautySalon.Models.CreateModels;
+﻿using BeautySalon.Models;
+using BeautySalon.Models.CreateModels;
 using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,7 @@ namespace BeautySalon.Controllers
     {
         private readonly BeautysalonContext _context;
         private readonly Random _random = new Random();
+        private readonly Metodos _metodos = new Metodos();
 
         public PuntoVentasController(BeautysalonContext context)
         {
@@ -90,10 +92,16 @@ namespace BeautySalon.Controllers
                 }
                 await _context.SaveChangesAsync();
 
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Venta exitosa", "Se completo la venta exitosamente " + invoice.ReferencesNumber);
+
                 return Json(new { status = true });
             }
             catch (Exception ex)
             {
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 3, "Venta fallida", "Se presento el siguiente error: " + ex.Message);
+
                 return Json(new { status = false } );
             }
         }

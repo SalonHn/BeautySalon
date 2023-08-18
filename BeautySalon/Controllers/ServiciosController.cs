@@ -1,4 +1,5 @@
-﻿using BeautySalon.Models.DataBase;
+﻿using BeautySalon.Models;
+using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace BeautySalon.Controllers
     public class ServiciosController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Metodos _metodos = new Metodos();
 
         public ServiciosController(BeautysalonContext context)
         {
@@ -67,6 +69,9 @@ namespace BeautySalon.Controllers
             var servicioFinal = _context.Add(servicio);
             Product service = servicioFinal.Entity;
             await _context.SaveChangesAsync();
+
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Nuevo servicio agregado", "Se agrego el servicio con sku " + servicio.Sku);
 
             return RedirectToAction("EditRecursos", new { id = service.IdProduct });
         }
@@ -127,6 +132,9 @@ namespace BeautySalon.Controllers
                 existe.Quantity = existe.Quantity + cantidad;
                 _context.SaveChanges();
             }
+
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Servicio actualizado", "Se actualizo la lista de recursos del servicio con id " + idService);
 
             return RedirectToAction("EditRecursos", "Servicios", new { id = idService });
         }
@@ -198,6 +206,9 @@ namespace BeautySalon.Controllers
                 editServicio.ModifyDate = DateTime.Now;
 
                 _context.SaveChanges();
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Servicio actualizado", "Se actualizo la información del servicio con sku " + editServicio.Sku);
 
                 return RedirectToAction("EditRecursos", "Servicios", new { id = servicio.IdProduct });
             }

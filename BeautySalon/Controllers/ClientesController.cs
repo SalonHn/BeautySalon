@@ -1,4 +1,5 @@
-﻿using BeautySalon.Models.DataBase;
+﻿using BeautySalon.Models;
+using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace BeautySalon.Controllers
     public class ClientesController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Metodos _metodos = new Metodos();
 
         public ClientesController(BeautysalonContext context)
         {
@@ -71,6 +73,9 @@ namespace BeautySalon.Controllers
 
             _context.Reservas.Add(reserva);
             _context.SaveChanges();
+
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Reserva de una cita", "Reservo una cita para el " + reserva.Fecha.ToString("dd-MM-yyyy"));
 
             return RedirectToAction("Reservas", "Clientes", new { estado = 1});
         }
@@ -181,6 +186,9 @@ namespace BeautySalon.Controllers
             {
                 reserva.IdEstado = 2;
                 _context.SaveChanges();
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Cancalacion de reserva", "Se cancelo la reserva programada para el " + reserva.Fecha.ToString("dd-MM-yyyy"));
             }
 
             return RedirectToAction("DetallesReserva", "Clientes", new { idReserva = idReserva });

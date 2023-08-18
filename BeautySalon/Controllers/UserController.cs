@@ -9,6 +9,7 @@ using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using BeautySalon.Models.CreateModels;
+using BeautySalon.Models;
 
 namespace BeautySalon.Controllers
 {
@@ -16,6 +17,7 @@ namespace BeautySalon.Controllers
     public class UserController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Metodos _metodos = new Metodos();
 
         public UserController(BeautysalonContext context)
         {
@@ -155,6 +157,9 @@ namespace BeautySalon.Controllers
                 var _employee = _context.Employees.Add(employee);
                 await _context.SaveChangesAsync();
 
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Nuevo empleado", "Se agrego con exito el empleado " + empleado.FirstName);
+
                 return RedirectToAction("Details", "User", new { id = _employee.Entity.IdEmployee});
             }
             catch (Exception e)
@@ -166,6 +171,10 @@ namespace BeautySalon.Controllers
                 ViewBag.Genero = genero;
                 ViewBag.Skill = skills;
                 ViewBag.Rol = roles;
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 3, "Error al ingresar el empleado", "Se produjo el siguiente error: " + e.Message);
+
                 return View();
             }
         }
@@ -282,6 +291,9 @@ namespace BeautySalon.Controllers
                     await _context.SaveChangesAsync();
                 }
 
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Empleado actualizado", "Se actualizo con exito el empleado " + empleado.FirstName);
+
                 return RedirectToAction("Details", "User", new { id = empleado.IdEmpleado });
             }
             catch (Exception e)
@@ -293,6 +305,10 @@ namespace BeautySalon.Controllers
                 ViewBag.Genero = genero;
                 ViewBag.Skill = skills;
                 ViewBag.Rol = roles;
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 3, "Error al actualizar el empleado", "Ocurrio el siguiente error: " + e.Message);
+
                 return View();
             }
         }
@@ -313,6 +329,10 @@ namespace BeautySalon.Controllers
                 user.UserDateModify = DateTime.Now;
                 await _context.SaveChangesAsync();
             }
+
+            int idU = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idU, 1, "Estado de usuario actualizado", "El estado del usuario " + empleado.FirstName + " pasa a " + user.UserActive);
+
             return RedirectToAction("Details", "User", new { id = idEmpleado });
         }
     }

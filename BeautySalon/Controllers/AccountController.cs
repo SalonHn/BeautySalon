@@ -8,12 +8,15 @@ using BeautySalon.Models.CreateModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using BeautySalon.Models;
+using System.Timers;
 
 namespace BeautySalon.Controllers
 {
     public class AccountController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Metodos _metodos = new Metodos();
 
         public AccountController(BeautysalonContext context)
         {
@@ -64,6 +67,8 @@ namespace BeautySalon.Controllers
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
 
+                _metodos.addBitacora(userAdmin.IdUser, 1, "Inicio de session", "");
+
                 if(userAdmin.IdType == 1)
                 {
                     return RedirectToAction("Index", "Clientes");
@@ -98,7 +103,11 @@ namespace BeautySalon.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Cerro session con exito", "");
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             return RedirectToAction("Login", "Account");
         }
 
@@ -184,6 +193,8 @@ namespace BeautySalon.Controllers
 
             var claimIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
+
+            _metodos.addBitacora(cliente.IdUser, 1, "Registro de usuario", "Registro por primera ves de este usuario");
 
             return RedirectToAction("Index", "Clientes");
         }

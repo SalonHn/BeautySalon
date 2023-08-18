@@ -1,4 +1,5 @@
-﻿using BeautySalon.Models.DataBase;
+﻿using BeautySalon.Models;
+using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace BeautySalon.Controllers
     public class InventarioController : Controller
     {
         private readonly BeautysalonContext _context;
+        private readonly Metodos _metodos = new Metodos();
 
         public InventarioController(BeautysalonContext context)
         {
@@ -76,6 +78,9 @@ namespace BeautySalon.Controllers
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Se agrego un producto", "Se agrego el producto que corresponde al sku " + product.Sku);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -162,6 +167,10 @@ namespace BeautySalon.Controllers
                     //Actualizando
                     _context.SaveChanges();
                 }
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Se edito un producto", "Se edito el producto que corresponde al sku " + product.Sku);
+
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -169,6 +178,10 @@ namespace BeautySalon.Controllers
                 ViewBag.Categories = await _context.Categories.Where(c => c.IdCategory != 1).ToListAsync();
                 ViewBag.Taxes = await _context.Taxes.ToListAsync();
                 ViewBag.Error = ex.Message;
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 3, "Error al actualizar un producto", "Se genero en el producto con sku " + product.Sku);
+
                 return View(product);
             }
         }
