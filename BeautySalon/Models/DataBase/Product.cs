@@ -34,7 +34,7 @@ public partial class Product
 
     public string? ImageProduct { get; set; }
 
-    public virtual Category? IdCategoryNavigation { get; set; }
+    public virtual Category? IdCategoryNavigation { get; set; } 
 
     public virtual RoleEmployee? IdSkillNavigation { get; set; } 
 

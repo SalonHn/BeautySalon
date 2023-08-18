@@ -11,15 +11,15 @@ public partial class Pago
 
     public string? NumeroDeTarjeta { get; set; }
 
-    public string? Vence { get; set; }
-
-    public string? Ccv { get; set; }
-
     public decimal Monto { get; set; }
 
     public decimal? Recibido { get; set; }
 
     public decimal? Cambio { get; set; }
+
+    public string? Vence { get; set; }
+
+    public string? Ccv { get; set; }
 
     public virtual TipoPago IdTipoPagoNavigation { get; set; } = null!;
 

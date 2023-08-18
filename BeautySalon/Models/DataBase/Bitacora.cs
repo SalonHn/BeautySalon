@@ -17,5 +17,7 @@ public partial class Bitacora
 
     public string? DetallesAdicionales { get; set; }
 
+    public virtual NivelBitacora NivelNavigation { get; set; } = null!;
+
     public virtual UserAdmin? UsuarioNavigation { get; set; }
 }

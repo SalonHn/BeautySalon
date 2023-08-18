@@ -37,6 +37,8 @@ public partial class BeautysalonContext : DbContext
 
     public virtual DbSet<Membresium> Membresia { get; set; }
 
+    public virtual DbSet<NivelBitacora> NivelBitacoras { get; set; }
+
     public virtual DbSet<Pago> Pagos { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
@@ -81,6 +83,11 @@ public partial class BeautysalonContext : DbContext
                 .HasColumnName("fecha");
             entity.Property(e => e.Nivel).HasColumnName("nivel");
             entity.Property(e => e.Usuario).HasColumnName("usuario");
+
+            entity.HasOne(d => d.NivelNavigation).WithMany(p => p.Bitacoras)
+                .HasForeignKey(d => d.Nivel)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_bitacora_nivel");
 
             entity.HasOne(d => d.UsuarioNavigation).WithMany(p => p.Bitacoras)
                 .HasForeignKey(d => d.Usuario)
@@ -343,6 +350,19 @@ public partial class BeautysalonContext : DbContext
                 .HasConstraintName("fk_user_membresia");
         });
 
+        modelBuilder.Entity<NivelBitacora>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__NivelBit__3213E83FC7E4F37B");
+
+            entity.ToTable("NivelBitacora");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Nivel)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("nivel");
+        });
+
         modelBuilder.Entity<Pago>(entity =>
         {
             entity.HasKey(e => e.IdPago).HasName("PK__Pago__BD2295AD125A5752");
@@ -354,7 +374,7 @@ public partial class BeautysalonContext : DbContext
                 .HasColumnType("money")
                 .HasColumnName("cambio");
             entity.Property(e => e.Ccv)
-                .HasMaxLength(5)
+                .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("ccv");
             entity.Property(e => e.IdTipoPago).HasColumnName("idTipoPago");
@@ -369,7 +389,7 @@ public partial class BeautysalonContext : DbContext
                 .HasColumnType("money")
                 .HasColumnName("recibido");
             entity.Property(e => e.Vence)
-                .HasMaxLength(4)
+                .HasMaxLength(5)
                 .IsUnicode(false)
                 .HasColumnName("vence");
 
