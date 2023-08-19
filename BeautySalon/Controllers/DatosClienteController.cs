@@ -3,6 +3,10 @@ using BeautySalon.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Runtime;
+using System.Security.Claims;
 
 namespace BeautySalon.Controllers
 {
@@ -103,21 +107,70 @@ namespace BeautySalon.Controllers
             return View();
 		}
 
-		public IActionResult PagarMembresia()
+		public async Task<IActionResult> PagarMembresia(int idInfo)
 		{
-			try
-			{
-				int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            try
+            {
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                InformacionDePago? info = _context.InformacionDePagos.Find(idInfo);
+                Pago pago = new Pago();
 
-				return RedirectToAction("Index", "Clientes");
-			}
-			catch (Exception ex)
-			{
-				int idUser = Int32.Parse(User.FindFirst("idUser").Value);
-				_metodos.addBitacora(idUser, 3, "Error obtener membresia", "Error: " + ex.Message);
-				return RedirectToAction("Index", "Clientes");
-			}
-		}
+                if (info != null)
+                {
+                    string ultimos = "xxxx xxxx xxxx ";
+                    int len = info.NumeroTarjeta.Length;
+                    for (int i = 4; i >= 1; i--)
+                    {
+                        ultimos = ultimos + info.NumeroTarjeta[len - i];
+                    }
+
+                    //Agregando el pago
+                    pago = new Pago
+                    {
+                        IdTipoPago = 2,
+                        Monto = 100,
+                        NumeroDeTarjeta = ultimos,
+                        Vence = info.Vence,
+                        Ccv = info.Ccv,
+                        Recibido = 0,
+                        Cambio = 0
+                    };
+                    var _pago = _context.Pagos.Add(pago);
+                    _context.SaveChanges();
+
+                    //Agregando la membresia
+                    Membresium membresium = new Membresium
+                    {
+                        IdPago = _pago.Entity.IdPago,
+                        UserId = idUser,
+                        Estado = true,
+                        Precio = pago.Monto,
+                        FechaInicio = DateTime.Now,
+                        FechaFin = DateTime.Now.AddMonths(1)
+                    };
+                    _context.Membresia.Add(membresium);
+                    _context.SaveChanges();
+
+                    //Actualizando el usuario
+                    UserAdmin? user = _context.UserAdmins.Find(idUser);
+                    if (user != null) { user.UserActive = true; }
+                    _context.SaveChanges();
+
+                    var currentIdentity = (ClaimsIdentity)User.Identity;
+                    currentIdentity.AddClaim(new Claim(ClaimTypes.Role, "VIP"));
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(currentIdentity));
+
+                    _metodos.addBitacora(idUser, 1, "Adquirio una membresia", "El periodo de la membresia es de " + membresium.FechaInicio + " a " + membresium.FechaFin);
+                }
+                return RedirectToAction("Index", "Clientes");
+            }
+            catch (Exception ex)
+            {
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 3, "Error obtener membresia", "Error: " + ex.Message);
+                return RedirectToAction("Index", "Clientes");
+            }
+        }
 
     }
 }

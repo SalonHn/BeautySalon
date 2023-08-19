@@ -335,5 +335,45 @@ namespace BeautySalon.Controllers
 
             return RedirectToAction("Details", "User", new { id = idEmpleado });
         }
+
+        public IActionResult Membresias()
+        {
+            var membresias = _context.Membresia
+                .Where(m => m.Estado == true)
+                .Join(_context.UserAdmins, m => m.UserId, u => u.IdUser, (m, u) => new { m, u })
+                .ToList();
+
+            List<ViewMembresias> viewMembresias = membresias.ConvertAll(x => new ViewMembresias
+            {
+                Id = x.m.IdMembresia,
+                Name = x.u.UserName,
+                inicio = x.m.FechaFin,
+                fin = x.m.FechaFin
+            });
+
+            ViewBag.Membresias = viewMembresias;
+
+            return View();
+        }
+
+        public IActionResult DesactivarMembresia(int idM)
+        {
+            Membresium? mem = _context.Membresia.Find(idM);
+            if (mem != null)
+            {
+                mem.Estado = false;
+                UserAdmin? user = _context.UserAdmins.Find(mem.UserId);
+                if (user != null)
+                {
+                    user.UserActive = false;
+                }
+                _context.SaveChanges();
+
+                int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idUser, 1, "Finalización de membresia", "Termino la membresia del usuario " + user.UserName);
+            }
+
+            return RedirectToAction("Membresias", "User");
+        }
     }
 }

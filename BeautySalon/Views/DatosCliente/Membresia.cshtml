@@ -1,5 +1,4 @@
-﻿
-@using BeautySalon.Models.DataBase;
+﻿@using BeautySalon.Models.DataBase;
 
 @{
     ViewData["Title"] = "Membresia";
@@ -37,15 +36,15 @@
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">Obtener Membresia</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            @if(info != null)
+            @if (info != null)
             {
                 <div class="modal-body">
-					<div><span><strong>Tarjeta: </strong>@info.NumeroTarjeta</span></div>
-					<div><span><strong>Cargo: </strong>L. 100.00</span></div>
+                    <div><span><strong>Tarjeta: </strong>@info.NumeroTarjeta</span></div>
+                    <div><span><strong>Cargo: </strong>L. 100.00</span></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a href="@Url.Action("", "", new {})" class="btn btn-dark text-warning">Pagar</a>
+                    <a href="@Url.Action("PagarMembresia", "DatosCliente", new { idInfo = info.IdInfoPago })" class="btn btn-dark text-warning">Pagar</a>
                 </div>
             }
             else

@@ -1,0 +1,43 @@
+﻿
+
+@using BeautySalon.Models.ViewModels;
+
+@{
+    ViewData["Title"] = "Membresias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<ViewMembresias> membresias = ViewBag.Membresias;
+}
+
+<div class="d-flex justify-content-center mt-3"><h3>Membresias Activas</h3></div>
+<hr />
+<table class="table table-sm table-bordeard">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in membresias)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.inicio</td>
+                <td>@item.fin</td>
+				<td><span style="color: green;"><strong>Activo</strong></span></td>
+                <td><a href="@Url.Action("DesactivarMembresia", "User", new {idM = item.Id})" class="btn btn-sm btn-danger">Desactivar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<div class="mt-3 d-flex justify-content-center">
+    <a asp-action="Index" asp-controller="Home" class="btn btn-sm btn-secondary">Volver</a>
+</div>
+
