@@ -34,7 +34,9 @@
 <div><span><strong>Telefono: </strong>@cliente.Phone</span></div>
 <div><span><strong>Correo: </strong>@cliente.Email</span></div>
 <div><span><strong>Fecha de registro: </strong>@cliente.CreateDate.ToString("dd-MM-yyyy")</span></div>
-
+<div class="mt-2">
+    <a asp-action="MetodoPago" asp-controller="DatosCliente" class="btn btn-sm btn-primary">Metodos de pago</a>
+</div>
 <hr />
 
 <div class="d-flex justify-content-center">

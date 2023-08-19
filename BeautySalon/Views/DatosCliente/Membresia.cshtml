@@ -1,0 +1,63 @@
+﻿
+@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "Membresia";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+
+    InformacionDePago info = ViewBag.InfoPagos;
+}
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        Membresia VIP
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Valor de la membresia: L. 100.00</h5>
+        <p class="card-text">Obten acceso a servicios especiales, descuentos unicos y regalos de temporada con tu membresia de cliente VIP.</p>
+        <button type="button" class="btn btn-dark text-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Obtener Ahora
+        </button>
+    </div>
+    <div class="card-footer text-body-secondary">
+        Duración 1 mes.
+    </div>
+</div>
+<div class="d-flex justify-content-center mt-4">
+    <a asp-action="Index" asp-controller="Clientes" class="btn btn-sm btn-secondary">Volver</a>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Obtener Membresia</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @if(info != null)
+            {
+                <div class="modal-body">
+					<div><span><strong>Tarjeta: </strong>@info.NumeroTarjeta</span></div>
+					<div><span><strong>Cargo: </strong>L. 100.00</span></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="@Url.Action("", "", new {})" class="btn btn-dark text-warning">Pagar</a>
+                </div>
+            }
+            else
+            {
+                <div class="modal-body">
+                    <span><strong>No tienes registrada información de pago.</strong></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a asp-action="MetodoPago" asp-controller="DatosCliente" class="btn btn-primary">Agregar forma de pago</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

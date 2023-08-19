@@ -20,5 +20,26 @@ namespace BeautySalon.Models
             _context.Bitacoras.Add(bitacora);
             await _context.SaveChangesAsync();
         }
+
+        public async void restarStock(int idProduct, int cantidad)
+        {
+            Product? product = _context.Products.Find(idProduct);
+            if (product != null)
+            {
+                if(product.IdCategory != 1)
+                {
+                    if (product.Stock <= cantidad)
+                    {
+                        product.Stock = 0;
+                    }
+                    else
+                    {
+                        product.Stock -= cantidad;
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
     }
 }

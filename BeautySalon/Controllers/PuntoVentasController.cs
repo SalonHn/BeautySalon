@@ -89,6 +89,7 @@ namespace BeautySalon.Controllers
                         Quantity = item.cantidad
                     };
                     _context.InvoiceDetails.Add(nuevoDetalle);
+                    _metodos.restarStock(item.idProducto, item.cantidad);
                 }
                 await _context.SaveChangesAsync();
 
