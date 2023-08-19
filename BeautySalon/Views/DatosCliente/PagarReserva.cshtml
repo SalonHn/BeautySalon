@@ -1,0 +1,78 @@
+﻿@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "PagarReserva";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+
+    Reserva reserva = ViewBag.Reserva;
+    Product servicio = ViewBag.Servicio;
+    InformacionDePago info = ViewBag.InfoPagos;
+}
+
+<div class="d-flex justify-content-center mt-3"><h3>Detalles del pago</h3></div>
+<hr />
+<div><span><strong>Servicio: </strong>@servicio.NameProduct</span></div>
+<div><span><strong>Precio: </strong>L. @servicio.Price.ToString("F2")</span></div>
+<div><span><strong>Subtotal: </strong>L. @servicio.Price.ToString("F2")</span></div>
+@if(servicio.IdTax == 1)
+{
+    <div><span><strong>Impuesto: </strong>L. @((servicio.Price * 0.15m).ToString("F2"))</span></div>
+    <div><span><strong>Total: </strong>L. @((servicio.Price * 1.15m).ToString("F2"))</span></div>
+}
+else
+{
+    <div><span><strong>Impuesto: </strong>L. @((servicio.Price * 0.18m).ToString("F2"))</span></div>
+    <div><span><strong>Total: </strong>L. @((servicio.Price * 1.18m).ToString("F2"))</span></div>
+}
+
+<hr />
+<div class="mt-2 row">
+    <div class="col-6">
+        <a href="@Url.Action("DetallesReserva", "Clientes", new {idReserva=reserva.IdReserva})" class="btn btn-secondary">Cancelar</a>
+    </div>
+    <div class="col-6">
+        <button type="button" class="btn btn-dark text-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Confirmar
+        </button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Pagar reserva</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @if (info != null)
+            {
+                <div class="modal-body">
+                    <div><span><strong>Tarjeta: </strong>@info.NumeroTarjeta</span></div>
+                    @if (servicio.IdTax == 1)
+                    {
+                        <div><span><strong>Cargo: </strong>L. @((servicio.Price * 1.15m).ToString("F2"))</span></div>
+                    }
+                    else
+                    {
+                        <div><span><strong>Cargo: </strong>L. @((servicio.Price * 1.18m).ToString("F2"))</span></div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="@Url.Action("ConfirmarPago", "DatosCliente", new { idReserva = reserva.IdReserva, idInfo = info.IdInfoPago })" class="btn btn-dark text-warning">Pagar</a>
+                </div>
+            }
+            else
+            {
+                <div class="modal-body">
+                    <span><strong>No tienes registrada información de pago.</strong></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a asp-action="MetodoPago" asp-controller="DatosCliente" class="btn btn-primary">Agregar forma de pago</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

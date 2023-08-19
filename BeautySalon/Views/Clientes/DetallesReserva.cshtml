@@ -61,17 +61,20 @@
 @if(estado.IdEstado == 1)
 {
     <div class="row">
-        <div class="col-6 d-flex justify-content-center">
-            <a href="@Url.Action("Reservas", "Clientes", new {estado = estado.IdEstado})" class="btn btn-secondary">Volver</a>
+        <div class="col-4 d-flex justify-content-center">
+            <a href="@Url.Action("Reservas", "Clientes", new {estado = estado.IdEstado})" class="btn btn-sm btn-secondary">Volver</a>
         </div>
-        <div class="col-6 d-flex justify-content-center">
-            <a href="@Url.Action("CancelarReserva", "Clientes", new {idReserva = reserva.IdReserva})" class="btn btn-danger">Cancelar Reserva</a>
+        <div class="col-4 d-flex justify-content-center">
+            <a href="@Url.Action("CancelarReserva", "Clientes", new {idReserva = reserva.IdReserva})" class="btn btn-sm btn-danger">Cancelar Reserva</a>
+        </div>
+        <div class="col-4 d-flex justify-content-center">
+            <a href="@Url.Action("PagarReserva", "DatosCliente", new {idReserva = reserva.IdReserva})" class="btn btn-sm btn-success">Pagar</a>
         </div>
     </div>
 }
 else
 {
     <div class="d-flex justify-content-center">
-        <a href="@Url.Action("Reservas", "Clientes", new {estado = estado.IdEstado})" class="btn btn-secondary">Volver</a>
+        <a href="@Url.Action("Reservas", "Clientes", new {estado = estado.IdEstado})" class="btn btn-sm btn-secondary">Volver</a>
     </div>
 }
