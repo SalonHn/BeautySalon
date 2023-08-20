@@ -1,0 +1,169 @@
+﻿
+@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "Detalles de Reserva";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Reserva reserva = ViewBag.Reserva;
+    Product servicio = ViewBag.Servicio;
+    HoursAvailable hora = ViewBag.Hora;
+    EstadoReserva estado = ViewBag.Estado;
+    RoleEmployee skill = ViewBag.skill;
+    Customer cliente = ViewBag.Cliente;
+
+    string colorEstado = "dodgerblue";
+    if (estado.IdEstado == 2)
+    {
+        colorEstado = "red";
+    }
+    else if (estado.IdEstado == 3)
+    {
+        colorEstado = "green";
+    }
+}
+
+<script>
+    var tipoPago = 1;
+
+    $(document).ready(function () {
+        //Seleccionar metodo de pago
+        $("input[name='tipoPago']").change(function () {
+            var opcionSeleccionada = $(this).val();
+            if (opcionSeleccionada == "1") {
+                $("#seccionPago").show();
+                $("#pagarEfectivo").show();
+                $("#pagarTarjeta").hide();
+                tipoPago = 1;
+            } else {
+                $("#seccionPago").hide();
+                $("#pagarEfectivo").hide();
+                $("#pagarTarjeta").show();
+                tipoPago = 0;
+            }
+        });
+
+        $("#pagarEfectivo").on("click", function () {
+            // Código a ejecutar cuando se hace clic en el botón
+            var recibido = $("#inputRecivido").val();
+            var idreserva = $("#idReserva").val();
+            if(recibido != null && recibido.trim() != ""){
+                if(parseInt(recibido) >= @(servicio.Price * 1.15m)){
+                    window.location.href = '@Url.Content("~/Citas/ConfirmarPago?idReserva=")' + idreserva + "&tipoPago=1&recibido=" + recibido;
+                }else{
+                    $("#viewMonto").show()
+                }
+            }else{
+                $("#viewMonto").show()
+            }
+        });
+    });
+</script>
+
+<div class="row mb-3">
+    <div class="d-flex justify-content-center align-items-center col-12 col-sm-6 col-lg-3 col-md-5 mb-3">
+        <img src="data:image/jpg; base64, @servicio.ImageProduct" alt="Sin imagen para mostrar" width="250" height="250" />
+    </div>
+    <div class="col">
+        <h5><strong>Detalles de la reserva</strong></h5>
+        <hr />
+        @if (servicio.Featured == true)
+        {
+            <div class="d-flex mb-2">
+                <div class="ps-2 pe-2" style="border-radius: 25px; background-color: black;">
+                    <span style="color: #f2c22d;"><strong>Servicio VIP</strong></span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex mb-2">
+                <div class="ps-2 pe-2" style="border-radius: 25px; background-color: dodgerblue;">
+                    <span style="color: white;"><strong>Normal</strong></span>
+                </div>
+            </div>
+        }
+        <div><span><strong style="color: black;">Cliente: </strong> @cliente.FullName</span></div>
+        <div><span><strong style="color: black;">Nombre: </strong> @servicio.NameProduct</span></div>
+        <div><span><strong style="color: black;">Precio: </strong>L. @servicio.Price.ToString("F2")</span></div>
+        <div><span><strong style="color: black;">Habilidad requerida: </strong> @skill.NameRole</span></div>
+        <div><span><strong style="color: black;">Descripción: </strong> @servicio.Description</span></div>
+        <h5 class="mt-3"><strong style="color: black;">Detalles de la reserva</strong></h5>
+        <hr />
+        <div><span><strong style="color: black;">Fecha: </strong> @reserva.Fecha.ToString("dd-MM-yyyy")</span></div>
+        <div><span><strong style="color: black;">Hora: </strong> @hora.Hour</span></div>
+        <div><span style="color: @colorEstado;"><strong style="color: black;">Estado: </strong> @estado.Estado</span></div>
+    </div>
+</div>
+
+<hr />
+@if (estado.IdEstado == 1)
+{
+    <div class="row">
+        <div class="col-4 d-flex justify-content-center">
+            <a href="@Url.Action("Index", "Citas", new {estado = estado.IdEstado})" class="btn btn-sm btn-secondary">Volver</a>
+        </div>
+        <div class="col-4 d-flex justify-content-center">
+            <a href="@Url.Action("CancelarReserva", "Citas", new {idReserva = reserva.IdReserva})" class="btn btn-sm btn-danger">Cancelar Reserva</a>
+        </div>
+        <div class="col-4 d-flex justify-content-center">
+            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Pagar
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-center">
+        <a href="@Url.Action("Index", "Citas", new {estado = estado.IdEstado})" class="btn btn-sm btn-secondary">Volver</a>
+    </div>
+}
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Pagar reserva</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2"><span><strong>IdReserva: </strong>@reserva.IdReserva</span></div>
+                <div class="mb-2"><span><strong>Precio: </strong>L. @((servicio.Price).ToString("F2"))</span></div>
+                <div class="mb-2"><span><strong>Impuesto: </strong>L. @((servicio.Price * 0.15m).ToString("F2"))</span></div>
+                <div class="mb-2"><span><strong>Total a pagar: </strong>L. @((servicio.Price * 1.15m).ToString("F2"))</span></div>
+                <label class="form-label">Metodo de pago</label>
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoPago" id="tipoPago1" checked value="1">
+                        <label class="form-check-label" for="tipoPago1">Efectivo</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoPago" id="tipoPago2" value="2">
+                        <label class="form-check-label" for="tipoPago2">Tarjeta</label>
+                    </div>
+                </div>
+                <input id="idReserva" hidden value="@reserva.IdReserva" />
+
+                <section id="seccionPago">
+                    <div class="row">
+                        <div class="col-auto">
+                            <label class="col-form-label-sm">Recibido</label>
+                            <input id="inputRecivido" type="number" class="form-control form-control-sm" />
+                            <span id="viewMonto" class="text-danger" style="display: none;">El monto ingresado es invalido</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="pagarEfectivo" type="button" class="btn btn-success">Pagar</button>
+                <a href="@Url.Action("ConfirmarPago", "Citas", new {idReserva= reserva.IdReserva, tipoPago = 2, recibido = 0})" id="pagarTarjeta" class="btn btn-success" style="display: none;">Pagar</a>
+            </div>
+        </div>
+    </div>
+</div>
+

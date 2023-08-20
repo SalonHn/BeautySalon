@@ -1,8 +1,80 @@
 ﻿
+@using BeautySalon.Models.DataBase;
+@using BeautySalon.Models.ViewModels;
+@model BeautySalon.Models.DataBase.EstadoReserva
+
+<script>
+    $(document).ready(function () {
+        $("#selectEstado").on("change", function () {
+            var estado = $("#selectEstado").val();
+            window.location.href = '@Url.Content("~/Citas/Index?estado=")' + estado;
+        });
+    });
+</script>
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reservas";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<EstadoReserva> estados = ViewBag.Estados;
+    List<ViewReservas> reservas = ViewBag.Reservas;
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-center"><h1>Reservas @(Model.Estado)s</h1></div>
+
+<div class="row g-3 align-items-center">
+    <div class="col-auto">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Volver a Inicio</a>
+    </div>
+    <div class="col-auto">
+        <label for="inputPassword6" class="col-form-label">Filtro:</label>
+    </div>
+    <div class="col-auto">
+        <select id="selectEstado" class="form-select" asp-for="IdEstado" asp-items="@(new SelectList(estados, "IdEstado", "Estado"))"></select>
+    </div>
+</div>
+<hr />
+<table class="table table-sm table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Servicio</th>
+            <th scope="col"></th>
+            <th scope="col">Hora</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reserva in reservas)
+        {
+            <tr>
+                <th>@reserva.fecha.ToString("yyyy-MM-dd")</th>
+                <td>@reserva.user</td>
+                <td>@reserva.nameServicio</td>
+                @if (reserva.vip == true)
+                {
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <div class="ps-2 pe-2" style="border-radius: 25px; background-color: black;">
+                                <span style="color: #f2c22d;"><strong>VIP</strong></span>
+                            </div>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <div class="ps-2 pe-2" style="border-radius: 25px; background-color: cornflowerblue;">
+                                <span style="color: white;"><strong>Normal</strong></span>
+                            </div>
+                        </div>
+                    </td>
+                }
+                <td>@reserva.hora</td>
+                <td><a href="@Url.Action("Detalles", "Citas", new {idReserva=reserva.id})">Detalles</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
 

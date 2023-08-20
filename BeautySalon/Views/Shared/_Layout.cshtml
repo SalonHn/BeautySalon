@@ -34,14 +34,14 @@
                         @if (User.IsInRole("Administrador") || User.IsInRole("Estilista") || User.IsInRole("Caja"))
                         {
                             <li class="nav-item">
-                                <a asp-action="Index" asp-controller="Citas" class="nav-link">Citas</a>
+                                <a asp-action="Index" asp-controller="Citas" class="nav-link">Reservas</a>
                             </li> 
                         }
                         
                         @if (User.IsInRole("Administrador") || User.IsInRole("Caja"))
                         {
                             <li class="nav-item">
-                                <a asp-action="Index" asp-controller="PuntoVentas" class="nav-link">Punto de Venta</a>
+                                <a asp-action="Index" asp-controller="PuntoVentas" class="nav-link">Ventas</a>
                             </li>
                         }
                         
@@ -96,7 +96,7 @@
 										<span class="text-light">@(User.Identity.Name)</span>
 									</a>
 									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" asp-action="Mi Perfil" asp-controller="Home">Mi Perfil</a></li>
+										<li><a class="dropdown-item" asp-action="MiPerfil" asp-controller="Home">Mi Perfil</a></li>
 										<li><hr class="dropdown-divider"></li>
                                         <li><a asp-action="Logout" asp-controller="Account" class="dropdown-item text-danger">Salir</a></li>
 									</ul>

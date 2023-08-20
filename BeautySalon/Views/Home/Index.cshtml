@@ -1,7 +1,94 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    string user = User.Identity.Name ?? "user";
 }
 
-<h1>Bienvenido a menu de administrador</h1>
+<style>
+    .icons-menu{
+        font-size: 50px;
+        color: gold;
+    }
+</style>
 
+<div class="mt-2">
+    <h3>Bienvenido @user</h3>
+</div>
+<hr />
+<div class="row">
+    @if (User.IsInRole("Administrador") || User.IsInRole("Estilista") || User.IsInRole("Caja"))
+    {
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-gradient bg-dark text-center mb-3" style="width: 10rem; background-color: whitesmoke; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-calendar-check icons-menu"></i></h5>
+                    <a asp-action="Index" asp-controller="Citas" class="btn btn-secondary text-warning">Reservas</a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if(User.IsInRole("Administrador") || User.IsInRole("Caja")){
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-dark bg-gradient text-center mb-3" style="width: 10rem; background-color: whitesmoke; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-file-invoice icons-menu"></i></h5>
+                    <a asp-action="Index" asp-controller="PuntoVentas" class="btn btn-secondary text-warning">Ventas</a>
+                </div>
+            </div>
+        </div>
+    }
+   
+    @if (User.IsInRole("Administrador") || User.IsInRole("Estilista") || User.IsInRole("Inventario"))
+    {
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-dark bg-gradient text-center mb-3" style="width: 10rem; background-color: whitesmoke; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-gem icons-menu"></i></h5>
+                    <a asp-action="Index" asp-controller="Servicios" class="btn btn-secondary text-warning">Servicios</a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (User.IsInRole("Administrador") || User.IsInRole("Inventario"))
+    {
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-dark bg-gradient text-center mb-3" style="width: 10rem; background-color: whitesmoke; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-cart-shopping icons-menu"></i></h5>
+                    <a asp-action="Index" asp-controller="Inventario" class="btn btn-secondary text-warning">Inventario</a>
+                </div>
+            </div>
+        </div>
+    }
+    
+    @if (User.IsInRole("Administrador"))
+    {
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-dark bg-gradient text-center mb-3" style="width: 10rem; background-color: whitesmoke; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-star icons-menu"></i></h5>
+                    <a asp-action="Membresias" asp-controller="User" class="btn btn-secondary text-warning">Membresias</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-dark bg-gradient text-center mb-3" style="width: 10rem; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-calendar icons-menu"></i></h5>
+                    <a asp-action="Index" asp-controller="Timetable" class="btn btn-secondary text-warning">Horarios</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-3 d-flex justify-content-center mt-2">
+            <div class="card bg-gradient bg-dark text-center mb-3" style="width: 10rem; border-radius: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa-solid fa-user icons-menu"></i></h5>
+                    <a asp-action="Index" asp-controller="User" class="btn btn-secondary text-warning">Empleados</a>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
 <script type="module" src="~/js/app.js"></script>

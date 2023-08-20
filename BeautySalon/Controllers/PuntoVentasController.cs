@@ -211,16 +211,16 @@ namespace BeautySalon.Controllers
             List<Invoice> invoices = new List<Invoice>();
             if (fecha != null && cliente != null)
             {
-                invoices = _context.Invoices.Where(i=> i.DateInvoice.Date == dateTime.Date && i.NameCustomer.Contains(cliente)).ToList();
+                invoices = _context.Invoices.Where(i=> i.DateInvoice.Date == dateTime.Date && i.NameCustomer.Contains(cliente)).OrderByDescending(i=> i.DateInvoice).ToList();
             }else if(fecha != null && cliente == null)
             {
-                invoices = _context.Invoices.Where(i=> i.DateInvoice.Date == dateTime.Date).ToList();
+                invoices = _context.Invoices.Where(i=> i.DateInvoice.Date == dateTime.Date).OrderByDescending(i => i.DateInvoice).ToList();
             }else if (cliente != null && fecha == null)
             {
-                invoices = _context.Invoices.Where(i => i.NameCustomer.Contains(cliente)).ToList();
+                invoices = _context.Invoices.Where(i => i.NameCustomer.Contains(cliente)).OrderByDescending(i => i.DateInvoice).ToList();
             } else
             {
-                invoices = _context.Invoices.ToList();
+                invoices = _context.Invoices.OrderByDescending(i => i.DateInvoice).ToList();
             }
 
             ViewBag.Facturas = invoices;
