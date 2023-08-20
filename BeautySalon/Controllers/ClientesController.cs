@@ -20,6 +20,29 @@ namespace BeautySalon.Controllers
 
         public IActionResult Index()
         {
+            //Extrae el horario para mostrar
+            var timetable = _context.Timetables.Where(timetable => timetable.IsHoliday == true).Join(
+                _context.HoursAvailables,
+                timetable => timetable.OpenHour,
+                openHour => openHour.IdHour,
+                (timetable, openHour) => new { timetable, openHour }).Join(
+                _context.HoursAvailables,
+                timetable => timetable.timetable.CloseHour,
+                closeHour => closeHour.IdHour,
+                (openTimetable, closeHour) => new { openTimetable, closeHour }).ToList();
+
+            List<ViewModelHorario> horarios = timetable.ConvertAll(x =>
+            new ViewModelHorario
+            {
+                Id = x.openTimetable.timetable.IdTimetable,
+                day = x.openTimetable.timetable.Day,
+                open = x.openTimetable.openHour.Hour,
+                close = x.closeHour.Hour
+            });
+
+            ViewBag.Timetable = horarios;
+
+            // Extrae los feriados para mostrar
             return View();
         }
 
@@ -194,5 +217,27 @@ namespace BeautySalon.Controllers
             return RedirectToAction("DetallesReserva", "Clientes", new { idReserva = idReserva });
         }
 
+        public IActionResult Catalogo(int? categoria, int? page)
+        {
+            categoria = categoria ?? 0;
+            page = page ?? 0;
+            List<Product> productos = new List<Product>();
+            if(categoria == 0)
+            {
+                productos = _context.Products.Where(p=> p.IdCategory != 1).ToList();
+            }
+            else
+            {
+                productos = _context.Products.Where(p => p.IdCategory == categoria).ToList();
+            }
+
+            ViewBag.Productos = productos;
+
+            List<Category> categorias = _context.Categories.Where(c => c.IdCategory != 1).ToList();
+            ViewBag.Categorias = categorias;
+            ViewBag.IdCategoria = categoria;
+
+            return View();
+        }
     }
 }

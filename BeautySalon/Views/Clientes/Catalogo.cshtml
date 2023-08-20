@@ -1,0 +1,53 @@
+﻿@using BeautySalon.Models.DataBase;
+
+@{
+    ViewData["Title"] = "Catalogo";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    List<Category> categorias = ViewBag.Categorias;
+    List<Product> productos =  ViewBag.Productos;
+}
+
+<script>
+    $(document).ready(function () {
+        // Captura el evento "change" del elemento <select>
+        $("#categoria").on("change", function () {
+            window.location.href = '@Url.Content("~/Clientes/Catalogo?categoria=")' + $("#categoria").val();
+        });
+    });
+</script>
+
+<div class="mt-3"><h3>Catalogo de productos</h3></div>
+<hr />
+<div class="row mb-2">
+    <div class="col-auto">
+        <a asp-action="Index" asp-controller="Clientes" class="btn btn-sm btn-secondary">Volver</a>
+    </div>
+    <div class="col-auto">
+        <label class="col-form-label-sm">Filtrar por categoria</label>
+    </div>
+    <div class="col-auto">
+        <select id="categoria" class="form-select form-select-sm" asp-items="@(new SelectList(categorias, "IdCategory", "Category1"))">
+            <option value="0">Todos</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var item in productos)
+    {
+        <div class="col-6 col-sm-4 col-lg-3 mt-2">
+            <div class="card h-100">
+                <img src="data:image/jpg; base64, @item.ImageProduct" class="card-img-top" alt="Imagen no disponible" style="height: 180px;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.NameProduct</h5>
+                    <span><strong>L. @((item.Price * 1.15m).ToString("F2"))</strong></span>
+                    <p class="card-text">@item.Description</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $("#categoria").val('@(ViewBag.IdCategoria)');
+</script>

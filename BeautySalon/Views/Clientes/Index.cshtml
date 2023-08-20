@@ -1,12 +1,94 @@
-﻿
+﻿@using BeautySalon.Models.ViewModels;
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    List<ViewModelHorario> timetable = ViewBag.Timetable;
 }
+<style>
+    body{
+        background-color: #00001111;
+    }
 
-<h1>Clientes</h1>
+    .iconRedesSociales{
+        font-size: 30px;
+        color: black;
+    }
+</style>
 
-<a asp-action="NuevaCita" asp-controller="Clientes">Nueva Cita</a>
+<div class="card mb-3">
+    <img src="~/img/baner365beautysalon.jpg" class="card-img-top" alt="No disponible">
+    <div class="card-body">
+        <h5 class="card-title">365 Beauty Salon</h5>
+        <p class="card-text">Nuestra vision es satisfacer las necesidades de belleza de nuestros clientes mediante servicios de la mas alta calidad.</p>
+        <p class="card-text"><small class="text-body-secondary"></small></p>
+        <hr />
+        <div class="mt3">
+            <div class="d-flex justify-content-center"><h3>Menú</h3></div>
+        </div>
+        <div class="row mt-3 mb-3">
+            <div class="col-12 col-sm-4 mt-2">
+                <div class="card bg-dark bg-gradient">
+                    <div class="card-body">
+                        <h5 class="card-title text-white">Servicios</h5>
+                        <p class="card-text text-white">Explora el catalogo de servicios y reserva tu cita.</p>
+                        <a asp-action="Servicios" asp-controller="Clientes" class="btn btn-warning">Acceder</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4 mt-2">
+                <div class="card bg-dark bg-gradient">
+                    <div class="card-body">
+                        <h5 class="card-title text-white">Productos</h5>
+                        <p class="card-text text-white">Explora nuestro catalogo de productos. </p>
+                        <a asp-action="Catalogo" asp-controller="Clientes" class="btn btn-warning">Acceder</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4 mt-2">
+                <div class="card bg-dark bg-gradient">
+                    <div class="card-body">
+                        <h5 class="card-title text-white">Reservas</h5>
+                        <p class="card-text text-white">Usa este apartado para administrar tus reservas..</p>
+                        <a asp-action="Reservas" asp-controller="Clientes" class="btn btn-warning">Acceder</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-center mt-3">
+            <div class="bg-dark bg-gradiant p-4" style="border-radius: 25px;">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-center"><h3 class="text-white">Horario de Atención</h3></div>
+                </div>
+                <table class="table table-sm">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Hora de Apertura</th>
+                            <th scope="col">Hora de Cierre</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-light">
+                        @foreach (var day in timetable)
+                        {
+                            <tr>
+                                <td>@day.day</td>
+                                <td>@day.open</td>
+                                <td>@day.close</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr/>
+        <div class="d-flex justify-content-center mt-3"><h4>Contactanos</h4></div>
+        <div class="d-flex justify-content-center">
+            <a href=""><i class="fa-brands fa-whatsapp iconRedesSociales"></i></a>
+            <a href="https://www.facebook.com/365beauty.hn" class="ms-2"><i class="fa-brands fa-facebook iconRedesSociales"></i></a>
+            <a href="https://www.instagram.com/365beauty.hn" class="ms-2"><i class="fa-brands fa-instagram iconRedesSociales"></i></a>
+        </div>
+    </div>
+</div>
 
-
-<span>guardando cambios        </span>

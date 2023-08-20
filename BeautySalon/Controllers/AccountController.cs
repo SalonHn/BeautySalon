@@ -67,7 +67,7 @@ namespace BeautySalon.Controllers
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIdentity));
 
-                //_metodos.addBitacora(userAdmin.IdUser, 1, "Inicio de session", "");
+                _metodos.addBitacora(userAdmin.IdUser, 1, "Inicio de session", "");
 
                 if(userAdmin.IdType == 1)
                 {
@@ -103,8 +103,8 @@ namespace BeautySalon.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            //int idUser = Int32.Parse(User.FindFirst("idUser").Value);
-            //_metodos.addBitacora(idUser, 1, "Cerro session con exito", "");
+            int idUser = Int32.Parse(User.FindFirst("idUser").Value);
+            _metodos.addBitacora(idUser, 1, "Cerro session con exito", "");
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
