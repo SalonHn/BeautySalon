@@ -10,6 +10,7 @@ using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using BeautySalon.Models.CreateModels;
 using BeautySalon.Models;
+using X.PagedList;
 
 namespace BeautySalon.Controllers
 {
@@ -25,9 +26,13 @@ namespace BeautySalon.Controllers
         }
 
         // GET: User
-        public IActionResult Index()
+        public IActionResult Index(int? page, string? buscar)
         {
+            int numPage = page ?? 1;
+            string search = buscar ?? "";
+
             var allUser = _context.Employees
+                .Where(e=> e.FirstName.Contains(search) || e.LastName.Contains(search))
                 .Join(_context.UserAdmins, employee => employee.IdUser, user => user.IdUser, (employee, user) => new { employee, user })
                 .Join(_context.TypeUsers, empleado => empleado.user.IdType, type => type.IdType, (empleado, type) => new { empleado, type })
                 .ToList();
@@ -44,7 +49,11 @@ namespace BeautySalon.Controllers
                 }
             );
 
-            ViewBag.Users = users;
+            IPagedList<ViewModelAllUser> pagedItems = users.ToPagedList(numPage, 10);
+
+            ViewBag.Users = pagedItems;
+
+            ViewBag.Name = buscar;
 
             return View();
         }
@@ -232,23 +241,11 @@ namespace BeautySalon.Controllers
             [Bind("FirstName", "LastName", "Dni", "Phone", "DateOfBirth", "Genero", "Age", "Email", "IdType", "IdRole", "UserName", "UserPassword", "UserPasswordConfirm", "IdEmpleado", "IdUsuario")] CreateEmpleado empleado
         )
         {
+
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
-                    List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
-                    List<string> genero = new List<string> { "Masculino", "Femenino" };
-                    ViewBag.Genero = genero;
-                    ViewBag.Skill = skills;
-                    ViewBag.Rol = roles;
-
-                    return View(empleado);
-                }
-
-                if (empleado.UserPassword != empleado.UserPasswordConfirm)
-                {
-                    ViewBag.NoCorresponde = "Las contraseñas no coincien";
                     List<RoleEmployee> skills = _context.RoleEmployees.Where(s => s.IdRole != 1).ToList();
                     List<TypeUser> roles = _context.TypeUsers.Where(r => r.IdType != 1).ToList();
                     List<string> genero = new List<string> { "Masculino", "Femenino" };
@@ -266,7 +263,6 @@ namespace BeautySalon.Controllers
                 if (user != null)
                 {
                     user.UserName = empleado.UserName;
-                    user.UserPassword = empleado.UserPassword;
                     user.IdType = empleado.IdType;
                     user.UserDateModify = fecha;
 
@@ -313,6 +309,33 @@ namespace BeautySalon.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult cambiarPassword(string password, int idUser)
+        {
+            try
+            {
+                UserAdmin? admin = _context.UserAdmins.Find(idUser);
+
+                if(admin != null)
+                {
+                    admin.UserDateModify = DateTime.Now;
+                    admin.UserPassword = password;
+
+                    int idU = Int32.Parse(User.FindFirst("idUser").Value);
+                    _metodos.addBitacora(idU, 1, "Actualización de la contraseña", "Se actualizo con exito la contraseña del user " + admin.UserName);
+                }
+
+                return RedirectToAction("Details", "User", new { id = idUser});
+            }
+            catch (Exception e)
+            {
+                int idU = Int32.Parse(User.FindFirst("idUser").Value);
+                _metodos.addBitacora(idU, 3, "Error al actualizar contraseña de empleado", "Ocurrio el siguiente error: " + e.Message);
+
+                return RedirectToAction("Details", "User", new { id = idUser });
+            }
+        }
+
         public async Task<IActionResult> CambioEstado(int idEmpleado, int idUser, bool estado)
         {
             Employee? empleado = _context.Employees.Find(idEmpleado);
@@ -336,11 +359,14 @@ namespace BeautySalon.Controllers
             return RedirectToAction("Details", "User", new { id = idEmpleado });
         }
 
-        public IActionResult Membresias()
+        public IActionResult Membresias(int? page)
         {
+            int numPage = page ?? 1;
+
             var membresias = _context.Membresia
                 .Where(m => m.Estado == true)
                 .Join(_context.UserAdmins, m => m.UserId, u => u.IdUser, (m, u) => new { m, u })
+                .OrderBy(m=> m.m.FechaFin)
                 .ToList();
 
             List<ViewMembresias> viewMembresias = membresias.ConvertAll(x => new ViewMembresias
@@ -351,7 +377,9 @@ namespace BeautySalon.Controllers
                 fin = x.m.FechaFin
             });
 
-            ViewBag.Membresias = viewMembresias;
+            IPagedList<ViewMembresias> pagedItems = viewMembresias.ToPagedList(numPage, 10);
+
+            ViewBag.Membresias = pagedItems;
 
             return View();
         }

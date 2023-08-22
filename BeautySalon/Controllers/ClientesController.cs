@@ -3,7 +3,7 @@ using BeautySalon.Models.DataBase;
 using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using X.PagedList;
 
 namespace BeautySalon.Controllers
 {
@@ -220,7 +220,7 @@ namespace BeautySalon.Controllers
         public IActionResult Catalogo(int? categoria, int? page)
         {
             categoria = categoria ?? 0;
-            page = page ?? 0;
+            int numPage = page ?? 1;
             List<Product> productos = new List<Product>();
             if(categoria == 0)
             {
@@ -231,7 +231,9 @@ namespace BeautySalon.Controllers
                 productos = _context.Products.Where(p => p.IdCategory == categoria).ToList();
             }
 
-            ViewBag.Productos = productos;
+            IPagedList<Product> pagedItems = productos.ToPagedList(numPage, 10);
+
+            ViewBag.Productos = pagedItems;
 
             List<Category> categorias = _context.Categories.Where(c => c.IdCategory != 1).ToList();
             ViewBag.Categorias = categorias;

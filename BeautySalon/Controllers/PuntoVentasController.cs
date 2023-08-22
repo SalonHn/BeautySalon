@@ -5,6 +5,7 @@ using BeautySalon.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using X.PagedList;
 
 namespace BeautySalon.Controllers
 {
@@ -205,9 +206,11 @@ namespace BeautySalon.Controllers
             return Json(respuesta);
         }
 
-        public IActionResult HistorialVentas(DateTime? fecha, string? cliente)
+        public IActionResult HistorialVentas(DateTime? fecha, string? cliente, int? page)
         {
             DateTime dateTime = fecha ?? DateTime.Now;
+            int numPage = page ?? 1;
+
             List<Invoice> invoices = new List<Invoice>();
             if (fecha != null && cliente != null)
             {
@@ -223,8 +226,12 @@ namespace BeautySalon.Controllers
                 invoices = _context.Invoices.OrderByDescending(i => i.DateInvoice).ToList();
             }
 
-            ViewBag.Facturas = invoices;
+            IPagedList<Invoice> pagedItems = invoices.ToPagedList(numPage, 10);
+
+            ViewBag.Facturas = pagedItems;
             ViewBag.Cliente = cliente;
+
+
             if(fecha != null)
             {
                 ViewBag.Fecha = dateTime.ToString("yyyy-MM-dd");

@@ -1,4 +1,8 @@
-﻿@model List<BeautySalon.Models.ViewModels.ViewModelProduct>
+﻿@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Core;
+
+@model IPagedList<BeautySalon.Models.ViewModels.ViewModelProduct>
 
 @{
     ViewData["Title"] = "Productos";
@@ -8,15 +12,22 @@
 <div class="d-flex justify-content-center mt-3">
     <h1>Inventario</h1>
 </div>
-
-<div class="row mt-3">
-    <div class="col-auto">
-        <a asp-action="Index" asp-controller="Home" class="btn btn-sm btn-secondary">Volver</a>
+<form asp-action="Index" asp-controller="Inventario" method="get">
+    <div class="row mt-3">
+        <div class="col-auto">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-sm btn-secondary">Volver</a>
+        </div>
+        <div class="col-auto">
+            <a href="@Url.Content("~/Inventario/Create")" class="btn btn-sm btn-primary">Nuevo Producto</a>
+        </div>
+        <div class="col-auto">
+            <input name="buscar" type="search" value="@ViewBag.Name" class="form-control form-control-sm" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-sm btn-success">Buscar</button>
+        </div>
     </div>
-    <div class="col-auto">
-        <a href="@Url.Content("~/Inventario/Create")" class="btn btn-sm btn-primary">Nuevo Producto</a>
-    </div>
-</div>
+</form>
 
 <div class="d-flex justify-content-center mt-2">
     <table class="table table-sm table-bordered">
@@ -46,4 +57,17 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="custom-pagination mt-3">
+    Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+    <div class="pagination-sm mt-1">
+        @Html.PagedListPager(
+            Model,
+            page => Url.Action("Index", "Inventario", new { page = page, buscar = ViewBag.Name }),
+            new PagedListRenderOptions {
+            LiElementClasses = new string[] {"page-item"},
+            PageClasses = new string[] {"page-link"}
+        })
+    </div>
 </div>

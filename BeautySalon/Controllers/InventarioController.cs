@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using X.PagedList;
 
 namespace BeautySalon.Controllers
 {
@@ -19,9 +20,13 @@ namespace BeautySalon.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? page, string? buscar)
         {
-            var joinProductCategory = _context.Products.Where(product=>product.IdCategory != 1).Join(_context.Categories,
+            int numPage = page ?? 1;
+            string search = buscar ?? "";
+            var joinProductCategory = _context.Products
+                .Where(product=>product.IdCategory != 1 && product.NameProduct.Contains(search))
+                .Join(_context.Categories,
                 product => product.IdCategory,
                 category => category.IdCategory,
                 (product, category) => new { product, category }).ToList();
@@ -37,7 +42,11 @@ namespace BeautySalon.Controllers
                     categoria = x.category.Category1
                 });
 
-            return View(products);
+            IPagedList<ViewModelProduct> pagedItems = products.ToPagedList(numPage, 10);
+
+            ViewBag.Name = buscar;
+
+            return View(pagedItems);
         }
 
         public async Task<IActionResult> Create()

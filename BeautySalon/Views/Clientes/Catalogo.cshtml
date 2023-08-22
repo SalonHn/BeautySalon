@@ -1,10 +1,14 @@
 ﻿@using BeautySalon.Models.DataBase;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Core;
+
 
 @{
     ViewData["Title"] = "Catalogo";
     Layout = "~/Views/Shared/_LayoutCliente.cshtml";
     List<Category> categorias = ViewBag.Categorias;
-    List<Product> productos =  ViewBag.Productos;
+    IPagedList<Product> productos = ViewBag.Productos;
 }
 
 <script>
@@ -47,6 +51,19 @@
         </div>
     }
 </div>
+<div class="custom-pagination mt-3">
+	Página @(productos.PageCount < productos.PageNumber ? 0 : productos.PageNumber) de @productos.PageCount
+    <div class="pagination-sm mt-1">
+        @Html.PagedListPager(
+            productos,
+            page => Url.Action("Catalogo", new { page = page, categoria = ViewBag.IdCategoria }),
+            new PagedListRenderOptions { 
+                LiElementClasses = new string[] {"page-item"},
+                PageClasses = new string[] {"page-link"}
+        })
+    </div>
+</div>
+
 
 <script>
     $("#categoria").val('@(ViewBag.IdCategoria)');

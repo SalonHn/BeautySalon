@@ -10,6 +10,24 @@
     TypeUser role = ViewBag.Role;
 }
 
+<script>
+    $(document).ready(function () {
+        $("#btnSubmit").click(function () {
+            if ($("#newPassword").val().trim() != "" && $("#confirmPassword").val().trim() != "") {
+                if ($("#newPassword").val() === $("#confirmPassword").val()) {
+                    
+                }else{
+                    $("#formNewPassword").show();
+                    $("#miFormulario").submit();
+                }
+            }else{
+                $("#alert").show();
+            }
+        });
+    });
+</script>
+
+
 <div class="d-flex justify-content-center"><h2>Información del Empleado</h2></div>
 <hr />
 <div>
@@ -48,6 +66,11 @@
             {
                 <div><span><strong>Habilidad: </strong>@skill.NameRole</span></div>
             }
+            <div class="mt-1">
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Cambiar Contraseña
+                </button>
+            </div>
             <div class="mt-2">
                 @if(user.UserActive == true)
                 {
@@ -67,6 +90,41 @@
         </div>
         <div class="col-6 d-flex justify-content-center">
             <a href="@Url.Action("Edit", "User", new {id = empleado.IdEmployee})" class="btn btn-sm btn-primary">Editar</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Cambiar Contraseña</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNewPassword" asp-action="cambiarPassword" asp-controller="User" method="post">
+                <div class="modal-body">
+                    <input name="idUser" value="@user.IdUser" hidden/>
+                    <div>
+                        <label class="col-form-label-sm">Nueva Contraseña</label>
+                        <input name="password" id="newPassword" class="form-control form-control-sm" />
+                    </div>
+                    <div class="mt-2">
+                        <label class="col-form-label-sm">Confirmar Contraseña</label>
+                        <input id="confirmPassword" class="form-control form-control-sm" />
+                    </div>
+                    <div class="mt-2">
+                        <span id="alert" class="text-danger" style="display: none;">Las contraseñas no coiciden</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="btnSubmit" type="button" class="btn btn-success">Confirmar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -1,10 +1,13 @@
 ﻿
 @using BeautySalon.Models.DataBase;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Core;
 
 @{
     ViewData["Title"] = "Historial Ventas";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<Invoice> facturas = ViewBag.Facturas;
+    IPagedList<Invoice> facturas = ViewBag.Facturas;
 }
 
 <script>
@@ -78,6 +81,19 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="custom-pagination mt-3">
+    Página @(facturas.PageCount < facturas.PageNumber ? 0 : facturas.PageNumber) de @facturas.PageCount
+    <div class="pagination-sm mt-1">
+        @Html.PagedListPager(
+            facturas,
+            page => Url.Action("HistorialVentas", "PuntoVentas", new { fecha = ViewBag.Fecha, cliente = ViewBag.Cliente, page = page}),
+            new PagedListRenderOptions {
+            LiElementClasses = new string[] {"page-item"},
+            PageClasses = new string[] {"page-link"}
+        })
+    </div>
 </div>
 
 
