@@ -1,0 +1,57 @@
+﻿@model BeautySalon.Models.CreateModels.CreateCliente
+
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_LayoutCliente.cshtml";
+    List<string> genero = ViewBag.Genero;
+}
+
+<div class="mt-3 d-flex justify-content-center"><h3>Editar Perfil</h3></div>
+
+<form asp-action="Editar" asp-controller="DatosCliente" method="post">
+    <div class="row">
+        <input asp-for="IdCustomer" hidden />
+        <input asp-for="IdUser" hidden />
+        <div class="col-12">
+            <label class="col-form-label-sm">Nombre</label>
+            <input asp-for="FullName" class="form-control form-control-sm" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        <div class="col-6 mt-2">
+            <label class="col-form-label-sm">Genero</label>
+            <select asp-for="Gender" asp-items="@(new SelectList(genero))" class="form-select form-select-sm">
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+        <div class="col-6 mt-2">
+            <label class="col-form-label-sm">Edad</label>
+            <input asp-for="Age" type="number" class="form-control form-control-sm" />
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
+        <div class="col-6 mt-2">
+            <label class="col-form-label-sm">Telefono</label>
+            <input asp-for="Phone" class="form-control form-control-sm" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+            <span class="text-danger">@ViewBag.Tel</span>
+        </div>
+        <div class="col-6 mt-2">
+            <label class="col-form-label-sm">Correo</label>
+            <input asp-for="Email" type="email" class="form-control form-control-sm" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <input asp-for="UserName" class="form-control form-control-sm" hidden />
+        <input asp-for="UserPassword" class="form-control form-control-sm" hidden />
+        <input asp-for="UserPasswordConfirm" class="form-control form-control-sm" hidden />
+
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+            <a asp-action="MiPerfil" asp-controller="DatosCliente" class="btn btn-sm btn-secondary">Volver</a>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+            <button type="submit" class="btn btn-sm btn-success">Guardar</button>
+        </div>
+    </div>
+</form>

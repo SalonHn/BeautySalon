@@ -15,10 +15,9 @@
         $("#btnSubmit").click(function () {
             if ($("#newPassword").val().trim() != "" && $("#confirmPassword").val().trim() != "") {
                 if ($("#newPassword").val() === $("#confirmPassword").val()) {
-                    
+                    $("#formNewPassword").submit();
                 }else{
-                    $("#formNewPassword").show();
-                    $("#miFormulario").submit();
+                    $("#alert").show();
                 }
             }else{
                 $("#alert").show();
@@ -110,11 +109,11 @@
                     <input name="idUser" value="@user.IdUser" hidden/>
                     <div>
                         <label class="col-form-label-sm">Nueva Contraseña</label>
-                        <input name="password" id="newPassword" class="form-control form-control-sm" />
+                        <input type="password" name="password" id="newPassword" class="form-control form-control-sm" />
                     </div>
                     <div class="mt-2">
                         <label class="col-form-label-sm">Confirmar Contraseña</label>
-                        <input id="confirmPassword" class="form-control form-control-sm" />
+                        <input type="password" id="confirmPassword" class="form-control form-control-sm" />
                     </div>
                     <div class="mt-2">
                         <span id="alert" class="text-danger" style="display: none;">Las contraseñas no coiciden</span>

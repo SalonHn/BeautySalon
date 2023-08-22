@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Runtime;
 using System.Security.Claims;
+using BeautySalon.Models.CreateModels;
 
 namespace BeautySalon.Controllers
 {
@@ -276,5 +277,102 @@ namespace BeautySalon.Controllers
                 return RedirectToAction("Index", "Clientes");
             }
         }
-    }
+
+
+        [HttpPost]
+        public async Task<IActionResult> cambiarPassword(string password, int idUser)
+        {
+            try
+            {
+                UserAdmin? admin = _context.UserAdmins.Find(idUser);
+
+                if (admin != null)
+                {
+                    admin.UserDateModify = DateTime.Now;
+                    admin.UserPassword = password;
+                    await _context.SaveChangesAsync();
+
+                    _metodos.addBitacora(idUser, 1, "Actualización de la contraseña", "Se actualizo con exito la contraseña del cliente " + admin.UserName);
+                }
+
+                return RedirectToAction("MiPerfil", "DatosCliente");
+            }
+            catch (Exception e)
+            {
+                _metodos.addBitacora(idUser, 3, "Error al actualizar contraseña de cliente", "Ocurrio el siguiente error: " + e.Message);
+
+                return RedirectToAction("MiPerfil", "DatosCliente");
+            }
+        }
+
+
+        public IActionResult Editar(int iduser)
+        {
+            CreateCliente cliente = new CreateCliente();
+            Customer? customer = _context.Customers.Where(c => c.IdUser == iduser).FirstOrDefault();
+
+            List<string> genero = new List<string> { "Femenino", "Masculino" };
+            ViewBag.Genero = genero;
+
+            if (customer != null)
+            {
+                cliente = new CreateCliente 
+                { 
+                    IdCustomer = customer.IdCustomer,
+                    IdUser = 0,
+                    FullName = customer.FullName,
+                    Gender = customer.Gender,
+                    Age = customer.Age,
+                    Phone = customer.Phone,
+                    Email = customer.Email ?? "email@unah.com",
+                    UserName = "hello",
+                    UserPassword = "hello",
+                    UserPasswordConfirm = "hello"
+                };
+            }
+
+            return View(cliente);
+        }
+
+        [HttpPost]
+		public async Task<IActionResult> Editar([Bind("IdUser", "IdCustomer", "FullName", "Gender", "Age", "Phone", "Email", "UserName", "UserPassword", "UserPasswordConfirm")] CreateCliente cliente)
+        {
+			if (!ModelState.IsValid)
+			{
+				List<string> genero = new List<string> { "Masculino", "Femenino" };
+				ViewBag.Genero = genero;
+				return View(cliente);
+			}
+
+			Customer? _cliente = _context.Customers.Where(c => c.Phone == cliente.Phone && c.IdCustomer != cliente.IdCustomer).FirstOrDefault();
+			if (_cliente != null)
+			{
+				List<string> genero = new List<string> { "Masculino", "Femenino" };
+				ViewBag.Genero = genero;
+				ViewBag.Tel = "Ya existe un usuario asociado a este telefono.";
+				return View(cliente);
+			}
+
+			DateTime fecha = DateTime.Now;
+
+            //Creando cliente
+            Customer? customer = _context.Customers.Find(cliente.IdCustomer);
+            if (customer != null)
+            {
+                customer.FullName = cliente.FullName;
+                customer.Phone = cliente.Phone;
+                customer.Email = cliente.Email;
+                customer.Age = cliente.Age;
+                customer.Gender = cliente.Gender;
+                customer.CreateDate = fecha;
+
+				await _context.SaveChangesAsync();
+			}
+
+			_metodos.addBitacora(cliente.IdUser, 1, "Actualización de usuario", "Actualizo su perfil exitosamente");
+
+			return RedirectToAction("MiPerfil", "DatosCliente");
+		}
+
+	}
 }

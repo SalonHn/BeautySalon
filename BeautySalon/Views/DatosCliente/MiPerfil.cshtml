@@ -8,6 +8,22 @@
     UserAdmin user = ViewBag.User;
 }
 
+<script>
+    $(document).ready(function () {
+        $("#btnSubmit").click(function () {
+            if ($("#newPassword").val().trim() != "" && $("#confirmPassword").val().trim() != "") {
+                if ($("#newPassword").val() === $("#confirmPassword").val()) {
+                    $("#formNewPassword").submit();
+                } else {
+                    $("#alert").show();
+                }
+            } else {
+                $("#alert").show();
+            }
+        });
+    });
+</script>
+
 <div class="d-flex justify-content-center"><h3>Mi Perfil</h3></div>
 <hr />
 
@@ -34,11 +50,55 @@
 <div><span><strong>Telefono: </strong>@cliente.Phone</span></div>
 <div><span><strong>Correo: </strong>@cliente.Email</span></div>
 <div><span><strong>Fecha de registro: </strong>@cliente.CreateDate.ToString("dd-MM-yyyy")</span></div>
+
+<div class="mt-2 row">
+    <div class="col-auto">
+		<a href="@Url.Action("Editar", "DatosCliente", new { iduser = user.IdUser })" class="btn btn-sm btn-primary">Editar</a>
+    </div>
+	<div class="col-auto">
+		<button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+			Cambiar Contraseña
+		</button>
+	</div>
+</div>
+
 <div class="mt-2">
     <a asp-action="MetodoPago" asp-controller="DatosCliente" class="btn btn-sm btn-primary">Metodos de pago</a>
 </div>
 <hr />
-
 <div class="d-flex justify-content-center">
     <a asp-action="Index" asp-controller="Clientes" class="btn btn-secondary">Salir</a>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Cambiar Contraseña</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formNewPassword" asp-action="cambiarPassword" asp-controller="DatosCliente" method="post">
+                <div class="modal-body">
+                    <input name="idUser" value="@user.IdUser" hidden />
+                    <div>
+                        <label class="col-form-label-sm">Nueva Contraseña</label>
+                        <input type="password" name="password" id="newPassword" class="form-control form-control-sm" />
+                    </div>
+                    <div class="mt-2">
+                        <label class="col-form-label-sm">Confirmar Contraseña</label>
+                        <input type="password" id="confirmPassword" class="form-control form-control-sm" />
+                    </div>
+                    <div class="mt-2">
+                        <span id="alert" class="text-danger" style="display: none;">Las contraseñas no coiciden</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="btnSubmit" type="button" class="btn btn-success">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

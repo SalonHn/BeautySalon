@@ -310,7 +310,7 @@ namespace BeautySalon.Controllers
         }
 
         [HttpPost]
-        public IActionResult cambiarPassword(string password, int idUser)
+        public async Task<IActionResult> cambiarPassword(string password, int idUser)
         {
             try
             {
@@ -320,6 +320,7 @@ namespace BeautySalon.Controllers
                 {
                     admin.UserDateModify = DateTime.Now;
                     admin.UserPassword = password;
+                    await _context.SaveChangesAsync();
 
                     int idU = Int32.Parse(User.FindFirst("idUser").Value);
                     _metodos.addBitacora(idU, 1, "Actualización de la contraseña", "Se actualizo con exito la contraseña del user " + admin.UserName);
